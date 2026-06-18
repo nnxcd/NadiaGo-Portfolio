@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nai Nai — Your Virtual Grandma — Nadia Go</title>
+  <meta name="description" content="Case study: Nai Nai, a virtual-grandmother concept closing Australia's rural Traditional Chinese Medicine trust gap. CISSA Hackathon winner, Medical track.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="mark" href="index.html#top" aria-label="Back to home">
+        NG<span class="mark-sub">.field</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html#work">Work</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#experience">Experience</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="status-console" aria-live="polite">
+        <span class="status-dot"></span>
+        <span class="status-text">Currently @ UniMelb</span>
+        <span class="status-divider">/</span>
+        <span class="status-clock" id="clock">--:--:-- --</span>
+        <span class="status-tz">MEL</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="cs-crumb" aria-label="Breadcrumb">
+    <a href="index.html#top">← Home</a>
+  </nav>
+
+  <nav class="cs-toc" aria-label="Case study sections">
+    <a href="#context">01. Context</a>
+    <a href="#problem">02. The problem</a>
+    <a href="#solution">03. The solution</a>
+    <a href="#features">04. Features</a>
+    <a href="#process">05. Process</a>
+    <a href="#reflection">06. Reflection</a>
+  </nav>
+
+  <main id="main">
+
+    <div class="cs-hero-banner" data-reveal>
+      <img src="https://framerusercontent.com/images/FUycmM9fsmtgtvuQvnlvQMvY7NY.jpg?width=2392&height=1379" alt="Nai Nai app concept — overview banner">
+    </div>
+
+    <section class="cs-hero-body">
+      <div class="cs-tags" data-reveal>
+        <span class="cs-tag">CISSA Hackathon</span>
+        <span class="cs-tag win">Winner — Medical Track</span>
+      </div>
+
+      <h1 class="cs-title" data-reveal>Building Nai Nai, for the people the healthcare system can't reach</h1>
+
+      <p class="cs-intro" data-reveal>
+        Nai Nai is a concept I designed for CISSA's Medical track — a digital companion
+        that turns a daily mood check-in into a safe, community-vetted Traditional Chinese
+        Medicine remedy. It took 1st place by treating trust, not information, as the
+        actual problem to solve.
+      </p>
+
+      <div class="cs-meta" data-reveal>
+        <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
+        <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
+        <div><span>Built for</span>CISSA Hackathon — Medical track</div>
+        <div><span>Outcome</span>1st place, Medical track</div>
+      </div>
+    </section>
+
+    <!-- ============ 01 CONTEXT ============ -->
+    <section class="cs-section" id="context">
+      <p class="eyebrow" data-reveal>01 — CONTEXT</p>
+      <h2 data-reveal>A health system that doesn't reach everyone equally</h2>
+      <p data-reveal>
+        28% of Australians live in rural and remote areas, where health outcomes already
+        trail the cities (ABS, 2023). Traditional Chinese Medicine could help close some of
+        that gap — non-invasive, well suited to age-related conditions, and in rising
+        demand. But the workforce that delivers it is shrinking and ageing out, fastest in
+        exactly the regions that need it most.
+      </p>
+      <div class="cs-stat-row" data-reveal>
+        <div class="cs-stat">
+          <span class="cs-stat-num">28%</span>
+          <span class="cs-stat-cap">of Australians live in rural or remote areas (ABS, 2023).</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat-num">51.4</span>
+          <span class="cs-stat-cap">average age of a TCM practitioner today (Ahpra, 2022).</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 02 PROBLEM ============ -->
+    <section class="cs-section" id="problem">
+      <p class="eyebrow" data-reveal>02 — THE PROBLEM</p>
+      <h2 data-reveal>The Supply-Trust Paradox</h2>
+      <p data-reveal>
+        Demand for TCM is rising as Australia ages — but the profession is short on
+        practitioners and short on trust at the same time, and neither half fixes the
+        other on its own.
+      </p>
+
+      <div class="cs-paradox" data-reveal>
+        <div class="cs-paradox-col">
+          <h3>The Supply Crisis</h3>
+          <p>The workforce has shrunk 1.9% over five years and is ageing fast. Practitioner
+            density in regional areas has dropped sharply, leaving remote Australians with
+            little to no access at all.</p>
+        </div>
+        <div class="cs-paradox-col">
+          <h3>The Trust Gap</h3>
+          <p>Consumer interest is high, but medical skepticism isn't going away. Clinical
+            evidence is hard to find in English, and safety concerns around herbal toxicity
+            persist (Healthdirect, 2024). A directory of strangers doesn't fix that.</p>
+        </div>
+      </div>
+
+      <p class="cs-hmw" data-reveal>
+        How might we democratise access to Traditional Chinese Medicine information for
+        remote users, while rebuilding trust in a shrinking profession?
+      </p>
+    </section>
+
+    <!-- ============ 03 SOLUTION ============ -->
+    <section class="cs-section" id="solution">
+      <p class="eyebrow" data-reveal>03 — THE SOLUTION</p>
+      <h2 data-reveal>A grandmother, not a directory</h2>
+      <p data-reveal>
+        We decided the trust gap wasn't only clinical — it was emotional. A directory of
+        vetted strangers doesn't feel like anyone you'd actually listen to. So instead of
+        another clinical app, we built a person.
+      </p>
+
+      <div class="cs-persona" data-reveal>
+        <span class="cs-persona-hanzi">奶奶</span>
+        <div class="cs-persona-text">
+          <p class="cs-persona-gloss"><em>nǎinai</em> — noun. Grandmother, in Mandarin.</p>
+          <p class="cs-persona-tagline">Ask Nainai. Nainai knows.</p>
+        </div>
+      </div>
+
+      <div class="cs-bento" data-reveal>
+        <figure class="cs-bento-item">
+          <img src="https://framerusercontent.com/images/S6AOQAbJLapmPWdZdcQPyCyVt8Q.png?width=1500&height=1125" alt="Nai Nai character illustration">
+          <figcaption>奶奶, brought to life — a warm character instead of a clinical interface.</figcaption>
+        </figure>
+        <figure class="cs-bento-item">
+          <img src="https://framerusercontent.com/images/XgpWE6aPQylyEmpWwWZfr7CeyJE.jpg?width=2392&height=1360" alt="Nai Nai app concept overview">
+          <figcaption>One companion, three jobs: check in, learn, and reach someone when home remedies aren't enough.</figcaption>
+        </figure>
+        <figure class="cs-bento-item">
+          <img src="https://framerusercontent.com/images/bQu5FOOo4KqkYroD6Dxbonec4I.png?width=3096&height=2163" alt="Nai Nai app screens overview">
+          <figcaption>Every remedy is vetted, not just searched for.</figcaption>
+        </figure>
+      </div>
+
+      <p data-reveal>
+        The brief split into two jobs Nai Nai had to do at once: build long-term trust in
+        TCM, and get someone through today. We worked with cultural advisors throughout to
+        keep the content TCM-aligned and respectful, not decorative.
+      </p>
+    </section>
+
+    <!-- ============ 04 FEATURES ============ -->
+    <section class="cs-section" id="features">
+      <p class="eyebrow" data-reveal>04 — FEATURES</p>
+      <h2 data-reveal>What Nai Nai actually does</h2>
+
+      <div class="cs-feature-grid" data-reveal>
+        <div class="cs-feature-card">
+          <h3>Daily check-in → real remedy</h3>
+          <p>A one-tap mood check-in goes straight to a specific, doable home remedy —
+            not a wall of information to sort through alone.</p>
+        </div>
+        <div class="cs-feature-card">
+          <h3>TCM Insights</h3>
+          <p>A searchable library of recipes, plain-language articles, and an ingredient
+            "hot/cold energy" guide — vetted, not just searched for.</p>
+        </div>
+        <div class="cs-feature-card">
+          <h3>Community + Ask Nainai</h3>
+          <p>A forum for swapping remedies with other users and practitioners, plus an
+            in-app chat with Nai Nai herself between check-ins.</p>
+        </div>
+      </div>
+
+      <div class="cs-media-row" data-reveal>
+        <figure class="cs-media">
+          <img src="https://framerusercontent.com/images/A9j04mI0AiPzSbocr1dVGmb9TE.png?width=416&height=504" alt="TCM Insights screen with recipes and ingredient energy guide">
+          <figcaption>TCM Insights — recipes &amp; ingredient energy guide</figcaption>
+        </figure>
+        <figure class="cs-media">
+          <img src="https://framerusercontent.com/images/EQ6JqIE0jAOdtSEcomm9SAus1F8.png?width=1359&height=2736" alt="Community forum and Ask Nainai chatbot screen">
+          <figcaption>Community forum &amp; Ask Nainai chatbot</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ 05 PROCESS ============ -->
+    <section class="cs-section" id="process">
+      <p class="eyebrow" data-reveal>05 — PROCESS</p>
+      <h2 data-reveal>From sticky notes to a grandmother</h2>
+      <p data-reveal>
+        Direction came from rapid ideation — Post-its, one-minute bursts of five ideas
+        each, then a fifteen-minute group walkthrough to argue for the strongest ones and
+        funnel down. Health-tracking, pill-logging, and inter-family wellness apps all had
+        a turn before Traditional Chinese Medicine stuck, once we realised it sat exactly
+        at the intersection of the Medical track and an actual demographic shift already
+        underway.
+      </p>
+
+      <p class="eyebrow" style="margin-top:36px;" data-reveal>WHAT WE HEARD</p>
+      <div class="cs-quote-row" data-reveal>
+        <div class="cs-quote">
+          <img src="https://framerusercontent.com/images/8pl8GDGse5qzXopVEOF2VnC1L00.png?width=500&height=580" alt="">
+          <p>"I take a Panadol and avoid coffee."</p>
+        </div>
+        <div class="cs-quote">
+          <img src="https://framerusercontent.com/images/J5uL6RC8DTjXaxPE9dWnUSHVE.png?width=572&height=544" alt="">
+          <p>"I power through the pain and go to sleep."</p>
+        </div>
+        <div class="cs-quote">
+          <img src="https://framerusercontent.com/images/E9tHEmFo7ZrMu9unO2DpRKGvNM.png?width=556&height=580" alt="">
+          <p>"I take a nap, and if that doesn't work, I take a Panadol."</p>
+        </div>
+        <div class="cs-quote">
+          <img src="https://framerusercontent.com/images/7wgMIUY3PWq7RSAOSIXULqHDNg.png?width=624&height=588" alt="">
+          <p>"I drink energy drinks."</p>
+        </div>
+      </div>
+
+      <div class="cs-stat-row" data-reveal>
+        <div class="cs-stat">
+          <span class="cs-stat-num">50%</span>
+          <span class="cs-stat-cap">of Australians self-diagnose, driven largely by GP shortages and cost (2024).</span>
+        </div>
+        <div class="cs-stat">
+          <span class="cs-stat-num">7M</span>
+          <span class="cs-stat-cap">Australians have poorer access to primary care simply because of where they live.</span>
+        </div>
+      </div>
+
+      <p class="cs-bridge" data-reveal>
+        Nobody disliked the idea of expert advice. They just didn't have it nearby, in
+        time, or in a way that felt like it was for them — which is exactly the gap a
+        character, not another feature, could close.
+      </p>
+    </section>
+
+    <!-- ============ 06 REFLECTION ============ -->
+    <section class="cs-section" id="reflection">
+      <p class="eyebrow" data-reveal>06 — REFLECTION</p>
+      <h2 data-reveal>What this taught me</h2>
+      <p data-reveal>
+        Nai Nai won CISSA's Medical track by refusing to treat trust as a UI problem
+        solvable with badges or directories. It's still a concept — untested with real
+        TCM practitioners, and far from a build — but it proved the more useful question
+        wasn't "how do we share more information," but "who would someone actually
+        believe."
+      </p>
+
+      <div class="cs-takeaway-grid" data-reveal>
+        <div class="cs-takeaway-card">
+          <h3>Trust isn't a UI problem</h3>
+          <p>A believable character did more work for the trust gap than another feature
+            ever would have.</p>
+        </div>
+        <div class="cs-takeaway-card">
+          <h3>Constraints sharpen ideas</h3>
+          <p>Funnelling from three other directions under hackathon time pressure forced
+            a sharper, more specific problem than more time alone would have found.</p>
+        </div>
+        <div class="cs-takeaway-card">
+          <h3>Still just a concept</h3>
+          <p>No real practitioners or safety review yet — that's the real next step, not
+            a finished product.</p>
+        </div>
+      </div>
+
+      <div class="cs-photo-placeholder" data-reveal>
+        [ PHOTO PLACEHOLDER — presenting Nai Nai at CISSA ]
+      </div>
+
+      <p class="cs-closing" data-reveal>Building community. Building knowledge.</p>
+    </section>
+
+    <nav class="cs-next" aria-label="Case study navigation">
+      <a class="back" href="index.html#work">← Back to all work</a>
+      <a href="index.html#case-mongie">Next project — Mongie →</a>
+    </nav>
+
+  </main>
+
+  <!-- ============ CONTACT / FOOTER ============ -->
+  <footer class="contact" id="contact">
+    <p class="contact-tag">GET IN TOUCH</p>
+    <p class="contact-line">
+      If your project is missing the person who can't be there yet,
+      that's usually where this kind of design starts.
+    </p>
+
+    <div class="contact-links">
+      <a href="mailto:nadiajingxiang@gmail.com" data-cursor="hot">Email</a>
+      <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Instagram</a>
+      <a href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener" data-cursor="cool">LinkedIn</a>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html#top">Top</a>
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#experience">Experience</a>
+    </nav>
+
+    <p class="credit">
+      Design study — structure borrowed from
+      <a href="https://meganyap.me/work/lingofable" target="_blank" rel="noopener">meganyap.me</a>,
+      real work &amp; bio sourced from
+      <a href="https://nadiaalexandra.framer.website/" target="_blank" rel="noopener">nadiaalexandra.framer.website</a>.
+      Not an official site.
+    </p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
