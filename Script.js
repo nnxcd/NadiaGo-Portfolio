@@ -15,7 +15,7 @@
      1. LIVE CLOCK — Melbourne, AU
      --------------------------------------------------------- */
   var clockEl = document.getElementById('clock');
-
+/* hello */
   function updateClock() {
     if (!clockEl) return;
     try {
