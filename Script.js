@@ -1,8 +1,8 @@
 /* =========================================================
    NADIA GO — FIELD LOG
-   Behavior: live Melbourne clock, scroll-reveal, marquee is
-   pure CSS, mood check-in widget, and an optional custom
-   cursor that mirrors the hot/cool token system.
+   Behavior: live Melbourne clock, scroll-reveal, marquee
+   pure CSS, optional custom cursor, physics chip stage
+   that lives inside .hero-physics-box on the right.
    ========================================================= */
 
 (function () {
@@ -20,14 +20,13 @@
     if (!clockEl) return;
     try {
       var now = new Date();
-      var formatted = now.toLocaleTimeString('en-US', {
+      clockEl.textContent = now.toLocaleTimeString('en-US', {
         timeZone: 'Australia/Melbourne',
         hour: 'numeric',
         minute: '2-digit',
         second: '2-digit',
         hour12: true
       });
-      clockEl.textContent = formatted;
     } catch (err) {
       clockEl.textContent = new Date().toLocaleTimeString();
     }
@@ -60,8 +59,6 @@
 
   /* ---------------------------------------------------------
      3. CUSTOM CURSOR
-     Skipped entirely on touch devices and reduced-motion —
-     the native cursor remains untouched in both cases.
      --------------------------------------------------------- */
   if (!isCoarsePointer && !prefersReducedMotion) {
     var dot = document.querySelector('.cursor-dot');
@@ -117,15 +114,14 @@
 
   /* ---------------------------------------------------------
      4. PHYSICS CHIP STAGE
-     A small Matter.js sandbox — tool & skill chips that drop
-     in with gravity on load and stay draggable, echoing the
-     floating icon strip from the original portfolio. Skipped
-     entirely (falls back to the plain wrapped row set in CSS)
-     for reduced motion, or if Matter.js failed to load.
+     Chips drop into .hero-physics-box with gravity and stay
+     draggable. Matter.js bounds are derived from the box
+     element itself so chips can't escape the bordered area.
      --------------------------------------------------------- */
   var stage = document.querySelector('.physics-stage');
+  var physicsBox = document.querySelector('.hero-physics-box');
 
-  if (stage && !prefersReducedMotion && typeof Matter !== 'undefined') {
+  if (stage && physicsBox && !prefersReducedMotion && typeof Matter !== 'undefined') {
     var chips = Array.prototype.slice.call(stage.querySelectorAll('.chip'));
 
     if (chips.length) {
@@ -133,29 +129,30 @@
       stage.addEventListener('dragstart', function (e) { e.preventDefault(); });
 
       var Engine = Matter.Engine,
-        World = Matter.World,
-        Bodies = Matter.Bodies,
-        Body = Matter.Body,
-        Mouse = Matter.Mouse,
-        MouseConstraint = Matter.MouseConstraint;
+          World  = Matter.World,
+          Bodies = Matter.Bodies,
+          Body   = Matter.Body,
+          Mouse  = Matter.Mouse,
+          MouseConstraint = Matter.MouseConstraint;
 
       var engine = Engine.create();
       engine.gravity.y = 0.85;
 
-      var rect = stage.getBoundingClientRect();
-      var W = rect.width || 800;
-      var H = rect.height || 240;
+      /* Use the physics box dimensions, not window */
+      var rect = physicsBox.getBoundingClientRect();
+      var W = rect.width  || 480;
+      var H = rect.height || 360;
       var wall = 60;
 
       World.add(engine.world, [
-        Bodies.rectangle(W / 2, H + wall / 2, W * 2, wall, { isStatic: true }),
-        Bodies.rectangle(W / 2, -wall / 2, W * 2, wall, { isStatic: true }),
-        Bodies.rectangle(-wall / 2, H / 2, wall, H * 2, { isStatic: true }),
+        Bodies.rectangle(W / 2, H + wall / 2,  W * 2, wall, { isStatic: true }),
+        Bodies.rectangle(W / 2, -wall / 2,      W * 2, wall, { isStatic: true }),
+        Bodies.rectangle(-wall / 2,  H / 2, wall, H * 2, { isStatic: true }),
         Bodies.rectangle(W + wall / 2, H / 2, wall, H * 2, { isStatic: true })
       ]);
 
       var tracked = chips.map(function (el, i) {
-        var w = el.offsetWidth || 60;
+        var w = el.offsetWidth  || 60;
         var h = el.offsetHeight || 60;
         var startX = 40 + Math.random() * Math.max(W - 80, 40);
         var startY = -h - i * 65;
@@ -163,15 +160,11 @@
 
         var body = isCircle
           ? Bodies.circle(startX, startY, w / 2, {
-              restitution: 0.55,
-              friction: 0.35,
-              frictionAir: 0.02
+              restitution: 0.55, friction: 0.35, frictionAir: 0.02
             })
           : Bodies.rectangle(startX, startY, w, h, {
               chamfer: { radius: h / 2 },
-              restitution: 0.4,
-              friction: 0.4,
-              frictionAir: 0.02
+              restitution: 0.4, friction: 0.4, frictionAir: 0.02
             });
 
         Body.setAngle(body, (Math.random() - 0.5) * 0.6);
@@ -179,6 +172,7 @@
         return { el: el, body: body, w: w, h: h };
       });
 
+      /* Bind mouse to the stage element, not window */
       var mouse = Mouse.create(stage);
       var mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
@@ -186,11 +180,11 @@
       });
       World.add(engine.world, mouseConstraint);
 
-      // don't let the drag handler swallow page scroll / native touch scroll
+      /* Keep scroll working */
       ['mousewheel', 'DOMMouseScroll', 'touchstart', 'touchmove', 'touchend'].forEach(function (evt) {
         if (mouse[evt]) mouse.element.removeEventListener(evt, mouse[evt]);
       });
-      mouse.element.addEventListener('touchstart', mouse.mousedown, { passive: true });
+      mouse.element.addEventListener('touchstart', mouse.mousedown,  { passive: true });
       mouse.element.addEventListener('touchmove', function (e) {
         if (mouseConstraint.body) mouse.mousemove(e);
       }, { passive: true });
@@ -201,24 +195,18 @@
       function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
 
       (function loop() {
-        // Cap the drag target itself, so a cursor that strays far below
-        // the box (e.g. down by the footer) never yanks a chip through
-        // the walls with it — this is what was letting chips escape.
         mouse.position.x = clamp(mouse.position.x, 0, W);
         mouse.position.y = clamp(mouse.position.y, 0, H);
 
         Engine.update(engine);
 
         tracked.forEach(function (t) {
-          var pos = t.body.position;
+          var pos  = t.body.position;
           var halfW = t.w / 2;
           var halfH = t.h / 2;
           var cx = clamp(pos.x, halfW, W - halfW);
           var cy = clamp(pos.y, halfH, H - halfH);
 
-          // Hard safety net: if anything (a fast drag, a tunnelled
-          // collision) ever pushed a body past the box edge, snap it
-          // back in and kill the velocity that was carrying it out.
           if (cx !== pos.x || cy !== pos.y) {
             var vel = t.body.velocity;
             Body.setPosition(t.body, { x: cx, y: cy });
@@ -234,6 +222,42 @@
 
         window.requestAnimationFrame(loop);
       })();
+    }
+  }
+
+  /* ---------------------------------------------------------
+     5. FLOATING CASE-STUDY NAV — active section highlight
+     --------------------------------------------------------- */
+  var floatnav = document.getElementById('cs-floatnav');
+
+  if (floatnav) {
+    var navLinks = Array.prototype.slice.call(floatnav.querySelectorAll('a[data-section]'));
+    var sections = navLinks.map(function (a) {
+      return document.getElementById(a.getAttribute('data-section'));
+    }).filter(Boolean);
+
+    function updateActiveLink() {
+      /* find the section whose top is closest to 40% down the viewport */
+      var threshold = window.innerHeight * 0.4;
+      var active = sections[0];
+
+      sections.forEach(function (sec) {
+        var top = sec.getBoundingClientRect().top;
+        if (top <= threshold) active = sec;
+      });
+
+      navLinks.forEach(function (a) {
+        var matches = active && a.getAttribute('data-section') === active.id;
+        a.classList.toggle('is-active', matches);
+      });
+    }
+
+    if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+      updateActiveLink();
+      window.addEventListener('scroll', updateActiveLink, { passive: true });
+    } else {
+      /* reduced motion: just mark first link active */
+      if (navLinks.length) navLinks[0].classList.add('is-active');
     }
   }
 

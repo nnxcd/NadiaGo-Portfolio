@@ -4,18 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nadia Go — Field Log</title>
-  <meta name="description" content="Nadia Go — multidisciplinary designer based in Melbourne, AU. Selected work: Nai Nai, Mongie, and Ekko.">
+  <meta name="description" content="Nadia Go — multidisciplinary designer based in Melbourne, AU. Selected work: Nai Nai, Mongie, and Daisy.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Joan&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- custom cursor (decorative — falls back to native cursor on touch / reduced motion) -->
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
 
@@ -24,14 +23,12 @@
       <a class="mark" href="#top" aria-label="Back to top">
         NG<span class="mark-sub">.field</span>
       </a>
-
       <nav class="nav" aria-label="Primary">
         <a href="#work">Work</a>
         <a href="#about">About</a>
         <a href="#experience">Experience</a>
         <a href="#contact">Contact</a>
       </nav>
-
       <div class="status-console" aria-live="polite">
         <span class="status-dot"></span>
         <span class="status-text">Currently @ UniMelb</span>
@@ -44,63 +41,87 @@
 
   <main id="main">
 
-    <!-- ============ PHYSICS STAGE ============ -->
-    <!-- Decorative — duplicates info already in the marquee/case-card
-         tools list below, so it's hidden from assistive tech and not
-         part of the tab order. Falls back to a plain wrapped row of
-         badges (see CSS) if JS is unavailable or motion is reduced. -->
-    <section class="physics-stage" aria-hidden="true">
-      <div class="chip chip-pill dark" data-shape="pill" draggable="false">
-        UNIMELB <span class="chip-dot"></span>
+    <!-- 
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>WELCOME</span><span class="dot">•</span>
+        <span>TO</span><span class="dot">•</span>
+        <span>MY PORTFOLIO</span><span class="dot">•</span>
+        <span>WELCOME</span><span class="dot">•</span>
+        <span>TO</span><span class="dot">•</span>
+        <span>MY PORTFOLIO</span><span class="dot">•</span>
       </div>
-      <div class="chip chip-pill outline" data-shape="pill" draggable="false">
-        UI/UX DESIGNER
-      </div>
-      <div class="chip chip-icon ai" data-shape="circle" draggable="false"><img src="Draggable-icon-logo/illustrator-logo.webp"></div>
-      <div class="chip chip-icon ps" data-shape="circle" draggable="false"><img src="Draggable-icon-logo/PS-logo.png"></div>
-      
-      <div class="chip chip-icon figma" data-shape="circle" draggable="false"><img src="Draggable-icon-logo/figma-logo.webp"></div>
-      <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-      <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
-      <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-      <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
-    </section>
+    </div>
+    ============ MARQUEE ============ -->
 
     <!-- ============ HERO ============ -->
-     <div class="marquee" aria-hidden="true">
-        <div class="marquee-track">
-          <span>WELCOME</span><span class="dot">•</span>
-          <span>TO</span><span class="dot">•</span>
-          <span>MY PORTFOLIO</span><span class="dot">•</span>
-          <span>WELCOME</span><span class="dot">•</span>
-          <span>TO</span><span class="dot">•</span>
-          <span>MY PORTFOLIO</span><span class="dot">•</span>
-         
-        </div>
-      </div>
-
     <section class="hero" id="top">
-      <div class="hero-inner">
-        
-        <h1 class="hero-name" data-reveal>NADIA <span class="accent">GO</span></h1>
-        <p class="hero-sub" data-reveal>
-           A Product Designer and User Researcher committed to designing for communities that are often overlooked, 
-          combining empathy with critical thinking to develop creative solutions that are genuinely shaped by the people they serve.
-        </p>
-        <div class="hero-actions" data-reveal>
-          <a class="btn btn-primary" href="#work" data-cursor="hot">See the work</a>
-          <a class="btn btn-ghost" href="mailto:nadiajingxiang@gmail.com" data-cursor="cool">Say hello</a>
-        </div>
-      </div>
+      <div class="hero-layout">
 
-      
+        <!-- Left: text -->
+        <div class="hero-left">
+          <p class="eyebrow" data-reveal>Product Designer · Melbourne, AU</p>
+          <h1 class="hero-name" data-reveal><span class="accent">Nadia Go.</span></h1>
+          <p class="hero-sub" data-reveal>
+            A Product Designer and User Researcher committed to designing for communities that are often overlooked,
+            combining empathy with critical thinking to develop creative solutions that are genuinely shaped by the people they serve.
+          </p>
+          <div class="hero-actions" data-reveal>
+            <a class="btn btn-primary" href="#work" data-cursor="hot">See the work</a>
+            <a class="btn btn-ghost" href="mailto:nadiajingxiang@gmail.com" data-cursor="cool">Say hello</a>
+          </div>
+        </div>
+
+        <!-- Right: physics sandbox box -->
+        <div class="hero-physics-box" data-reveal>
+          <!-- Physics chips live inside this box — aria-hidden since they duplicate info below -->
+          <section class="physics-stage" aria-hidden="true">
+            <div class="chip chip-pill dark" data-shape="pill" draggable="false">
+              UNIMELB <span class="chip-dot"></span>
+            </div>
+            <div class="chip chip-pill outline" data-shape="pill" draggable="false">
+              UI/UX DESIGNER
+            </div>
+            <div class="chip chip-icon ai" data-shape="circle" draggable="false">
+              <img src="Draggable-icon-logo/illustrator-logo.webp" alt="">
+            </div>
+            <div class="chip chip-icon ps" data-shape="circle" draggable="false">
+              <img src="Draggable-icon-logo/PS-logo.png" alt="">
+            </div>
+            <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
+              <img src="Draggable-icon-logo/figma-logo.webp" alt="">
+            </div>
+            <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+            <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
+            <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+            <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
+            <!-- decorative filler circles — cream bg, navy outline, various sizes -->
+            <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b22" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b30" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b34" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+          </section>
+        </div>
+
+      </div>
     </section>
 
     <!-- ============ SELECTED WORK ============ -->
     <section class="work" id="work">
       <div class="section-head" data-reveal>
         <p class="eyebrow">SELECTED WORK — FIELD LOG</p>
-        <h2>Three companions, three kinds of care.</h2> 
+        <h2>Three companions, three kinds of care.</h2>
         <p class="section-sub">
           Every project below starts the same way: someone is missing, so something
           else has to step in. Here's what that became, three different times.
@@ -115,9 +136,9 @@
             <span class="case-status status-winner">WINNER — CISSA</span>
           </div>
           <p class="case-class">Classification: Healthcare Companion</p>
-          <img src="Case-study-images/nainai-preview.jpg">
+          <img src="Case-study-images/nainai-preview.jpg" alt="Nai Nai case study preview">
           <br>
-          <h3 class="case-title">NAI NAI <span class="case-title-sub">— Your Virtual Grandma</span></h3>
+          <h3 class="case-title">Nai nai <span class="case-title-sub">— Your Virtual Grandma</span></h3>
           <p class="case-desc">
             Nearly a third of Australians live outside major cities, where healthcare
             access is thinner and the Traditional Chinese Medicine workforce is shrinking
@@ -130,7 +151,7 @@
             <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
             <div><span>Built for</span>CISSA Hackathon — Medical track</div>
           </div>
-          <a class="case-link" href="https://nadiaalexandra.framer.website/nainai:YourVirtualGrandma" target="_blank" rel="noopener" data-cursor="hot">
+          <a class="case-link" href="nainai.html" rel="noopener" data-cursor="hot">
             Read the full case study →
           </a>
         </article>
@@ -138,12 +159,12 @@
         <article class="case-card" id="case-mongie" data-reveal>
           <div class="case-head">
             <span class="case-no">No. 02</span>
-            <span class="case-status status-winner">RUNNER UP — CISSA </span>
+            <span class="case-status status-winner">RUNNER UP — CISSA</span>
           </div>
           <p class="case-class">Classification: Wellness Companion</p>
-          <img src="Case-study-images/mongie-preview.jpg">
+          <img src="Case-study-images/mongie-preview.jpg" alt="Mongie case study preview">
           <br>
-          <h3 class="case-title">MONGIE <span class="case-title-sub">— Your Pet Pal</span></h3>
+          <h3 class="case-title">Mongie <span class="case-title-sub">— Your Pet Pal</span></h3>
           <p class="case-desc">
             Built across a 4-day hackathon for working parents who can't always be watching.
             Mongie turns a kid's water breaks, stretches, and small wins into a virtual pet
@@ -165,17 +186,17 @@
             <span class="case-no">No. 03</span>
             <span class="case-status status-progress">IN PROGRESS</span>
           </div>
-          <p class="case-class">Classification: Financial wishlist tracker</p>
-          <img src="Case-study-images/ITP-1.jpg">
+          <p class="case-class">Classification: Financial Wishlist Tracker</p>
+          <img src="Case-study-images/ITP-1.jpg" alt="Daisy case study preview">
           <br>
-          <h3 class="case-title">DAISY <span class="case-title-sub">— Your one stop to shopping responsibly</span></h3>
+          <h3 class="case-title">Daisy <span class="case-title-sub">— Your one stop to shopping responsibly</span></h3>
           <p class="case-desc">
-            There's a constant tension between wanting to shop more sustainably and actually doing it — especially when 
+            There's a constant tension between wanting to shop more sustainably and actually doing it — especially when
             it's hard to keep track of clothing purchases and their impact on your finances. Daisy helps users keep track
-            of what items they have in their wishlist, their categories, and how these purchases can pile up and affect their finances. 
+            of what items they have in their wishlist, their categories, and how these purchases can pile up and affect their finances.
           </p>
           <div class="case-meta">
-            <div><span>Role</span> UI Designer, UX Researcher, Branding Designer</div>
+            <div><span>Role</span>UI Designer, UX Researcher, Branding Designer</div>
             <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
             <div><span>Built for</span>Capstone project</div>
           </div>
@@ -210,10 +231,11 @@
         <div class="about-data" data-reveal>
           <p class="data-label">LANGUAGES</p>
           <ul class="lang-list">
-            <li><span>EN</span>fluent</li>
-            <li><span>ZH</span>semi-fluent</li>
-            <li><span>NL</span>semi-fluent</li>
-            <li><span>ID</span>semi-fluent</li>
+            <li><span>English</span>Fluent</li>
+            <li><span>Bahasa</span>Semi-fluent</li>
+            <li><span>Dutch</span>Semi-fluent</li>
+            <li><span>Chinese</span>Semi-fluent</li>
+            
           </ul>
           <p class="data-label">BASED</p>
           <p class="data-value">Melbourne, AU<br>University of Melbourne</p>
@@ -227,7 +249,6 @@
         <p class="eyebrow">EXPERIENCE</p>
         <h2>Where the hours went.</h2>
       </div>
-
       <ul class="timeline">
         <li data-reveal>
           <span class="tl-date">2025</span>
@@ -248,8 +269,6 @@
       </ul>
     </section>
 
-   
-
   </main>
 
   <!-- ============ CONTACT / FOOTER ============ -->
@@ -259,20 +278,17 @@
       If your project is missing the person who can't be there yet,
       that's usually where this kind of design starts.
     </p>
-
     <div class="contact-links">
       <a href="mailto:nadiajingxiang@gmail.com" data-cursor="hot">Email</a>
       <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Instagram</a>
       <a href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener" data-cursor="cool">LinkedIn</a>
     </div>
-
     <nav class="footer-nav" aria-label="Footer">
       <a href="#top">Top</a>
       <a href="#work">Work</a>
       <a href="#about">About</a>
       <a href="#experience">Experience</a>
     </nav>
-
     <p class="credit">
       Design study — structure borrowed from
       <a href="https://meganyap.me/home" target="_blank" rel="noopener">meganyap.me</a>,
