@@ -15,7 +15,7 @@
      1. LIVE CLOCK — Melbourne, AU
      --------------------------------------------------------- */
   var clockEl = document.getElementById('clock');
-/* hello */
+
   function updateClock() {
     if (!clockEl) return;
     try {
@@ -222,6 +222,42 @@
 
         window.requestAnimationFrame(loop);
       })();
+    }
+  }
+
+  /* ---------------------------------------------------------
+     5. FLOATING CASE-STUDY NAV — active section highlight
+     --------------------------------------------------------- */
+  var floatnav = document.getElementById('cs-floatnav');
+
+  if (floatnav) {
+    var navLinks = Array.prototype.slice.call(floatnav.querySelectorAll('a[data-section]'));
+    var sections = navLinks.map(function (a) {
+      return document.getElementById(a.getAttribute('data-section'));
+    }).filter(Boolean);
+
+    function updateActiveLink() {
+      /* find the section whose top is closest to 40% down the viewport */
+      var threshold = window.innerHeight * 0.4;
+      var active = sections[0];
+
+      sections.forEach(function (sec) {
+        var top = sec.getBoundingClientRect().top;
+        if (top <= threshold) active = sec;
+      });
+
+      navLinks.forEach(function (a) {
+        var matches = active && a.getAttribute('data-section') === active.id;
+        a.classList.toggle('is-active', matches);
+      });
+    }
+
+    if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+      updateActiveLink();
+      window.addEventListener('scroll', updateActiveLink, { passive: true });
+    } else {
+      /* reduced motion: just mark first link active */
+      if (navLinks.length) navLinks[0].classList.add('is-active');
     }
   }
 
