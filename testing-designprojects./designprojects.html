@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Playground — Nadia Go</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #ffffff;
+            --ink-soft: #fafafa;
+            --paper: #000000;
+            --paper-dim: #454545;
+            --muted: #5c5c5c;
+            --hot: #3cade2;
+            --hot-dim: #1d8bbe;
+            --cool: #6fb39f;
+            --cool-dim: #3f7d70;
+            --line: #e4e4e4;
+            --font-display: "Space Grotesk", sans-serif;
+            --font-body: "Inter Tight", sans-serif;
+            --font-mono: 'Space Mono', 'SFMono-Regular', Consolas, monospace;
+        }
+
+        * { box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--ink);
+            color: var(--paper);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.05) 1px, transparent 0);
+            background-size: 26px 26px;
+        }
+
+        .gallery-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .gallery-container.is-dragging {
+            cursor: grabbing;
+        }
+
+        .gallery-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            padding: 40px;
+            will-change: transform;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            background: var(--paper-dim);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            border: 1px solid var(--line);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .gallery-item img,
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(60, 173, 226, 0.1), rgba(111, 179, 159, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+            pointer-events: none;
+        }
+
+        .gallery-item:hover .gallery-item-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item-title {
+            color: var(--ink);
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header overlay */
+        .gallery-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 100;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .gallery-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--paper);
+            margin: 0;
+        }
+
+        .gallery-nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .gallery-nav a {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--cool-dim);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .gallery-nav a:hover {
+            color: var(--hot-dim);
+        }
+
+        /* Instructions */
+        .gallery-info {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            z-index: 100;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            line-height: 1.8;
+        }
+
+        /* Custom cursor */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--hot);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cursor-ring {
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--hot);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        body.custom-cursor-active .cursor-dot,
+        body.custom-cursor-active .cursor-ring {
+            opacity: 1;
+        }
+
+        .cursor-ring.is-active {
+            border-color: var(--cool);
+            background: rgba(111, 179, 159, 0.1);
+            width: 48px;
+            height: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-item {
+                aspect-ratio: auto;
+                min-height: 200px;
+            }
+
+            .gallery-header {
+                padding: 0 20px;
+                height: 70px;
+            }
+
+            .gallery-info {
+                bottom: 20px;
+                left: 20px;
+                font-size: 10px;
+            }
+
+            .gallery-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+
+    <div class="gallery-container" id="gallery-container">
+        <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+
+    <header class="gallery-header">
+        <h1 class="gallery-title">Design Playground</h1>
+        <nav class="gallery-nav">
+            <a href="../index.html">Back to work</a>
+            <a href="mailto:nadiajingxiang@gmail.com">Get in touch</a>
+        </nav>
+    </header>
+
+    <div class="gallery-info">
+        <div>Drag to explore · Hover for details</div>
+        <div style="font-size: 11px; color: var(--paper-dim); margin-top: 8px;">
+            → / ↓ to scroll
+        </div>
+    </div>
+
+    <script>
+        // ─────────────────────────────────────────────────────────
+        // GALLERY WALL — Interactive draggable & scrollable gallery
+        // ─────────────────────────────────────────────────────────
+
+        const TILE_SIZE = 220;
+        const GAP = 24;
+        const STEP = TILE_SIZE + GAP;
+        const DEFAULT_VX = -0.2;
+        const DEFAULT_VY = 0.15;
+        const LERP_DRAG = 0.08;
+
+        let offsetX = 0, offsetY = 0;
+        let targetX = 0, targetY = 0;
+        let vx = DEFAULT_VX, vy = DEFAULT_VY;
+
+        let isDragging = false;
+        let lastClientX, lastClientY;
+        let dragVX = 0, dragVY = 0;
+
+        const isTouchDevice = 'ontouchstart' in window;
+        const container = document.getElementById('gallery-container');
+        const grid = document.getElementById('gallery-grid');
+
+        // Sample gallery items with projects
+        const galleryItems = [
+            { title: 'NAI NAI', subtitle: 'Healthcare Companion', color: 'hot' },
+            { title: 'MONGIE', subtitle: 'Wellness Companion', color: 'cool' },
+            { title: 'DAISY', subtitle: 'Shopping Wishlist', color: 'hot' },
+            { title: 'Design System', subtitle: 'UI Components', color: 'cool' },
+            { title: 'Motion Study', subtitle: 'Animation Exploration', color: 'hot' },
+            { title: 'Illustrations', subtitle: 'Character Design', color: 'cool' },
+            { title: 'Branding', subtitle: 'Identity & Logo', color: 'hot' },
+            { title: 'Research', subtitle: 'User Studies', color: 'cool' },
+            { title: 'Prototypes', subtitle: 'Interactive Concepts', color: 'hot' },
+            { title: 'Typography', subtitle: 'Font Exploration', color: 'cool' },
+            { title: 'Photography', subtitle: 'Visual Documentation', color: 'hot' },
+            { title: 'Packaging', subtitle: 'Product Design', color: 'cool' },
+        ];
+
+        // Create gallery grid
+        galleryItems.forEach((item, idx) => {
+            const tile = document.createElement('div');
+            tile.className = 'gallery-item';
+            tile.style.gridColumn = `span ${Math.random() > 0.7 ? 2 : 1}`;
+            tile.style.gridRow = `span ${Math.random() > 0.8 ? 2 : 1}`;
+            
+            // Placeholder background with gradient
+            const bgColor = item.color === 'hot' ? 'var(--hot)' : 'var(--cool)';
+            tile.style.background = `linear-gradient(135deg, ${bgColor}22, ${bgColor}11)`;
+            tile.style.backdropFilter = 'blur(2px)';
+            
+            tile.innerHTML = `
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; background: inherit;">
+                    <div>
+                        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px;">
+                            ${item.subtitle}
+                        </div>
+                        <div style="font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--paper);">
+                            ${item.title}
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">${item.title}</div>
+                </div>
+            `;
+            
+            tile.addEventListener('click', () => {
+                console.log('Clicked:', item.title);
+            });
+            
+            grid.appendChild(tile);
+        });
+
+        // ─────────────────────────────────────────────────────────
+        // POINTER EVENTS (drag, touch, mouse)
+        // ─────────────────────────────────────────────────────────
+
+        function onPointerDown(e) {
+            isDragging = true;
+            lastClientX = e.clientX || e.touches[0].clientX;
+            lastClientY = e.clientY || e.touches[0].clientY;
+            dragVX = 0;
+            dragVY = 0;
+            container.classList.add('is-dragging');
+        }
+
+        function onPointerMove(e) {
+            if (!isDragging) return;
+
+            const clientX = e.clientX || e.touches[0].clientX;
+            const clientY = e.clientY || e.touches[0].clientY;
+
+            dragVX = clientX - lastClientX;
+            dragVY = clientY - lastClientY;
+
+            targetX += dragVX;
+            targetY += dragVY;
+
+            lastClientX = clientX;
+            lastClientY = clientY;
+        }
+
+        function onPointerUp(e) {
+            isDragging = false;
+            container.classList.remove('is-dragging');
+            // Inertia: keep velocity after drag ends
+            vx = dragVX * 0.5;
+            vy = dragVY * 0.5;
+        }
+
+        container.addEventListener('mousedown', onPointerDown);
+        document.addEventListener('mousemove', onPointerMove);
+        document.addEventListener('mouseup', onPointerUp);
+
+        if (isTouchDevice) {
+            container.addEventListener('touchstart', onPointerDown, { passive: true });
+            document.addEventListener('touchmove', onPointerMove, { passive: true });
+            document.addEventListener('touchend', onPointerUp);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') targetX -= 50;
+            if (e.key === 'ArrowLeft') targetX += 50;
+            if (e.key === 'ArrowDown') targetY -= 50;
+            if (e.key === 'ArrowUp') targetY += 50;
+        });
+
+        // ─────────────────────────────────────────────────────────
+        // ANIMATION LOOP
+        // ─────────────────────────────────────────────────────────
+
+        function animate() {
+            // Add default velocity for auto-scroll effect
+            if (!isDragging) {
+                targetX += vx;
+                targetY += vy;
+                vx *= 0.98;
+                vy *= 0.98;
+            }
+
+            // Smooth lerp to target
+            offsetX += (targetX - offsetX) * LERP_DRAG;
+            offsetY += (targetY - offsetY) * LERP_DRAG;
+
+            grid.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // ─────────────────────────────────────────────────────────
+        // CUSTOM CURSOR
+        // ─────────────────────────────────────────────────────────
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+
+        if (!isCoarsePointer && !prefersReducedMotion) {
+            const dot = document.querySelector('.cursor-dot');
+            const ring = document.querySelector('.cursor-ring');
+
+            if (dot && ring) {
+                document.body.classList.add('custom-cursor-active');
+
+                let mouseX = window.innerWidth / 2;
+                let mouseY = window.innerHeight / 2;
+                let ringX = mouseX;
+                let ringY = mouseY;
+
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+                });
+
+                function animateRing() {
+                    ringX += (mouseX - ringX) * 0.18;
+                    ringY += (mouseY - ringY) * 0.18;
+                    ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+                    requestAnimationFrame(animateRing);
+                }
+                animateRing();
+
+                document.addEventListener('mouseover', (e) => {
+                    if (e.target.closest('.gallery-item')) {
+                        ring.classList.add('is-active');
+                    }
+                });
+
+                document.addEventListener('mouseout', (e) => {
+                    if (e.target.closest('.gallery-item')) {
+                        ring.classList.remove('is-active');
+                    }
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    dot.style.opacity = '0';
+                    ring.style.opacity = '0';
+                });
+
+                document.addEventListener('mouseenter', () => {
+                    dot.style.opacity = '';
+                    ring.style.opacity = '';
+                });
+            }
+        }
+    </script>
+</body>
+</html>
