@@ -30,9 +30,6 @@
         <a href="#contact">Contact</a>
       </nav>
       <div class="status-console" aria-live="polite">
-        
-      <!--  <span class="status-text">Currently @ UniMelb</span> -->
-      <!--  <span class="status-divider">/</span> -->
         <span class="status-clock" id="clock">--:--:-- --</span> <span class="status-dot"></span>
         <span class="status-tz">MEL</span>
       </div>
@@ -41,24 +38,10 @@
 
   <main id="main">
 
-    <!-- 
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track">
-        <span>WELCOME</span><span class="dot">•</span>
-        <span>TO</span><span class="dot">•</span>
-        <span>MY PORTFOLIO</span><span class="dot">•</span>
-        <span>WELCOME</span><span class="dot">•</span>
-        <span>TO</span><span class="dot">•</span>
-        <span>MY PORTFOLIO</span><span class="dot">•</span>
-      </div>
-    </div>
-    ============ MARQUEE ============ -->
-
     <!-- ============ HERO ============ -->
     <section class="hero" id="top">
       <div class="hero-layout">
 
-        <!-- Left: text -->
         <div class="hero-left">
           <p class="eyebrow" data-reveal>Product Designer · Melbourne, AU</p>
           <h1 class="hero-name" data-reveal><span class="accent">Nadia Go.</span></h1>
@@ -72,9 +55,7 @@
           </div>
         </div>
 
-        <!-- Right: physics sandbox box -->
         <div class="hero-physics-box" data-reveal>
-          <!-- Physics chips live inside this box — aria-hidden since they duplicate info below -->
           <section class="physics-stage" aria-hidden="true">
             <div class="chip chip-pill dark" data-shape="pill" draggable="false">
               UNIMELB <span class="chip-dot"></span>
@@ -89,13 +70,12 @@
               <img src="Draggable-icon-logo/PS-logo.png" alt="">
             </div>
             <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
-              <img src="Draggable-icon-logo/figma-logo.webp" alt="">
+              <img src="Draggable-icon-logo/figma-logo.png" alt="">
             </div>
             <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
             <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
             <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
             <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
-            <!-- decorative filler circles — cream bg, navy outline, various sizes -->
             <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
             <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
             <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
@@ -130,81 +110,127 @@
 
       <div class="card-grid">
 
+        <!-- ── CARD 01: Nai Nai ── -->
         <article class="case-card" id="case-nainai" data-reveal>
-          <a href="nainai.html">
-          <div class="case-head">
-            <span class="case-no">No. 01</span>
-            <span class="case-status status-winner">WINNER — CISSA</span>
-          </div>
-          <p class="case-class">Classification: Healthcare Companion</p>
-          <img src="Case-study-images/nainai-preview.jpg" alt="Nai Nai case study preview">
-          <br>
-          <h3 class="case-title">Nai nai <span class="case-title-sub">— Your Virtual Grandma</span></h3>
-          <p class="case-desc">
-            Nearly a third of Australians live outside major cities, where healthcare
-            access is thinner and the Traditional Chinese Medicine workforce is shrinking
-            and ageing fast. Nai Nai is a concept for a warm, grandmotherly guide that turns
-            a daily check-in into safe, community-vetted home remedies — built to close a
-            trust gap, not just an information one.
-          </p>
-          <div class="case-meta">
-            <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
-            <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
-            <div><span>Built for</span>CISSA Hackathon — Medical track</div>
-          </div>
-          <a class="case-link" href="nainai.html" rel="noopener" data-cursor="hot">
-            Read the full case study →
-          </a>
+          <a href="nainai.html" class="case-card-link">
+            <div class="case-card-inner">
+
+              <div class="case-card-image">
+                <img src="Case-study-images/nainai-preview.jpg" alt="Nai Nai case study preview">
+              </div>
+
+              <div class="case-card-body">
+                <!-- always visible -->
+                <div class="case-head">
+                  <span class="case-no">No. 01</span>
+                  <span class="case-status status-winner">WINNER — CISSA</span>
+                </div>
+                <p class="case-class">Classification: Healthcare Companion</p>
+                <h3 class="case-title">Nai nai <span class="case-title-sub">— Your Virtual Grandma</span></h3>
+                <p class="case-desc">
+                  Nearly a third of Australians live outside major cities, where healthcare
+                  access is thinner and the Traditional Chinese Medicine workforce is shrinking
+                  and ageing fast. Nai Nai is a concept for a warm, grandmotherly guide that turns
+                  a daily check-in into safe, community-vetted home remedies — built to close a
+                  trust gap, not just an information one.
+                </p>
+
+                <!-- revealed on hover -->
+                <div class="case-reveal">
+                  <div class="case-reveal-inner">
+                    <div class="case-meta">
+                      <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
+                      <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
+                      <div><span>Built for</span>CISSA Hackathon — Medical track</div>
+                    </div>
+                    <span class="case-link">Read the full case study →</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </a>
         </article>
 
+        <!-- ── CARD 02: Mongie ── -->
         <article class="case-card" id="case-mongie" data-reveal>
-          <div class="case-head">
-            <span class="case-no">No. 02</span>
-            <span class="case-status status-winner">RUNNER UP — CISSA</span>
-          </div>
-          <p class="case-class">Classification: Wellness Companion</p>
-          <img src="Case-study-images/mongie-preview.jpg" alt="Mongie case study preview">
-          <br>
-          <h3 class="case-title">Mongie <span class="case-title-sub">— Your Pet Pal</span></h3>
-          <p class="case-desc">
-            Built across a 4-day hackathon for working parents who can't always be watching.
-            Mongie turns a kid's water breaks, stretches, and small wins into a virtual pet
-            that grows happier alongside them — while parents get a quiet, real-time read
-            on how the day actually went.
-          </p>
-          <div class="case-meta">
-            <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
-            <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
-            <div><span>Built for</span>Student Hackathon — Medical track</div>
-          </div>
-          <a class="case-link" href="https://nadiaalexandra.framer.website/mongie404" target="_blank" rel="noopener" data-cursor="hot">
-            Read the full case study →
-          </a>
+          <div class="case-card-inner">
+
+            <div class="case-card-image">
+              <img src="Case-study-images/mongie-preview.jpg" alt="Mongie case study preview">
+            </div>
+
+            <div class="case-card-body">
+              <!-- always visible -->
+              <div class="case-head">
+                <span class="case-no">No. 02</span>
+                <span class="case-status status-winner">RUNNER UP — CISSA</span>
+              </div>
+              <p class="case-class">Classification: Wellness Companion</p>
+              <h3 class="case-title">Mongie <span class="case-title-sub">— Your Pet Pal</span></h3>
+              <p class="case-desc">
+                Built across a 4-day hackathon for working parents who can't always be watching.
+                Mongie turns a kid's water breaks, stretches, and small wins into a virtual pet
+                that grows happier alongside them — while parents get a quiet, real-time read
+                on how the day actually went.
+              </p>
+
+              <!-- revealed on hover -->
+              <div class="case-reveal">
+                <div class="case-reveal-inner">
+                  <div class="case-meta">
+                    <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
+                    <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
+                    <div><span>Built for</span>Student Hackathon — Medical track</div>
+                  </div>
+                  <a class="case-link" href="https://nadiaalexandra.framer.website/mongie404" target="_blank" rel="noopener" data-cursor="hot">
+                    Read the full case study →
+                  </a>
+                </div>
+              </div>
+            </div><!-- /.case-card-body -->
+
+          </div><!-- /.case-card-inner -->
         </article>
 
+        <!-- ── CARD 03: Daisy ── -->
         <article class="case-card" id="case-ekko" data-reveal>
-          <div class="case-head">
-            <span class="case-no">No. 03</span>
-            <span class="case-status status-progress">IN PROGRESS</span>
-          </div>
-          <p class="case-class">Classification: Financial Wishlist Tracker</p>
-          <img src="Case-study-images/ITP-1.jpg" alt="Daisy case study preview">
-          <br>
-          <h3 class="case-title">Daisy <span class="case-title-sub">— Your one stop to shopping responsibly</span></h3>
-          <p class="case-desc">
-            There's a constant tension between wanting to shop more sustainably and actually doing it — especially when
-            it's hard to keep track of clothing purchases and their impact on your finances. Daisy helps users keep track
-            of what items they have in their wishlist, their categories, and how these purchases can pile up and affect their finances.
-          </p>
-          <div class="case-meta">
-            <div><span>Role</span>UI Designer, UX Researcher, Branding Designer</div>
-            <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
-            <div><span>Built for</span>Capstone project</div>
-          </div>
-          <a class="case-link" href="https://nadiaalexandra.framer.website/ekko404" target="_blank" rel="noopener" data-cursor="hot">
-            Read the full case study →
-          </a>
+          <div class="case-card-inner">
+
+            <div class="case-card-image">
+              <img src="Case-study-images/ITP-1.jpg" alt="Daisy case study preview">
+            </div>
+
+            <div class="case-card-body">
+              <!-- always visible -->
+              <div class="case-head">
+                <span class="case-no">No. 03</span>
+                <!-- <span class="case-status status-progress">IN PROGRESS</span> -->
+              </div>
+              <p class="case-class">Classification: Financial Wishlist Tracker</p>
+              <h3 class="case-title">Daisy <span class="case-title-sub">— Your one stop to shopping responsibly</span></h3>
+              <p class="case-desc">
+                There's a constant tension between wanting to shop more sustainably and actually doing it — especially when
+                it's hard to keep track of clothing purchases and their impact on your finances. Daisy helps users keep track
+                of what items they have in their wishlist, their categories, and how these purchases can pile up and affect their finances.
+              </p>
+
+              <!-- revealed on hover -->
+              <div class="case-reveal">
+                <div class="case-reveal-inner">
+                  <div class="case-meta">
+                    <div><span>Role</span>UI Designer, UX Researcher, Branding Designer</div>
+                    <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
+                    <div><span>Built for</span>Capstone project</div>
+                  </div>
+                  <a class="case-link" href="https://nadiaalexandra.framer.website/ekko404" target="_blank" rel="noopener" data-cursor="hot">
+                    Read the full case study →
+                  </a>
+                </div>
+              </div>
+            </div><!-- /.case-card-body -->
+
+          </div><!-- /.case-card-inner -->
         </article>
 
       </div>
@@ -234,7 +260,6 @@
             <li><span>Bahasa</span>Semi-fluent</li>
             <li><span>Dutch</span>Semi-fluent</li>
             <li><span>Chinese</span>Semi-fluent</li>
-            
           </ul>
           <p class="data-label">BASED</p>
           <p class="data-value">Melbourne, AU<br>University of Melbourne</p>
