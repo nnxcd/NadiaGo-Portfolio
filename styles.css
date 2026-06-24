@@ -12,8 +12,8 @@
   --navy-dim: #2d3170;
   --red:      #E53D00;
   --red-dim:  #b83000;
-  --cream:    #F3F1EB;
-  --cream-dim:#e6e3da;
+  --cream:    #ffffff;
+  --cream-dim:#ffffff;
   --ink:      #1B1E4B;
   --ink-soft: #ffffff;
   --paper:    #1B1E4B;
@@ -24,7 +24,7 @@
   --cool:     #2d3170;
   --cool-dim: #1B1E4B;
   --line:     #d6d3ca;
-  --bg:       #F3F1EB;
+  --bg:       #ffffff;
 
   /* type */
   --font-display: 'Joan', serif;
@@ -56,6 +56,11 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--hot); /* Custom highlight background */
+  color: var(--cream);            /* Custom text color inside highlight */
 }
 
 img { max-width: 100%; display: block; }
@@ -146,7 +151,7 @@ body.custom-cursor-active button { cursor: none; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(243, 241, 235, 0.92);
+  background: var(--bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
@@ -298,7 +303,7 @@ body.custom-cursor-active button { cursor: none; }
   position: relative;
   overflow: hidden;
   height: 360px;
-  background: var(--cream-dim);
+  background: var(--bg);
 }
 
 /* =========================================================
