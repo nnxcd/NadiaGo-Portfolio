@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Joan&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:wght@400..700&family=Joan&family=Pixelify+Sans:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,82 +18,69 @@
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
 
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="mark" href="#top" aria-label="Back to top">
-        NG<span class="mark-sub">.field</span>
-      </a>
-      <nav class="nav" aria-label="Primary">
-        <a href="#work">Work</a>
-        <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <div class="status-console" aria-live="polite">
-        <span class="status-clock" id="clock">--:--:-- --</span> <span class="status-dot"></span>
-        <span class="status-tz">MEL</span>
-      </div>
-    </div>
-  </header>
-
   <main id="main">
 
     <!-- ============ HERO ============ -->
     <section class="hero" id="top">
-      <div class="hero-layout">
 
-        <div class="hero-left">
-          <p class="eyebrow" data-reveal>Product Designer · Melbourne, AU</p>
-          <h1 class="hero-name" data-reveal><span class="accent">Nadia Go.</span></h1>
-          <p class="hero-sub" data-reveal>
-            A Product Designer and User Researcher committed to designing for communities that are often overlooked,
-            combining empathy with critical thinking to develop creative solutions that are genuinely shaped by the people they serve.
-          </p>
-          <div class="hero-actions" data-reveal>
-            <a class="btn btn-primary" href="#work" data-cursor="hot">See the work</a>
-            <a class="btn btn-ghost" href="mailto:nadiajingxiang@gmail.com" data-cursor="cool">Say hello</a>
+      <!-- eyebrow row: role label + email -->
+      <div class="hero-top" data-reveal>
+        <p class="hero-eyebrow">Multidisciplinary Designer — based in Melbourne, AU</p>
+        <a class="hero-email" href="mailto:nadiajingxiang@gmail.com" data-cursor="hot">nadiajingxiang@gmail.com</a>
+      </div>
+
+      <!-- physics playground (relocated full-width band — same chips) -->
+      <div class="hero-physics-box" data-reveal>
+        <section class="physics-stage" aria-hidden="true">
+          <div class="chip chip-pill dark" data-shape="pill" draggable="false">
+            UNIMELB <span class="chip-dot"></span>
           </div>
-        </div>
+          <div class="chip chip-pill outline" data-shape="pill" draggable="false">
+            UI/UX DESIGNER
+          </div>
+          <div class="chip chip-icon ai" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/illustrator-logo.webp" alt="">
+          </div>
+          <div class="chip chip-icon pr" data-shape="circle" draggable="false">Pr</div>
+          <div class="chip chip-icon ps" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/PS-logo.png" alt="">
+          </div>
+          <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/figma-logo.png" alt="">
+          </div>
+          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
+          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
+          <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b22" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b30" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b34" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+        </section>
+      </div>
 
-        <div class="hero-physics-box" data-reveal>
-          <section class="physics-stage" aria-hidden="true">
-            <div class="chip chip-pill dark" data-shape="pill" draggable="false">
-              UNIMELB <span class="chip-dot"></span>
-            </div>
-            <div class="chip chip-pill outline" data-shape="pill" draggable="false">
-              UI/UX DESIGNER
-            </div>
-            <div class="chip chip-icon ai" data-shape="circle" draggable="false">
-              <img src="Draggable-icon-logo/illustrator-logo.webp" alt="">
-            </div>
-            <div class="chip chip-icon ps" data-shape="circle" draggable="false">
-              <img src="Draggable-icon-logo/PS-logo.png" alt="">
-            </div>
-            <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
-              <img src="Draggable-icon-logo/figma-logo.png" alt="">
-            </div>
-            <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-            <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
-            <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-            <div class="chip chip-mini arrow" data-shape="circle" draggable="false">↓</div>
-            <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b22" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b30" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b34" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
-            <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
-          </section>
-        </div>
+      <!-- giant name -->
+      <h1 class="hero-name">Nadia Go</h1>
 
+      <!-- intro + about link -->
+      <div class="hero-intro" data-reveal>
+        <p class="hero-lead">
+          A Product Designer and User Researcher committed to designing for communities that are
+          often overlooked — combining empathy with critical thinking to develop creative solutions
+          that are genuinely shaped by the people they serve.
+        </p>
+        <a class="hero-about-link" href="#about" data-cursor="hot">About me <span>↗</span></a>
       </div>
     </section>
 
@@ -297,22 +284,22 @@
 
   <!-- ============ CONTACT / FOOTER ============ -->
   <footer class="contact" id="contact">
-    <p class="contact-tag">GET IN TOUCH</p>
-    <p class="contact-line">
-      If your project is missing the person who can't be there yet,
-      that's usually where this kind of design starts.
-    </p>
+    <p class="contact-tag">Let's get in touch</p>
+    <h2 class="contact-head">Let's make something<br>worth the detour.</h2>
     <div class="contact-links">
       <a href="mailto:nadiajingxiang@gmail.com" data-cursor="hot">Email</a>
       <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Instagram</a>
       <a href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener" data-cursor="cool">LinkedIn</a>
     </div>
-    <nav class="footer-nav" aria-label="Footer">
-      <a href="#top">Top</a>
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-    </nav>
+    <div class="contact-foot">
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#top">Top</a>
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+      </nav>
+      <span class="footer-clock"><span id="clock">—:—:—</span> · Melbourne, AU</span>
+    </div>
     <p class="credit">
       Design study — structure borrowed from
       <a href="https://meganyap.me/home" target="_blank" rel="noopener">meganyap.me</a>,
