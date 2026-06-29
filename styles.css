@@ -25,7 +25,7 @@
   --cool-dim: #1B1E4B;
   --line:     #d6d3ca;
   --bg:       #ffffff;
-  --surface:  #f1efe8;
+  --surface:  #fffefa;
   --display-ink: #1a1a1f;
 
   /* type */
@@ -39,16 +39,20 @@
   --font-head:    'Space Grotesk', 'Host Grotesk', sans-serif;
   --font-text:    'Inter', 'Host Grotesk', sans-serif;
 
+  
   /* layout */
   --radius:    12px;
   --radius-sm: 6px;
   --header-h:  72px;
   --maxw:      1140px;
+  --gutter:    clamp(24px, 4vw, 72px);
 }
 
 /* =========================================================
    RESET / BASE
    ========================================================= */
+.tracking-tight { --tracking-text: -0.02em; }
+.tracking-wide  { --tracking-text: 0.06em; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -65,7 +69,7 @@ body {
 
 ::selection {
   background-color: var(--hot);
-  color: var(--cream);
+  color: var(--bg);
 }
 
 img { max-width: 100%; display: block; }
@@ -252,12 +256,13 @@ body.custom-cursor-active button { cursor: none; }
    ========================================================= */
 
 .hero {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 34px 28px 36px;
+  max-width: none;
+  margin: 0;
+  padding: 34px var(--gutter) 36px;
 }
 
 .hero-top {
+  letter-spacing: var(--tracking-tight);
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -302,12 +307,13 @@ body.custom-cursor-active button { cursor: none; }
 .hero-name {
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: clamp(3.5rem, 14vw, 11rem);
+  font-size: clamp(6rem, 22vw, 45rem);
   line-height: 0.86;
   letter-spacing: -0.04em;
   color: var(--display-ink);
   text-transform: uppercase;
   margin: 0;
+  align-self: center;
 }
 
 /* intro row: lead paragraph + about link */
@@ -393,7 +399,7 @@ body.custom-cursor-active button { cursor: none; }
   border-radius: 16px;
 }
 .chip-pill.outline {
-  background: var(--cream);
+  background: var(--bg);
   color: var(--navy);
   border: 1px solid var(--line);
 }
@@ -509,9 +515,9 @@ body.custom-cursor-active button { cursor: none; }
    ========================================================= */
 
 .work {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 30px 28px 100px;
+  max-width: none;
+  margin: 0;
+  padding: 30px var(--gutter) 100px;
 }
 
 .section-head { max-width: 640px; margin-bottom: 48px; }
@@ -694,9 +700,9 @@ body.custom-cursor-active button { cursor: none; }
    ========================================================= */
 
 .about {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 40px 28px 90px;
+  max-width: none;
+  margin: 0;
+  padding: 40px var(--gutter) 90px;
 }
 .about-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 64px; }
 .about-text h2 { font-family: var(--font-head); font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.025em; color: var(--display-ink); margin-bottom: 24px; line-height: 1.04; }
@@ -713,7 +719,7 @@ body.custom-cursor-active button { cursor: none; }
    EXPERIENCE
    ========================================================= */
 
-.experience { max-width: var(--maxw); margin: 0 auto; padding: 40px 28px 100px; }
+.experience { max-width: none; margin: 0; padding: 40px var(--gutter) 100px; }
 .experience .section-head h2 { font-family: var(--font-head); font-weight: 700; letter-spacing: -0.025em; color: var(--display-ink); }
 .timeline { position: relative; max-width: 100%; margin-top: 26px; border-top: 1px solid var(--line); }
 .timeline::before { display: none; }
@@ -728,7 +734,7 @@ body.custom-cursor-active button { cursor: none; }
    CONTACT / FOOTER
    ========================================================= */
 
-.contact { max-width: var(--maxw); margin: 0 auto; padding: 80px 28px 48px; border-top: 1px solid var(--line); text-align: left; }
+.contact { max-width: none; margin: 0; padding: 80px var(--gutter) 48px; border-top: 1px solid var(--line); text-align: left; }
 .contact-tag { font-family: var(--font-text); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
 .contact-head { font-family: var(--font-head); font-size: clamp(2.2rem, 6vw, 4.4rem); font-weight: 700; line-height: 0.98; letter-spacing: -0.03em; color: var(--display-ink); margin-bottom: 36px; }
 .contact-links { display: flex; gap: 14px; flex-wrap: wrap; font-family: var(--font-text); font-size: 1rem; font-weight: 500; margin-bottom: 64px; }
