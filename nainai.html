@@ -11,33 +11,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Joan&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="has-floatnav">
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="mark" href="index.html#top" aria-label="Back to home">
-        NG<span class="mark-sub">.field</span>
-      </a>
-      <nav class="nav" aria-label="Primary">
-        <a href="index.html#work">Work</a>
-        <a href="index.html#about">About</a>
-        <a href="index.html#experience">Experience</a>
-        <a href="index.html#contact">Contact</a>
-      </nav>
-      <div class="status-console" aria-live="polite">
-        <span class="status-dot"></span>
-        <span class="status-text">Currently @ UniMelb</span>
-        <span class="status-divider">/</span>
-        <span class="status-clock" id="clock">--:--:-- --</span>
-        <span class="status-tz">MEL</span>
-      </div>
-    </div>
+<!-- ============ NAVBAR ============ -->
+  <header class="navbar" id="navbar">
+    <p class="navbar-label">Multidisciplinary Designer — based in Melbourne, AU</p>
+    <nav class="navbar-nav" aria-label="Primary">
+      <a href="#top">Top</a>
+      <a href="#work">Projects</a>
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a class="navbar-email" href="mailto:nadiajingxiang@gmail.com" data-cursor="hot">nadiajingxiang@gmail.com</a>
+    </nav>
   </header>
 
-  <nav class="cs-crumb" aria-label="Breadcrumb">
-    <a href="index.html#top">← Home</a>
-  </nav>
-
-
+  <main id="main">
 
 
   <main id="main">
@@ -148,20 +134,19 @@
       </div>
 
       <div class="cs-bento" data-reveal>
+        <figure class="cs-bento-item cs-bento-item--video">
+          <video autoplay loop muted playsinline>
+            <source src="Case-study-images/nainai-cyvideo.mp4" type="video/mp4">
+          </video>
+          <figcaption>Support is available to users to know where to massage.</figcaption>
+        </figure>
+
         <figure class="cs-bento-item">
-
           <img src="Case-study-images/Nainai-tcminsights.jpg" alt="Nai Nai character illustration">
-
           <figcaption>奶奶, brought to life — a warm character instead of a clinical interface.</figcaption>
         </figure>
-       
-        <figure class="cs-bento-item">
-          <video autoplay loop muted playsinline>
-              <source src="Case-study-images/nainai-cyvideo.mp4" type="video/mp4">
-            </video>
-            <figcaption>Support is available to users to know where to massage.</figcaption>
-          </figure>
-        </div>
+
+        
       </div>
 <br>
 
@@ -308,7 +293,7 @@
 
       </div>
 
-      <p class="cs-closing" data-reveal>Building community. Building knowledge.</p>
+    <!--  <p class="cs-closing" data-reveal>Building community. Building knowledge.</p>-->
     </section>
 
     <nav class="cs-next" aria-label="Case study navigation">
