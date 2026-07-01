@@ -339,7 +339,7 @@
   <footer class="contact micro-footer" id="contact">
     <!-- content sits above the p5 canvas -->
     <div class="micro-inner">
-      <h2 class="micro-title">Never Miss a Micro Moment</h2>
+      <h2 class="micro-title">Thank you for coming!</h2>
       <p class="micro-sub">Let's connect — find me across the web.</p>
       <div class="micro-actions">
         <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Instagram</a>
@@ -418,7 +418,7 @@
       const px = ox + c.x * size, py = oy + c.y * size;
       layer.noStroke();
       if (c.type === 5 || c.type === 6) {
-        layer.fill(0,0,255);
+        layer.fill(0, 196, 196);
         c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
         starBounds.push({ x:px, y:py, size });
       } else if (c.type === 7 || c.type === 8) {
@@ -451,7 +451,7 @@
       let starH = false;
       for (const s of starBounds) {
         const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
-        p.noStroke(); p.fill(on ? p.color(255,255,0) : p.color(0,0,255));
+        p.noStroke(); p.fill(on ? p.color(255,255,0) : p.color(0, 196, 196));
         p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
         if (on) starH = true;
       }
