@@ -349,148 +349,128 @@
 
     <div class="footer-pixel-art">
       <!-- Background graphics by Tessie Gresley -->
-      <script>
-        let starGridSize = 20, heartGridSize = 22;
-        let footerEl;                       // declared globally
-        let cellsToDraw = [];
-        let starOffsetX, starOffsetY, heartOffsetX, heartOffsetY;
-        let flowerLayer;
-        let starBounds = [], heartBounds = [];
-        let isHeartHovering = false;
+      <div class="footer-pixel-art" id="footer-pixel-art"></div>
 
-        let starPattern = [
-          [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
-          [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
-          [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
-          [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
-          [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
-          [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
-          [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
-          [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
-          [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
-          [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
-          [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
-          [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
-        ];
+<script>
+(function () {
+  const starGridSize = 20, heartGridSize = 22;
 
-        let heartPattern = [
-          [0,7,7,8,8,8,0,8,8,8,8,0],
-          [7,8,0,7,7,8,0,8,8,7,7,8],
-          [8,8,7,7,7,7,7,7,8,8,7,7],
-          [7,7,7,8,8,7,7,8,8,8,7,8],
-          [7,7,0,7,7,7,7,0,0,7,7,8],
-          [7,8,8,8,7,8,7,7,7,8,8,8],
-          [0,7,7,7,7,8,7,7,8,8,8,0],
-          [0,0,8,7,7,8,8,7,8,8,0,0],
-          [0,0,0,7,0,8,7,8,8,0,0,0],
-          [0,0,0,0,8,7,8,8,0,0,0,0],
-          [0,0,0,0,0,7,8,0,0,0,0,0],
-        ];
+  const starPattern = [
+    [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
+    [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
+    [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
+    [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
+    [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
+    [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
+    [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
+    [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
+    [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
+    [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
+    [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
+    [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
+  ];
 
-        function buildCells() {
-          cellsToDraw = []; starBounds = []; heartBounds = [];
+  const heartPattern = [
+    [0,7,7,8,8,8,0,8,8,8,8,0],
+    [7,8,0,7,7,8,0,8,8,7,7,8],
+    [8,8,7,7,7,7,7,7,8,8,7,7],
+    [7,7,7,8,8,7,7,8,8,8,7,8],
+    [7,7,0,7,7,7,7,0,0,7,7,8],
+    [7,8,8,8,7,8,7,7,7,8,8,8],
+    [0,7,7,7,7,8,7,7,8,8,8,0],
+    [0,0,8,7,7,8,8,7,8,8,0,0],
+    [0,0,0,7,0,8,7,8,8,0,0,0],
+    [0,0,0,0,8,7,8,8,0,0,0,0],
+    [0,0,0,0,0,7,8,0,0,0,0,0],
+  ];
 
-          // heart top-left, star bottom-right
-          heartOffsetX = 60;
-          heartOffsetY = 60;
-          starOffsetX = width  - starPattern[0].length * starGridSize - 60;
-          starOffsetY = height - starPattern.length  * starGridSize - 60;
+  const sketch = (p) => {
+    let footerEl, layer;
+    let cells = [], starBounds = [], heartBounds = [];
+    let starOX, starOY, heartOX, heartOY;
+    let heartHover = false;
 
-          for (let y = 0; y < starPattern.length; y++)
-            for (let x = 0; x < starPattern[y].length; x++)
-              if (starPattern[y][x] !== 0)
-                cellsToDraw.push({ x, y, type: starPattern[y][x], source: 'star' });
+    function buildCells() {
+      cells = []; starBounds = []; heartBounds = [];
+      heartOX = 60; heartOY = 60;
+      starOX = p.width  - starPattern[0].length * starGridSize - 60;
+      starOY = p.height - starPattern.length   * starGridSize - 60;
 
-          for (let y = 0; y < heartPattern.length; y++)
-            for (let x = 0; x < heartPattern[y].length; x++)
-              if (heartPattern[y][x] !== 0)
-                cellsToDraw.push({ x, y, type: heartPattern[y][x], source: 'heart' });
-        }
+      for (let y = 0; y < starPattern.length; y++)
+        for (let x = 0; x < starPattern[y].length; x++)
+          if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
 
-        function setup() {
-          footerEl = document.getElementById('contact');
-          let c = createCanvas(footerEl.offsetWidth, footerEl.offsetHeight);
-          c.parent('footer-pixel-art');
+      for (let y = 0; y < heartPattern.length; y++)
+        for (let x = 0; x < heartPattern[y].length; x++)
+          if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
+    }
 
-          flowerLayer = createGraphics(width, height);
-          buildCells();
-          for (let i = 0; i < 500; i++) drawOneRandomShape();
-        }
+    function reveal() {
+      if (!cells.length) return;
+      const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
+      const size = c.src === 'star' ? starGridSize : heartGridSize;
+      const ox   = c.src === 'star' ? starOX : heartOX;
+      const oy   = c.src === 'star' ? starOY : heartOY;
+      const px = ox + c.x * size, py = oy + c.y * size;
+      layer.noStroke();
+      if (c.type === 5 || c.type === 6) {
+        layer.fill(0,0,255);
+        c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+        starBounds.push({ x:px, y:py, size });
+      } else if (c.type === 7 || c.type === 8) {
+        layer.fill(255,105,180);
+        c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+        heartBounds.push({ x:px, y:py, size });
+      }
+    }
 
-        // top-level sibling of setup/draw
-        function windowResized() {
-          resizeCanvas(footerEl.offsetWidth, footerEl.offsetHeight);
-          flowerLayer = createGraphics(width, height);
-          buildCells();
-          for (let i = 0; i < 500; i++) drawOneRandomShape();
-        }
+    p.setup = () => {
+      footerEl = document.getElementById('contact');
+      const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+      cv.parent('footer-pixel-art');
+      layer = p.createGraphics(p.width, p.height);
+      buildCells();
+      for (let i = 0; i < 500; i++) reveal();
+    };
 
-        function draw() {
-          clear();                    // let the footer's --surface show through
-          image(flowerLayer, 0, 0);
-          checkStarHover();
-          checkHeartHover();
-        }
+    p.windowResized = () => {
+      p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+      layer = p.createGraphics(p.width, p.height);
+      buildCells();
+      for (let i = 0; i < 500; i++) reveal();
+    };
 
-        function drawOneRandomShape() {
-          if (cellsToDraw.length === 0) return;
-          let index = floor(random(cellsToDraw.length));
-          let cell = cellsToDraw.splice(index, 1)[0];
+    p.draw = () => {
+      p.clear();
+      p.image(layer, 0, 0);
 
-          let size, originX, originY;
-          if (cell.source === 'star') { size = starGridSize;  originX = starOffsetX;  originY = starOffsetY; }
-          else                        { size = heartGridSize; originX = heartOffsetX; originY = heartOffsetY; }
+      let starH = false;
+      for (const s of starBounds) {
+        const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
+        p.noStroke(); p.fill(on ? p.color(255,255,0) : p.color(0,0,255));
+        p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
+        if (on) starH = true;
+      }
+      heartHover = false;
+      for (const h of heartBounds) {
+        const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
+        p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180));
+        p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
+        if (on) heartHover = true;
+      }
+      document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
+    };
 
-          let posX = originX + cell.x * size;
-          let posY = originY + cell.y * size;
-          flowerLayer.noStroke();
+    p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+  };
 
-          if (cell.type === 5 || cell.type === 6) {           // blue star
-            flowerLayer.fill(0, 0, 255);
-            if (cell.type === 5) flowerLayer.rect(posX, posY, size, size);
-            else flowerLayer.ellipse(posX + size/2, posY + size/2, size, size);
-            starBounds.push({ x: posX, y: posY, size });
-          } else if (cell.type === 7 || cell.type === 8) {    // pink heart
-            flowerLayer.fill(255, 105, 180);
-            if (cell.type === 7) flowerLayer.rect(posX, posY, size, size);
-            else flowerLayer.ellipse(posX + size/2, posY + size/2, size, size);
-            heartBounds.push({ x: posX, y: posY, size });
-          }
-        }
-
-        function checkStarHover() {
-          let hovering = false;
-          for (let s of starBounds) {
-            if (mouseX > s.x && mouseX < s.x + s.size && mouseY > s.y && mouseY < s.y + s.size) {
-              fill(255, 255, 0); hovering = true;
-            } else fill(0, 0, 255);
-            noStroke();
-            ellipse(s.x + s.size/2, s.y + s.size/2, s.size, s.size);
-          }
-          if (hovering) document.body.style.cursor = 'pointer';
-          else if (!isHeartHovering) document.body.style.cursor = 'default';
-        }
-
-        function checkHeartHover() {
-          isHeartHovering = false;
-          for (let h of heartBounds) {
-            if (mouseX > h.x && mouseX < h.x + h.size && mouseY > h.y && mouseY < h.y + h.size) {
-              fill(57, 255, 20); isHeartHovering = true;
-            } else fill(255, 105, 180);
-            noStroke();
-            ellipse(h.x + h.size/2, h.y + h.size/2, h.size, h.size);
-          }
-          if (isHeartHovering) document.body.style.cursor = 'pointer';
-        }
-
-        function mouseMoved() {
-          for (let i = 0; i < 4; i++) drawOneRandomShape();
-        }
-      </script>
+  window.addEventListener('load', () => new p5(sketch));
+})();
+</script>
     </div>
   </footer>
 
