@@ -1006,6 +1006,8 @@ body.custom-cursor-active button { cursor: none; }
   border-radius: var(--radius);
   border: 1px solid var(--line);
 }
+
+
 .cs-bento-item figcaption { font-family: var(--font-body); font-size: 0.82rem; color: var(--muted); margin-top: 8px; margin-bottom: 16px; }
 
 .cs-feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 28px 0 36px; }

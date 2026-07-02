@@ -347,130 +347,149 @@
       </div>
     </div>
 
-    <div class="footer-pixel-art">
+    <!-- ============================================================
+     PASTE THIS INTO index.html
+     Replace the whole <div class="footer-pixel-art">…</div>
+     that sits inside <footer class="contact micro-footer" id="contact">
+     ============================================================ -->
+
+    <!-- p5 canvas mounts here (id is what cv.parent needs) -->
+    <div class="footer-pixel-art" id="footer-pixel-art">
       <!-- Background graphics by Tessie Gresley -->
-      <div class="footer-pixel-art" id="footer-pixel-art"></div>
+      <script>
+      (function () {
+        const starGridSize = 20, heartGridSize = 22;
 
-<script>
-(function () {
-  const starGridSize = 20, heartGridSize = 22;
+        const starPattern = [
+          [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
+          [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
+          [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
+          [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
+          [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
+          [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
+          [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
+          [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
+          [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
+          [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
+          [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
+          [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
+        ];
 
-  const starPattern = [
-    [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
-    [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
-    [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
-    [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
-    [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
-    [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
-    [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
-    [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
-    [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
-    [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
-    [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
-    [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
-  ];
+        const heartPattern = [
+          [0,7,7,8,8,8,0,8,8,8,8,0],
+          [7,8,0,7,7,8,0,8,8,7,7,8],
+          [8,8,7,7,7,7,7,7,8,8,7,7],
+          [7,7,7,8,8,7,7,8,8,8,7,8],
+          [7,7,0,7,7,7,7,0,0,7,7,8],
+          [7,8,8,8,7,8,7,7,7,8,8,8],
+          [0,7,7,7,7,8,7,7,8,8,8,0],
+          [0,0,8,7,7,8,8,7,8,8,0,0],
+          [0,0,0,7,0,8,7,8,8,0,0,0],
+          [0,0,0,0,8,7,8,8,0,0,0,0],
+          [0,0,0,0,0,7,8,0,0,0,0,0],
+        ];
 
-  const heartPattern = [
-    [0,7,7,8,8,8,0,8,8,8,8,0],
-    [7,8,0,7,7,8,0,8,8,7,7,8],
-    [8,8,7,7,7,7,7,7,8,8,7,7],
-    [7,7,7,8,8,7,7,8,8,8,7,8],
-    [7,7,0,7,7,7,7,0,0,7,7,8],
-    [7,8,8,8,7,8,7,7,7,8,8,8],
-    [0,7,7,7,7,8,7,7,8,8,8,0],
-    [0,0,8,7,7,8,8,7,8,8,0,0],
-    [0,0,0,7,0,8,7,8,8,0,0,0],
-    [0,0,0,0,8,7,8,8,0,0,0,0],
-    [0,0,0,0,0,7,8,0,0,0,0,0],
-  ];
+        const sketch = (p) => {
+          let footerEl, layer;
+          let cells = [], starBounds = [], heartBounds = [];
+          let starOX, starOY, heartOX, heartOY;
+          let activeStarSize, activeHeartSize;
+          let heartHover = false;
 
-  const sketch = (p) => {
-    let footerEl, layer;
-    let cells = [], starBounds = [], heartBounds = [];
-    let starOX, starOY, heartOX, heartOY;
-    let heartHover = false;
+          function buildCells() {
+            cells = []; starBounds = []; heartBounds = [];
 
-    function buildCells() {
-      cells = []; starBounds = []; heartBounds = [];
-      heartOX = 60; heartOY = 60;
-      starOX = p.width  - starPattern[0].length * starGridSize - 60;
-      starOY = p.height - starPattern.length   * starGridSize - 60;
+            const narrow = p.width < 700;              // phone-ish
+            const gs  = narrow ? 12 : starGridSize;    // shrink grids on small screens
+            const hs  = narrow ? 13 : heartGridSize;
+            const pad = narrow ? 24 : 60;              // smaller corner offset
 
-      for (let y = 0; y < starPattern.length; y++)
-        for (let x = 0; x < starPattern[y].length; x++)
-          if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
+            activeStarSize = gs;
+            activeHeartSize = hs;
 
-      for (let y = 0; y < heartPattern.length; y++)
-        for (let x = 0; x < heartPattern[y].length; x++)
-          if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
-    }
+            heartOX = pad; heartOY = pad;              // heart top-left
+            starOX = p.width  - starPattern[0].length * gs - pad;  // star bottom-right
+            starOY = p.height - starPattern.length    * gs - pad;
 
-    function reveal() {
-      if (!cells.length) return;
-      const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
-      const size = c.src === 'star' ? starGridSize : heartGridSize;
-      const ox   = c.src === 'star' ? starOX : heartOX;
-      const oy   = c.src === 'star' ? starOY : heartOY;
-      const px = ox + c.x * size, py = oy + c.y * size;
-      layer.noStroke();
-      if (c.type === 5 || c.type === 6) {
-        layer.fill(0, 196, 196);
-        c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
-        starBounds.push({ x:px, y:py, size });
-      } else if (c.type === 7 || c.type === 8) {
-        layer.fill(255,105,180);
-        c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
-        heartBounds.push({ x:px, y:py, size });
-      }
-    }
+            // heart always shown
+            for (let y = 0; y < heartPattern.length; y++)
+              for (let x = 0; x < heartPattern[y].length; x++)
+                if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
 
-    p.setup = () => {
-      footerEl = document.getElementById('contact');
-      const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
-      cv.parent('footer-pixel-art');
-      layer = p.createGraphics(p.width, p.height);
-      buildCells();
-      for (let i = 0; i < 500; i++) reveal();
-    };
+            // star only on wider screens (dropped on phones to avoid overlap)
+            if (!narrow) {
+              for (let y = 0; y < starPattern.length; y++)
+                for (let x = 0; x < starPattern[y].length; x++)
+                  if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
+            }
+          }
 
-    p.windowResized = () => {
-      p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
-      layer = p.createGraphics(p.width, p.height);
-      buildCells();
-      for (let i = 0; i < 500; i++) reveal();
-    };
+          function reveal() {
+            if (!cells.length) return;
+            const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
+            const size = c.src === 'star' ? activeStarSize : activeHeartSize;
+            const ox   = c.src === 'star' ? starOX : heartOX;
+            const oy   = c.src === 'star' ? starOY : heartOY;
+            const px = ox + c.x * size, py = oy + c.y * size;
+            layer.noStroke();
+            if (c.type === 5 || c.type === 6) {
+              layer.fill(77, 240, 229); //box color
+              c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+              starBounds.push({ x:px, y:py, size });
+            } else if (c.type === 7 || c.type === 8) {
+              layer.fill(255,105,180);
+              c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+              heartBounds.push({ x:px, y:py, size });
+            }
+          }
 
-    p.draw = () => {
-      p.clear();
-      p.image(layer, 0, 0);
+          p.setup = () => {
+            footerEl = document.getElementById('contact');
+            const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+            cv.parent('footer-pixel-art');
+            layer = p.createGraphics(p.width, p.height);
+            buildCells();
+            for (let i = 0; i < 500; i++) reveal();
+          };
 
-      let starH = false;
-      for (const s of starBounds) {
-        const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
-        p.noStroke(); p.fill(on ? p.color(255,255,0) : p.color(0, 196, 196));
-        p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
-        if (on) starH = true;
-      }
-      heartHover = false;
-      for (const h of heartBounds) {
-        const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
-        p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180));
-        p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
-        if (on) heartHover = true;
-      }
-      document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
-    };
+          p.windowResized = () => {
+            p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+            layer = p.createGraphics(p.width, p.height);
+            buildCells();
+            for (let i = 0; i < 500; i++) reveal();
+          };
 
-    p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
-  };
+          p.draw = () => {
+            p.clear();
+            p.image(layer, 0, 0);
 
-  window.addEventListener('load', () => new p5(sketch));
-})();
-</script>
+            let starH = false;
+            for (const s of starBounds) {
+              const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
+              p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229)); //star hover color then fill
+              p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
+              if (on) starH = true;
+            }
+            heartHover = false;
+            for (const h of heartBounds) {
+              const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
+              p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180)); //heart hover then fill color
+              p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
+              if (on) heartHover = true;
+            }
+            document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
+          };
+
+          p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+        };
+
+        window.addEventListener('load', () => new p5(sketch));
+      })();
+      </script>
     </div>
   </footer>
 
