@@ -307,6 +307,12 @@
       </div>
     </div>
 
+    <!-- ============================================================
+     PASTE THIS INTO index.html
+     Replace the whole <div class="footer-pixel-art">…</div>
+     that sits inside <footer class="contact micro-footer" id="contact">
+     ============================================================ -->
+
     <!-- p5 canvas mounts here (id is what cv.parent needs) -->
     <div class="footer-pixel-art" id="footer-pixel-art">
       <!-- Background graphics by Tessie Gresley -->
@@ -391,7 +397,7 @@
             const px = ox + c.x * size, py = oy + c.y * size;
             layer.noStroke();
             if (c.type === 5 || c.type === 6) {
-              layer.fill(0, 196, 196);
+              layer.fill(77, 240, 229); //box color
               c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
               starBounds.push({ x:px, y:py, size });
             } else if (c.type === 7 || c.type === 8) {
@@ -424,14 +430,14 @@
             let starH = false;
             for (const s of starBounds) {
               const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
-              p.noStroke(); p.fill(on ? p.color(255,255,0) : p.color(0, 196, 196));
+              p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229)); //star hover color then fill
               p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
               if (on) starH = true;
             }
             heartHover = false;
             for (const h of heartBounds) {
               const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
-              p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180));
+              p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180)); //heart hover then fill color
               p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
               if (on) heartHover = true;
             }
