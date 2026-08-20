@@ -393,6 +393,20 @@ body.custom-cursor-active button { cursor: none; }
   align-self: center;
 }
 
+/* 'about' page giant name */
+.about-hero-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: clamp(6rem, 18vw, 30rem);
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  color: var(--display-ink);
+  text-transform: uppercase;
+  margin: 0;
+  align-self: center;
+  white-space: nowrap;
+}
+
 /* intro row: lead paragraph + about link */
 .hero-intro {
   display: flex;
