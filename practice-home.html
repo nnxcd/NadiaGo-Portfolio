@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadia Go — Product & Multidisciplinary Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F1EC;              /* warm off-white */
+    --card:#FBFAF6;
+    --ink:#1B1A17;
+    --muted:#6C6A62;
+    --faint:#98968C;
+    --line:#E4E1D8;
+    --line-2:#EDEAE2;
+    --accent:#2F7A57;         /* calm green — used sparingly for tags/metrics */
+    --accent-soft:#E4EFE8;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+    --pad:clamp(26px,3.2vw,48px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--ink); color:var(--bg);}
+  a{color:inherit; text-decoration:none;}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px;}
+  img{max-width:100%; display:block;}
+
+  /* ── LAYOUT ─────────────────────────────────────── */
+  .shell{
+    display:grid;
+    grid-template-columns:minmax(300px,0.82fr) 1.5fr;
+    align-items:start;                 /* keeps the rail short enough to travel */
+    gap:clamp(24px,3vw,56px);
+    max-width:1320px; margin:0 auto;
+    padding:0 var(--pad);
+  }
+
+  /* ── STICKY BIO RAIL (light, like Ben's) ────────── */
+  .rail{
+    position:sticky; top:0; height:100vh;
+    padding:var(--pad) 0;
+    display:flex; flex-direction:column;
+  }
+  .rail-name{
+    font-size:clamp(1.5rem,2vw,1.9rem); font-weight:600; letter-spacing:-0.02em;
+    margin:0 0 2px;
+  }
+  .rail-role{color:var(--muted); font-size:1rem; margin-bottom:22px;}
+  .rail-tags{
+    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;
+  }
+  .rail-tags span{
+    font-size:0.74rem; font-weight:500; letter-spacing:0.02em;
+    padding:5px 11px; border:1px solid var(--line); border-radius:999px; color:var(--muted);
+  }
+  .rail-bio{color:var(--ink); font-size:0.98rem; max-width:34ch; margin-bottom:14px;}
+  .rail-bio.dim{color:var(--muted); font-size:0.92rem; margin-bottom:26px;}
+  .rail-bio a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+
+  .rail-links{display:flex; flex-direction:column; gap:2px; margin-bottom:22px;}
+  .rail-links a{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 0; border-bottom:1px solid var(--line-2);
+    font-size:0.95rem; font-weight:500;
+    transition:padding-left .2s ease, color .2s ease;
+  }
+  .rail-links a .arr{color:var(--faint); transition:transform .2s ease, color .2s ease;}
+  .rail-links a:hover{padding-left:6px; color:var(--accent);}
+  .rail-links a:hover .arr{transform:translate(3px,-3px); color:var(--accent);}
+
+  /* copy-email chip (Ben touch) */
+  .rail-email{
+    display:flex; align-items:center; gap:10px; width:100%;
+    background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:12px 14px; cursor:pointer;
+    font-family:var(--sans); font-size:0.9rem; color:var(--ink); text-align:left;
+    margin-bottom:22px; transition:border-color .2s ease, background .2s ease;
+  }
+  .rail-email:hover{border-color:var(--accent); background:var(--accent-soft);}
+  .rail-email .ico{font-size:1.1rem;}
+  .rail-email .txt{display:flex; flex-direction:column; line-height:1.25;}
+  .rail-email .txt b{font-weight:600;}
+  .rail-email .txt small{color:var(--muted); font-size:0.76rem;}
+  .rail-email.copied{border-color:var(--accent); background:var(--accent-soft);}
+
+  /* currently reading widget (Ben touch) */
+  .rail-reading{
+    margin-top:auto; display:flex; align-items:center; gap:14px;
+    padding-top:22px; border-top:1px solid var(--line);
+  }
+  .book{
+    width:44px; height:60px; border-radius:3px; flex-shrink:0;
+    background:linear-gradient(135deg,#c9a24b,#8a5a2b);
+    box-shadow:2px 2px 0 rgba(0,0,0,0.08), inset 3px 0 0 rgba(255,255,255,0.15);
+  }
+  .rail-reading .r-label{font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin-bottom:3px;}
+  .rail-reading .r-title{font-size:0.9rem; font-weight:600; line-height:1.2;}
+  .rail-reading .r-author{font-size:0.82rem; color:var(--muted);}
+
+  /* ── PROJECT FEED ───────────────────────────────── */
+  .feed{padding:var(--pad) 0;}
+  .feed-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--faint);
+    padding-bottom:16px; margin-bottom:22px; border-bottom:1px solid var(--line);
+  }
+
+  .card-list{display:flex; flex-direction:column; gap:22px;}
+
+  .card{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:18px; overflow:hidden;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, border-color .3s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 40px rgba(27,26,23,0.09);
+    border-color:var(--line);
+  }
+
+  .card-media{
+    position:relative; height:clamp(190px,24vw,280px); overflow:hidden;
+    display:flex; align-items:flex-end; padding:18px;
+  }
+  .card-media::after{                         /* subtle image-like sheen */
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,0.16));
+  }
+  .card-media .m-name{
+    position:relative; z-index:1; color:#fff; font-weight:600;
+    font-size:0.86rem; letter-spacing:0.02em; opacity:0.9;
+  }
+  .card:hover .card-media{transform:none;}
+  /* per-project duotone stand-ins (swap for real <img> later) */
+  .m-nainai{background:linear-gradient(135deg,#E8846B,#B33C34);}
+  .m-mongie{background:linear-gradient(135deg,#6FA8C7,#2E5E7E);}
+  .m-daisy {background:linear-gradient(135deg,#7FB77E,#3B7A54);}
+  .m-notes {background:linear-gradient(135deg,#C9B79C,#8A7355);}
+
+  .tag-new{
+    position:absolute; top:14px; right:14px; z-index:2;
+    background:#fff; color:var(--accent); font-size:0.68rem; font-weight:700;
+    letter-spacing:0.06em; text-transform:uppercase; padding:5px 10px; border-radius:999px;
+  }
+
+  .card-body{padding:22px 24px 24px;}
+  .card-eyebrow{font-size:0.78rem; font-weight:600; color:var(--muted); margin-bottom:8px;}
+  .card-title{font-size:clamp(1.3rem,2.2vw,1.7rem); font-weight:600; letter-spacing:-0.02em; margin:0 0 8px;}
+  .card-desc{color:var(--muted); font-size:0.98rem; max-width:52ch; margin-bottom:16px;}
+
+  .card-stats{display:flex; gap:8px; flex-wrap:wrap;}
+  .stat{
+    display:inline-flex; align-items:baseline; gap:5px;
+    background:var(--accent-soft); border-radius:999px; padding:5px 11px;
+    font-size:0.76rem; color:var(--accent);
+  }
+  .stat b{font-weight:700;}
+  .stat.plain{background:transparent; border:1px solid var(--line); color:var(--muted);}
+
+  /* gallery + contact */
+  .card-gallery{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 24px; background:transparent; border:1px dashed var(--line);
+  }
+  .card-gallery span{font-size:1.05rem; font-weight:600;}
+  .card-gallery .arr{color:var(--accent); font-size:1.2rem; transition:transform .2s ease;}
+  .card-gallery:hover{border-color:var(--accent);}
+  .card-gallery:hover .arr{transform:translate(4px,-4px);}
+
+  .contact{padding:56px 0 30px;}
+  .contact h2{font-size:clamp(1.7rem,3.4vw,2.6rem); font-weight:600; letter-spacing:-0.025em; margin:0 0 14px; max-width:18ch;}
+  .contact p{color:var(--muted); max-width:48ch; margin-bottom:24px;}
+  .contact-btn{
+    display:inline-flex; align-items:center; gap:9px;
+    background:var(--ink); color:var(--bg); font-weight:600; font-size:0.95rem;
+    padding:14px 24px; border-radius:12px; transition:background .2s ease, transform .2s ease;
+  }
+  .contact-btn:hover{background:#000; transform:translateY(-2px);}
+
+  /* ── RESPONSIVE: un-stick + stack ───────────────── */
+  @media (max-width:880px){
+    .shell{grid-template-columns:1fr; gap:0;}
+    .rail{position:static; height:auto; padding-bottom:32px; border-bottom:1px solid var(--line);}
+    .rail-reading{margin-top:30px;}
+    .feed{padding-top:32px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .card{transition:none;}
+    .card:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ══ STICKY BIO RAIL ══ -->
+  <aside class="rail">
+    <h1 class="rail-name">Nadia Go</h1>
+    <p class="rail-role">Multidisciplinary Designer</p>
+
+    <div class="rail-tags">
+      <span>Melbourne, AU</span>
+      <span>End-to-end</span>
+      <span>Brand + Product</span>
+    </div>
+
+    <p class="rail-bio">I'm a designer who works across the whole thing — brand, product, and the small interactions in between. I care about craft and about shipping.</p>
+    <p class="rail-bio dim">Five years turning fuzzy ideas into things people actually use. Currently designing for <a href="#">early-stage teams</a> in Australia.</p>
+
+    <nav class="rail-links">
+      <a href="#">LinkedIn <span class="arr">↗</span></a>
+      <a href="#">X / Twitter <span class="arr">↗</span></a>
+      <a href="#">Substack <span class="arr">↗</span></a>
+      <a href="#">Read my CV <span class="arr">↗</span></a>
+    </nav>
+
+    <button class="rail-email" id="copyEmail" data-email="hello@nadiago.design">
+      <span class="ico">📨</span>
+      <span class="txt">
+        <b id="emailLabel">Copy my email</b>
+        <small id="emailSub">Tap to copy · hello@nadiago.design</small>
+      </span>
+    </button>
+
+    <div class="rail-reading">
+      <div class="book"></div>
+      <div>
+        <div class="r-label">Currently reading</div>
+        <div class="r-title">The Shape of Design</div>
+        <div class="r-author">Frank Chimero</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ PROJECT FEED ══ -->
+  <main class="feed">
+    <div class="feed-head"><span>Selected work</span><span>2024 — 2026</span></div>
+
+    <div class="card-list">
+
+      <!-- Nai Nai -->
+      <a class="card" href="#">
+        <span class="tag-new">New</span>
+        <div class="card-media m-nainai"><span class="m-name">Nai Nai — packaging</span></div>
+        <div class="card-body">
+          <div class="card-eyebrow">Nai Nai · Brand &amp; Packaging</div>
+          <h3 class="card-title">A dumpling brand for grandmothers and Gen Z alike</h3>
+          <p class="card-desc">Identity, packaging, and art direction for a frozen-dumpling startup — warm enough for family, sharp enough for the shelf.</p>
+          <div class="card-stats">
+            <span class="stat"><b>3 wks</b> to sell out first run</span>
+            <span class="stat plain">Shipped 2025</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Mongie -->
+      <a class="card" href="#">
+        <div class="card-media m-mongie"><span class="m-name">Mongie — mobile app</span></div>
+        <div class="card-body">
+          <div class="card-eyebrow">Mongie · Product &amp; Mobile</div>
+          <h3 class="card-title">Turning the group-chat trip that never happens into one that does</h3>
+          <p class="card-desc">End-to-end product design for a group-travel planner — from research through prototyping to a shipped beta with two engineers.</p>
+          <div class="card-stats">
+            <span class="stat"><b>1,500+</b> trips planned</span>
+            <span class="stat"><b>4.8★</b> beta rating</span>
+            <span class="stat plain">In beta · 2025</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Daisy -->
+      <a class="card" href="#">
+        <div class="card-media m-daisy"><span class="m-name">Daisy — web + interaction</span></div>
+        <div class="card-body">
+          <div class="card-eyebrow">Daisy · Web &amp; Interaction</div>
+          <h3 class="card-title">A plant-care companion that texts like a friend, not an app</h3>
+          <p class="card-desc">Design and build for a conversational plant-care tool. Playful voice, gentle reminders, zero guilt.</p>
+          <div class="card-stats">
+            <span class="stat"><b>92%</b> kept plants alive</span>
+            <span class="stat plain">Concept · 2024</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Field Notes -->
+      <a class="card" href="#">
+        <div class="card-media m-notes"><span class="m-name">Field Notes — editorial</span></div>
+        <div class="card-body">
+          <div class="card-eyebrow">Field Notes · Editorial</div>
+          <h3 class="card-title">A living archive of half-finished ideas</h3>
+          <p class="card-desc">Ongoing writing and art direction — publishing ideas before they're ready, most Sundays.</p>
+          <div class="card-stats">
+            <span class="stat plain">Ongoing</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- gallery -->
+      <a class="card card-gallery" href="#">
+        <span>Design gallery — offcuts, experiments &amp; type</span>
+        <span class="arr">↗</span>
+      </a>
+
+    </div>
+
+    <section class="contact" id="contact">
+      <h2>Have something half-formed? Let's shape it.</h2>
+      <p>The best projects usually start as a blurry idea and a Tuesday-night email. Send me yours.</p>
+      <a class="contact-btn" href="#">Get in touch →</a>
+    </section>
+  </main>
+
+</div>
+
+<script>
+  // copy-email interaction (Ben-style)
+  const btn = document.getElementById('copyEmail');
+  const label = document.getElementById('emailLabel');
+  const sub = document.getElementById('emailSub');
+  const original = {l: label.textContent, s: sub.textContent};
+  btn.addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(btn.dataset.email);
+      btn.classList.add('copied');
+      label.textContent = 'Copied ✓';
+      sub.textContent = btn.dataset.email;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        label.textContent = original.l;
+        sub.textContent = original.s;
+      }, 1800);
+    }catch(e){
+      sub.textContent = btn.dataset.email;   // fallback: just reveal it
+    }
+  });
+</script>
+
+</body>
+</html>
