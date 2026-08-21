@@ -9,12 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F3F1EC;              /* warm off-white */
+    --bg:#FFFF;              /* warm off-white */
     --card:#FBFAF6;
     --ink:#1B1A17;
     --muted:#6C6A62;
     --faint:#98968C;
     --line:#E4E1D8;
+    --menu-bg:#dfdfdf;
     --line-2:#EDEAE2;
     --accent:#2F7A57;         /* calm green — used sparingly for tags/metrics */
     --accent-soft:#E4EFE8;
@@ -64,6 +65,27 @@
   .rail-bio{color:var(--ink); font-size:0.98rem; max-width:34ch; margin-bottom:14px;}
   .rail-bio.dim{color:var(--muted); font-size:0.92rem; margin-bottom:26px;}
   .rail-bio a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+
+.rail-menu{margin-bottom:24px; background-color:var(--menu-bg);border-radius:15px;}
+.rail-menu-title{display:block; font-size:0.72rem; letter-spacing:0.12em; color:var(--muted); margin:15px; margin-top:15px;}
+.rail-menu ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; margin:8px;}
+.rail-menu a{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:11px 14px; border-radius:10px;
+  color:var(--muted); text-decoration:none; font-size:0.95rem;
+  transition:background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.rail-menu a:hover{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+.rail-menu a:hover .arr{color:var(--ink);}
+
+.rail-menu a.active{background:var(--card); color:var(--ink);}
+.rail-menu .arr{color:var(--faint);}
+
 
   .rail-links{display:flex; flex-direction:column; gap:2px; margin-bottom:22px;}
   .rail-links a{
@@ -215,12 +237,20 @@
     </div>
 
     <p class="rail-bio">I'm a designer who works across the whole thing — brand, product, and the small interactions in between. I care about craft and about shipping.</p>
-    <p class="rail-bio dim">Five years turning fuzzy ideas into things people actually use. Currently designing for <a href="#">early-stage teams</a> in Australia.</p>
-
+    <!-- <p class="rail-bio dim">Five years turning fuzzy ideas into things people actually use. Currently designing for <a href="#">early-stage teams</a> in Australia.</p> -->
+    
+    <nav class="rail-menu">
+      <span class="rail-menu-title">EXPLORE</span>
+      <ul>
+        <li><a href="#"><span>01. My Work</span><span class="arr">→</span></a></li>
+        <li><a href="#"><span>02. About Me</span><span class="arr">→</span></a></li>
+        <li><a href="#"><span>03. Playground</span><span class="arr">→</span></a></li>
+        
+      </ul>
+    </nav>
     <nav class="rail-links">
       <a href="#">LinkedIn <span class="arr">↗</span></a>
-      <a href="#">X / Twitter <span class="arr">↗</span></a>
-      <a href="#">Substack <span class="arr">↗</span></a>
+      <a href="#">Instagram <span class="arr">↗</span></a>
       <a href="#">Read my CV <span class="arr">↗</span></a>
     </nav>
 
@@ -232,6 +262,7 @@
       </span>
     </button>
 
+    <!-- Currently reading 
     <div class="rail-reading">
       <div class="book"></div>
       <div>
@@ -240,7 +271,10 @@
         <div class="r-author">Frank Chimero</div>
       </div>
     </div>
+    -->
   </aside>
+
+  
 
   <!-- ══ PROJECT FEED ══ -->
   <main class="feed">
