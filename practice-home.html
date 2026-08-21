@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#FFFF;              /* warm off-white */
+    --bg:#FFFFFF;             /* page background (white) */
     --card:#FBFAF6;
     --ink:#1B1A17;
     --muted:#6C6A62;
@@ -21,6 +21,7 @@
     --accent-soft:#E4EFE8;
     --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
     --pad:clamp(26px,3.2vw,48px);
+    --section-gap:24px;       /* consistent vertical spacing between rail sections */
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -44,50 +45,49 @@
     padding:0 var(--pad);
   }
 
-  /* ── STICKY BIO RAIL (light, like Ben's) ────────── */
+  /* ── STICKY BIO RAIL ────────────────────────────── */
   .rail{
     position:sticky; top:0; height:100vh;
     padding:var(--pad) 0;
     display:flex; flex-direction:column;
+    justify-content:center;           /* center content → equal gap top & bottom */
+    
+    
   }
+  .rail > *:last-child{margin-bottom:0;}   /* drop trailing margin so centering stays even */
   .rail-name{
     font-size:clamp(1.5rem,2vw,1.9rem); font-weight:600; letter-spacing:-0.02em;
     margin:0 0 2px;
   }
-  .rail-role{color:var(--muted); font-size:1rem; margin-bottom:22px;}
+  .rail-role{color:var(--muted); font-size:1rem; margin-bottom:var(--section-gap);}
   .rail-tags{
-    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;
+    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:var(--section-gap);
   }
   .rail-tags span{
     font-size:0.74rem; font-weight:500; letter-spacing:0.02em;
     padding:5px 11px; border:1px solid var(--line); border-radius:999px; color:var(--muted);
   }
-  .rail-bio{color:var(--ink); font-size:0.98rem; max-width:34ch; margin-bottom:14px;}
-  .rail-bio.dim{color:var(--muted); font-size:0.92rem; margin-bottom:26px;}
+  .rail-bio{color:var(--ink); font-size:0.98rem; max-width:34ch; margin:0 0 var(--section-gap);}
+  .rail-bio.dim{color:var(--muted); font-size:0.92rem; margin:0 0 var(--section-gap);}
   .rail-bio a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
 
-.rail-menu{margin-bottom:24px; background-color:var(--menu-bg);border-radius:15px;}
-.rail-menu-title{display:block; font-size:0.72rem; letter-spacing:0.12em; color:var(--muted); margin:15px; margin-top:15px;}
-.rail-menu ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; margin:8px;}
-.rail-menu a{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:11px 14px; border-radius:10px;
-  color:var(--muted); text-decoration:none; font-size:0.95rem;
-  transition:background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
-}
+  /* ── EXPLORE MENU ───────────────────────────────── */
+  .rail-menu{margin-bottom:var(--section-gap); background-color:var(--menu-bg); border-radius:15px; padding:8px;}
+  .rail-menu-title{display:block; font-size:0.72rem; letter-spacing:0.12em; color:var(--muted); margin:0; padding:10px 14px 8px;}
+  .rail-menu ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px;}
+  .rail-menu a{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:11px 14px; border-radius:10px;
+    color:var(--muted); text-decoration:none; font-size:0.95rem;
+    transition:background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .rail-menu a:hover{background:var(--bg); color:var(--ink);}
+  .rail-menu a:hover .arr{color:var(--ink);}
+  .rail-menu a.active{background:var(--card); color:var(--ink);}
+  .rail-menu .arr{color:var(--faint);}
 
-.rail-menu a:hover{
-  background:var(--bg);
-  color:var(--ink);
-}
-
-.rail-menu a:hover .arr{color:var(--ink);}
-
-.rail-menu a.active{background:var(--card); color:var(--ink);}
-.rail-menu .arr{color:var(--faint);}
-
-
-  .rail-links{display:flex; flex-direction:column; gap:2px; margin-bottom:22px;}
+  /* ── EXTERNAL LINKS ─────────────────────────────── */
+  .rail-links{display:flex; flex-direction:column; gap:2px; margin-bottom:var(--section-gap);}
   .rail-links a{
     display:flex; align-items:center; justify-content:space-between;
     padding:9px 0; border-bottom:1px solid var(--line-2);
@@ -98,13 +98,13 @@
   .rail-links a:hover{padding-left:6px; color:var(--accent);}
   .rail-links a:hover .arr{transform:translate(3px,-3px); color:var(--accent);}
 
-  /* copy-email chip (Ben touch) */
+  /* copy-email chip */
   .rail-email{
     display:flex; align-items:center; gap:10px; width:100%;
     background:var(--card); border:1px solid var(--line);
     border-radius:12px; padding:12px 14px; cursor:pointer;
     font-family:var(--sans); font-size:0.9rem; color:var(--ink); text-align:left;
-    margin-bottom:22px; transition:border-color .2s ease, background .2s ease;
+    margin-bottom:var(--section-gap); transition:border-color .2s ease, background .2s ease;
   }
   .rail-email:hover{border-color:var(--accent); background:var(--accent-soft);}
   .rail-email .ico{font-size:1.1rem;}
@@ -113,10 +113,10 @@
   .rail-email .txt small{color:var(--muted); font-size:0.76rem;}
   .rail-email.copied{border-color:var(--accent); background:var(--accent-soft);}
 
-  /* currently reading widget (Ben touch) */
+  /* currently reading widget */
   .rail-reading{
     margin-top:auto; display:flex; align-items:center; gap:14px;
-    padding-top:22px; border-top:1px solid var(--line);
+    padding-top:var(--section-gap); border-top:1px solid var(--line);
   }
   .book{
     width:44px; height:60px; border-radius:3px; flex-shrink:0;
@@ -238,16 +238,16 @@
 
     <p class="rail-bio">I'm a designer who works across the whole thing — brand, product, and the small interactions in between. I care about craft and about shipping.</p>
     <!-- <p class="rail-bio dim">Five years turning fuzzy ideas into things people actually use. Currently designing for <a href="#">early-stage teams</a> in Australia.</p> -->
-    
+
     <nav class="rail-menu">
       <span class="rail-menu-title">EXPLORE</span>
       <ul>
         <li><a href="#"><span>01. My Work</span><span class="arr">→</span></a></li>
         <li><a href="#"><span>02. About Me</span><span class="arr">→</span></a></li>
         <li><a href="#"><span>03. Playground</span><span class="arr">→</span></a></li>
-        
       </ul>
     </nav>
+
     <nav class="rail-links">
       <a href="#">LinkedIn <span class="arr">↗</span></a>
       <a href="#">Instagram <span class="arr">↗</span></a>
@@ -262,7 +262,7 @@
       </span>
     </button>
 
-    <!-- Currently reading 
+    <!-- Currently reading
     <div class="rail-reading">
       <div class="book"></div>
       <div>
@@ -274,7 +274,7 @@
     -->
   </aside>
 
-  
+
 
   <!-- ══ PROJECT FEED ══ -->
   <main class="feed">
@@ -357,7 +357,7 @@
 </div>
 
 <script>
-  // copy-email interaction (Ben-style)
+  // copy-email interaction
   const btn = document.getElementById('copyEmail');
   const label = document.getElementById('emailLabel');
   const sub = document.getElementById('emailSub');
