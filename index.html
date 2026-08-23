@@ -436,6 +436,8 @@
             const oy   = c.src === 'star' ? starOY : heartOY;
             const px = ox + c.x * size, py = oy + c.y * size;
             layer.noStroke();
+
+            
             if (c.type === 5 || c.type === 6) {
               layer.fill(77, 240, 229); //box color
               c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
@@ -446,7 +448,7 @@
               heartBounds.push({ x:px, y:py, size });
             }
           }
-
+          
           p.setup = () => {
             footerEl = document.getElementById('contact');
             const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));

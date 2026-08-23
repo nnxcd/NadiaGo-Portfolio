@@ -6,7 +6,10 @@
 <title>Nadia Go — Product & Multidisciplinary Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+
+<!-- p5.js — powers the pixel-art footer canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 
 <style>
   :root{
@@ -17,18 +20,21 @@
     --faint:#98968C;
     --line:#E4E1D8;
     --menu-bg:#dfdfdf;
+    --overview-menu:#ebe5d3;
     --line-2:#EDEAE2;
     --accent:#2F7A57;         /* calm green — used sparingly for tags/metrics */
     --accent-soft:#E4EFE8;
     --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
     --title:'Syne',system-ui,-apple-system,sans-serif;
+    --title-alt:'BioRhyme',system-ui,-apple-system,sans-serif;
     --pad:clamp(26px,3.2vw,48px);
     --section-gap:24px;       /* consistent vertical spacing between rail sections */
+    --footer-h:100vh;         /* height of the reveal footer (matches the reveal space) */
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    margin:0; background:var(--bg); color:var(--ink);
+    margin:0; background:var(--ink); color:var(--ink);
     font-family:var(--sans); font-size:16px; line-height:1.55;
     -webkit-font-smoothing:antialiased;
   }
@@ -37,30 +43,37 @@
   a:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px;}
   img{max-width:100%; display:block;}
 
-  
-  /* ── LAYOUT ─────────────────────────────────────── */
-  
+
+  /* ── LAYOUT ─────────────────────────────────────────
+     .shell is the scrolling "page" that sits ON TOP of the
+     fixed footer. It has a solid background so it fully hides
+     the footer until you scroll into the reveal space created
+     by its bottom margin. */
   .shell{
+    position:relative;
+    z-index:1;
+    background:var(--bg);
+    margin:0 auto var(--footer-h) 0;   /* right:auto → flush LEFT; bottom → reveal space */
+    max-width:1500px;                  /* cap width on ultra-wide, still left-aligned */
+
     display:grid;
     grid-template-columns:minmax(300px,0.82fr) 1.5fr;
     align-items:start;                 /* keeps the rail short enough to travel */
     gap:clamp(24px,3vw,56px);
-    max-width:1320px; margin:0 auto;
-    padding:0 var(--pad);
+    padding:0 var(--pad) 0 0;          /* no left padding on the shell — rail hugs the edge */
   }
 
   /* ── STICKY BIO RAIL ────────────────────────────── */
   .rail{
     position:sticky; top:0; height:100vh;
-    padding:var(--pad) 0;
+    padding:var(--pad);                /* internal padding so text isn't jammed to the edge */
     display:flex; flex-direction:column;
-    justify-content:center;           /* center content → equal gap top & bottom */
-    
-    
+    justify-content:center;            /* center content → equal gap top & bottom */
+    background-color:var(--card);
   }
   .rail > *:last-child{margin-bottom:0;}   /* drop trailing margin so centering stays even */
   .rail-name{
-    font-size:clamp(3rem,2vw,1.9rem); font-family:var(--title); letter-spacing:-0.02em;
+    font-size:clamp(3rem,2vw,1.9rem); font-family:var(--title-alt); letter-spacing:-0.04em;font-weight:600;
     margin:0 0 0px;
   }
   .rail-role{color:var(--muted); font-size:1rem; margin-bottom:var(--section-gap); margin-top:0;}
@@ -76,7 +89,7 @@
   .rail-bio a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
 
   /* ── EXPLORE MENU ───────────────────────────────── */
-  .rail-menu{margin-bottom:var(--section-gap); background-color:var(--menu-bg); border-radius:15px; padding:8px;}
+  .rail-menu{margin-bottom:var(--section-gap); background-color:var(--overview-menu); border-radius:15px; padding:8px;}
   .rail-menu-title{display:block; font-size:0.72rem; letter-spacing:0.12em; color:var(--muted); margin:0; padding:10px 14px 8px;}
   .rail-menu ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px;}
   .rail-menu a{
@@ -98,7 +111,7 @@
     font-size:0.95rem; font-weight:500;
     transition:padding-left .2s ease, color .2s ease;
   }
-  .rail-links a .arr{color:var(--faint); transition:transform .2s ease, color .2s ease;}
+  .rail-links a .arr{color:var(--faint); transition:transform .2s ease, color .2s ease;} 
   .rail-links a:hover{padding-left:6px; color:var(--accent);}
   .rail-links a:hover .arr{transform:translate(3px,-3px); color:var(--accent);}
 
@@ -117,113 +130,154 @@
   .rail-email .txt small{color:var(--muted); font-size:0.76rem;}
   .rail-email.copied{border-color:var(--accent); background:var(--accent-soft);}
 
-  /* currently reading widget */
-  .rail-reading{
-    margin-top:auto; display:flex; align-items:center; gap:14px;
-    padding-top:var(--section-gap); border-top:1px solid var(--line);
-  }
-  .book{
-    width:44px; height:60px; border-radius:3px; flex-shrink:0;
-    background:linear-gradient(135deg,#c9a24b,#8a5a2b);
-    box-shadow:2px 2px 0 rgba(0,0,0,0.08), inset 3px 0 0 rgba(255,255,255,0.15);
-  }
-  .rail-reading .r-label{font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin-bottom:3px;}
-  .rail-reading .r-title{font-size:0.9rem; font-weight:600; line-height:1.2;}
-  .rail-reading .r-author{font-size:0.82rem; color:var(--muted);}
-
   /* ── PROJECT FEED ───────────────────────────────── */
   .feed{padding:var(--pad) 0;}
-  .feed-head{
-    background:var(--ink);
-    display:flex; justify-content:space-between; align-items:baseline;
-    font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--faint);
-    padding-bottom:16px; margin-bottom:22px; border-bottom:1px solid var(--line);
+
+  /* two-up grid of compact portrait cards; collapses to one column
+     when the feed itself gets narrow */
+  .card-list{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+  @media (min-width:1250px){
+    .card-list{grid-template-columns:1fr 1fr;}
   }
 
-  .card-list{display:flex; flex-direction:column; gap:22px;}
-
   .card{
+    display:flex; flex-direction:column;
     background:var(--card); border:1px solid var(--line);
-    border-radius:18px; overflow:hidden;
+    border-radius:20px; padding:14px 14px 22px;
     transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, border-color .3s ease;
   }
   .card:hover{
     transform:translateY(-4px);
     box-shadow:0 16px 40px rgba(27,26,23,0.09);
-    border-color:var(--line);
+    border-color:var(--accent);
   }
 
+  /* inset cover image, rounded — like the reference cards */
   .card-media{
-    position:relative; height:clamp(190px,24vw,280px); overflow:hidden;
-    display:flex; align-items:flex-end; padding:18px;
+    position:relative; aspect-ratio:4/3; overflow:hidden;
+    border-radius:14px; margin-bottom:18px;
   }
-  .card-media::after{                         /* subtle image-like sheen */
-    content:''; position:absolute; inset:0;
-    background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,0.16));
+  .card-media img{
+    position:absolute; inset:0; z-index:0;
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .4s ease;
   }
-  .card-media .m-name{
-    position:relative; z-index:1; color:#fff; font-weight:600;
-    font-size:0.86rem; letter-spacing:0.02em; opacity:0.9;
-  }
-  .card:hover .card-media{transform:none;}
-  /* per-project duotone stand-ins (swap for real <img> later) */
+  .card:hover .card-media img{transform:scale(1.03);}
+  /* per-project duotone stand-ins — fallback tint behind the image */
   .m-nainai{background:linear-gradient(135deg,#E8846B,#B33C34);}
   .m-mongie{background:linear-gradient(135deg,#6FA8C7,#2E5E7E);}
   .m-daisy {background:linear-gradient(135deg,#7FB77E,#3B7A54);}
-  .m-notes {background:linear-gradient(135deg,#C9B79C,#8A7355);}
 
-  /*
-  .tag-new{
-    position:absolute; top:14px; right:14px; z-index:2;
-    background:#fff; color:var(--accent); font-size:0.68rem; font-weight:700;
-    letter-spacing:0.06em; text-transform:uppercase; padding:5px 10px; border-radius:999px;
-  } */
+  .card-body{padding:0 6px;}
 
-  .card-body{padding:22px 24px 24px;}
-  .card-eyebrow{font-size:0.78rem; font-weight:600; color:var(--muted); margin-bottom:8px;}
-  .card-title{font-size:clamp(1.3rem,2.2vw,1.7rem); font-weight:600; letter-spacing:-0.02em; margin:0 0 8px;}
-  .card-desc{color:var(--muted); font-size:0.98rem; max-width:52ch; margin-bottom:16px;}
-
-  .card-stats{display:flex; gap:8px; flex-wrap:wrap;}
-  .stat{
-    display:inline-flex; align-items:baseline; gap:5px;
-    background:var(--accent-soft); border-radius:999px; padding:5px 11px;
-    font-size:0.76rem; color:var(--accent);
-  }
-  .stat b{font-weight:700;}
-  .stat.plain{background:transparent; border:1px solid var(--line); color:var(--muted);}
-
-  /* gallery + contact */
-  .card-gallery{
+  /* title + tag pill on one line */
+  .card-titlerow{
     display:flex; align-items:center; justify-content:space-between;
+    gap:12px; margin-bottom:10px;
+  }
+  .card-title{
+    font-family:var(--title-alt); font-weight:600; letter-spacing:-0.03em;
+    font-size:clamp(1.5rem,2.4vw,2rem); color:var(--ink); margin:0; line-height:1;
+  }
+  .card-tag{
+    font-size:0.64rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+    padding:5px 10px; border-radius:6px; background:var(--menu-bg); color:var(--muted);
+    white-space:nowrap; flex-shrink:0;
+  }
+  .card-tag.win{background:var(--accent); color:#fff;}
+
+  /* one short, compelling line */
+  .card-desc{
+    color:var(--muted); font-size:1.02rem; line-height:1.4;
+    margin:0 0 24px; max-width:42ch;
+  }
+
+  /* divided stat row (value on top, small caption below) */
+  .card-stats{display:flex;}
+  .card-stats .stat{
+    flex:1; min-width:0;
+    padding-left:18px; border-left:1px solid var(--line);
+  }
+  .card-stats .stat:first-child{padding-left:0; border-left:none;}
+  .stat-value{
+    display:block;
+    font-family:var(--title-alt); font-weight:600; letter-spacing:-0.02em;
+    font-size:clamp(1.1rem,1.7vw,1.45rem); color:var(--ink); line-height:1.05;
+  }
+  .stat-label{
+    display:block; margin-top:6px;
+    font-size:0.66rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--faint);
+  }
+
+  /* gallery card — spans the full row, stays flat */
+  .card-gallery{
+    grid-column:1 / -1;
+    flex-direction:row; align-items:center; justify-content:space-between;
     padding:26px 24px; background:transparent; border:1px dashed var(--line);
   }
-  .card-gallery span{font-size:1.05rem; font-weight:600;}
+  .card-gallery span{font-size:1.05rem; font-weight:600; color:var(--ink);}
   .card-gallery .arr{color:var(--accent); font-size:1.2rem; transition:transform .2s ease;}
-  .card-gallery:hover{border-color:var(--accent);}
+  .card-gallery:hover{border-color:var(--accent); transform:none; box-shadow:none;}
   .card-gallery:hover .arr{transform:translate(4px,-4px);}
 
-  .contact{padding:56px 0 30px;}
-  .contact h2{font-size:clamp(1.7rem,3.4vw,2.6rem); font-weight:600; letter-spacing:-0.025em; margin:0 0 14px; max-width:18ch;}
-  .contact p{color:var(--muted); max-width:48ch; margin-bottom:24px;}
-  .contact-btn{
-    display:inline-flex; align-items:center; gap:9px;
-    background:var(--ink); color:var(--bg); font-weight:600; font-size:0.95rem;
-    padding:14px 24px; border-radius:12px; transition:background .2s ease, transform .2s ease;
+  /* ── REVEAL FOOTER ──────────────────────────────────
+     Fixed to the bottom of the viewport, sitting BEHIND the
+     page (.shell covers it). As the page scrolls into the
+     reveal space (.shell's bottom margin), this comes into view. */
+  .micro-footer{
+    position:fixed;
+    inset:auto 0 0 0;          /* bottom:0; left:0; right:0 */
+    height:var(--footer-h);
+    z-index:0;
+    background:var(--ink);
+    color:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    padding:var(--pad);
   }
-  .contact-btn:hover{background:#000; transform:translateY(-2px);}
+  .micro-inner{
+    position:relative; z-index:2;   /* text/buttons sit above the canvas */
+    text-align:center; max-width:44ch;
+  }
+  .micro-title{
+    font-family:var(--title); font-weight:700; letter-spacing:-0.02em;
+    font-size:clamp(2rem,5vw,3.4rem); line-height:1.05;
+    margin:0 0 12px; color:#fff;
+  }
+  .micro-sub{
+    color:rgba(255,255,255,0.72); font-size:1.05rem; margin:0 0 26px;
+  }
+  .micro-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+  .micro-btn{
+    display:inline-flex; align-items:center;
+    padding:12px 24px; border-radius:999px;
+    border:1px solid rgba(255,255,255,0.28); color:#fff;
+    font-weight:600; font-size:0.95rem;
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .micro-btn:hover{
+    background:rgba(255,255,255,0.12); border-color:#fff; transform:translateY(-2px);
+  }
+  /* p5 canvas mount — fills the footer, behind the text */
+  #footer-pixel-art{position:absolute; inset:0; z-index:1;}
+  #footer-pixel-art canvas{display:block;}
 
   /* ── RESPONSIVE: un-stick + stack ───────────────── */
   @media (max-width:880px){
-    .shell{grid-template-columns:1fr; gap:0;}
+    .shell{grid-template-columns:1fr; gap:0; padding:0;}
     .rail{position:static; height:auto; padding-bottom:32px; border-bottom:1px solid var(--line);}
-    .rail-reading{margin-top:30px;}
-    .feed{padding-top:32px;}
+    .feed{padding:32px var(--pad);}
   }
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
     .card{transition:none;}
     .card:hover{transform:none;}
+    .card-media img{transition:none;}
   }
 
 
@@ -250,125 +304,257 @@
       <span>Brand + Product</span>
     </div>
 
-    <p class="rail-bio">I'm a designer who works across the whole thing — brand, product, and the small interactions in between. I care about craft and about shipping.</p>
-    <!-- <p class="rail-bio dim">Five years turning fuzzy ideas into things people actually use. Currently designing for <a href="#">early-stage teams</a> in Australia.</p> -->
+    <p class="rail-bio">I'm a UI/UX Designer and Researcher focused on finding the holes that other people can't identify first.</p>
 
     <nav class="rail-menu">
       <span class="rail-menu-title">EXPLORE</span>
       <ul>
-        <li><a href="#"><span>01. My Work</span><span class="arr">→</span></a></li>
+        <li><a href="#work"><span>01. My Work</span><span class="arr">→</span></a></li>
         <li><a href="#"><span>02. About Me</span><span class="arr">→</span></a></li>
         <li><a href="#"><span>03. Playground</span><span class="arr">→</span></a></li>
       </ul>
     </nav>
 
     <nav class="rail-links">
-      <a href="#">LinkedIn <span class="arr">↗</span></a>
-      <a href="#">Instagram <span class="arr">↗</span></a>
+      <a href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener">LinkedIn <span class="arr">↗</span></a>
+      <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener">Instagram <span class="arr">↗</span></a>
       <a href="#">Read my CV <span class="arr">↗</span></a>
     </nav>
 
-    <button class="rail-email" id="copyEmail" data-email="hello@nadiago.design">
+    <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
       <span class="ico">📨</span>
       <span class="txt">
         <b id="emailLabel">Copy my email</b>
-        <small id="emailSub">Tap to copy · hello@nadiago.design</small>
+        <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
       </span>
     </button>
-
-    <!-- Currently reading
-    <div class="rail-reading">
-      <div class="book"></div>
-      <div>
-        <div class="r-label">Currently reading</div>
-        <div class="r-title">The Shape of Design</div>
-        <div class="r-author">Frank Chimero</div>
-      </div>
-    </div>
-    -->
   </aside>
 
 
-
   <!-- ══ PROJECT FEED ══ -->
-  <main class="feed">
-    <!-- <div class="feed-head"><span>Selected work</span><span>2024 — 2026</span></div> -->
-
+  <main class="feed" id="work">
     <div class="card-list">
 
-      <!-- Nai Nai -->
-      <a class="card" href="#">
-        <!-- <span class="tag-new">New</span> -->
-        <div class="card-media m-nainai"><span class="m-name">Nai Nai — packaging</span></div>
+      <!-- ── Nai Nai ── -->
+      <a class="card" href="nainai.html">
+        <div class="card-media m-nainai">
+          <img src="Case-study-images/CS(nainai).jpg" alt="Nai Nai case study preview" onerror="this.style.display='none'">
+        </div>
         <div class="card-body">
-          <div class="card-eyebrow">Nai Nai · Brand &amp; Packaging</div>
-          <h3 class="card-title">A dumpling brand for grandmothers and Gen Z alike</h3>
-          <p class="card-desc">Identity, packaging, and art direction for a frozen-dumpling startup — warm enough for family, sharp enough for the shelf.</p>
+          <div class="card-titlerow">
+            <h3 class="card-title">Nai Nai</h3>
+            <span class="card-tag win">Winner · CISSA</span>
+          </div>
+          <p class="card-desc">A virtual grandma for safe, community-vetted home remedies.</p>
           <div class="card-stats">
-            <span class="stat"><b>3 wks</b> to sell out first run</span>
-            <span class="stat plain">Shipped 2025</span>
+            <div class="stat"><span class="stat-value">Medical</span><span class="stat-label">Hackathon track</span></div>
+            <div class="stat"><span class="stat-value">TCM</span><span class="stat-label">Home care</span></div>
+            <div class="stat"><span class="stat-value">Lead UI</span><span class="stat-label">+ Research</span></div>
           </div>
         </div>
       </a>
 
-      <!-- Mongie -->
+      <!-- ── Mongie ── -->
       <a class="card" href="#">
-        <div class="card-media m-mongie"><span class="m-name">Mongie — mobile app</span></div>
+        <div class="card-media m-mongie">
+          <img src="Case-study-images/CS(mongie).jpg" alt="Mongie case study preview" onerror="this.style.display='none'">
+        </div>
         <div class="card-body">
-          <div class="card-eyebrow">Mongie · Product &amp; Mobile</div>
-          <h3 class="card-title">Turning the group-chat trip that never happens into one that does</h3>
-          <p class="card-desc">End-to-end product design for a group-travel planner — from research through prototyping to a shipped beta with two engineers.</p>
+          <div class="card-titlerow">
+            <h3 class="card-title">Mongie</h3>
+            <span class="card-tag">Runner-up · CISSA</span>
+          </div>
+          <p class="card-desc">A virtual pet that grows as kids take their breaks.</p>
           <div class="card-stats">
-            <span class="stat"><b>1,500+</b> trips planned</span>
-            <span class="stat"><b>4.8★</b> beta rating</span>
-            <span class="stat plain">In beta · 2025</span>
+            <div class="stat"><span class="stat-value">4 days</span><span class="stat-label">Build sprint</span></div>
+            <div class="stat"><span class="stat-value">Kids</span><span class="stat-label">Wellness</span></div>
+            <div class="stat"><span class="stat-value">Lead UI</span><span class="stat-label">+ Research</span></div>
           </div>
         </div>
       </a>
 
-      <!-- Daisy -->
+      <!-- ── Daisy ── -->
       <a class="card" href="#">
-        <div class="card-media m-daisy"><span class="m-name">Daisy — web + interaction</span></div>
+        <div class="card-media m-daisy">
+          <img src="Case-study-images/CS(Daisy).jpg" alt="Daisy case study preview" onerror="this.style.display='none'">
+        </div>
         <div class="card-body">
-          <div class="card-eyebrow">Daisy · Web &amp; Interaction</div>
-          <h3 class="card-title">A plant-care companion that texts like a friend, not an app</h3>
-          <p class="card-desc">Design and build for a conversational plant-care tool. Playful voice, gentle reminders, zero guilt.</p>
+          <div class="card-titlerow">
+            <h3 class="card-title">Daisy</h3>
+            <span class="card-tag">Capstone</span>
+          </div>
+          <p class="card-desc">Track your wishlist before it wrecks your budget.</p>
           <div class="card-stats">
-            <span class="stat"><b>92%</b> kept plants alive</span>
-            <span class="stat plain">Concept · 2024</span>
+            <div class="stat"><span class="stat-value">Fashion</span><span class="stat-label">+ Finance</span></div>
+            <div class="stat"><span class="stat-value">Wishlist</span><span class="stat-label">Tracker</span></div>
+            <div class="stat"><span class="stat-value">UI · UX</span><span class="stat-label">+ Branding</span></div>
           </div>
         </div>
       </a>
 
-      <!-- Field Notes -->
-      <a class="card" href="#">
-        <div class="card-media m-notes"><span class="m-name">Field Notes — editorial</span></div>
-        <div class="card-body">
-          <div class="card-eyebrow">Field Notes · Editorial</div>
-          <h3 class="card-title">A living archive of half-finished ideas</h3>
-          <p class="card-desc">Ongoing writing and art direction — publishing ideas before they're ready, most Sundays.</p>
-          <div class="card-stats">
-            <span class="stat plain">Ongoing</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- gallery -->
+      <!-- gallery / playground -->
       <a class="card card-gallery" href="#">
         <span>Design gallery — offcuts, experiments &amp; type</span>
         <span class="arr">↗</span>
       </a>
-
     </div>
-
-    <section class="contact" id="contact">
-      <h2>Have something half-formed? Let's shape it.</h2>
-      <p>The best projects usually start as a blurry idea and a Tuesday-night email. Send me yours.</p>
-      <a class="contact-btn" href="#">Get in touch →</a>
-    </section>
   </main>
 
 </div>
+
+
+<!-- ══ CONTACT / REVEAL FOOTER ══ -->
+<footer class="contact micro-footer" id="contact">
+  <!-- content sits above the p5 canvas -->
+  <div class="micro-inner">
+    <h2 class="micro-title">Thank you for coming!</h2>
+    <p class="micro-sub">Let's connect — find me across the web.</p>
+    <div class="micro-actions">
+      <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Instagram</a>
+      <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener" data-cursor="cool">LinkedIn</a>
+    </div>
+  </div>
+
+  <!-- p5 canvas mounts here -->
+  <div class="footer-pixel-art" id="footer-pixel-art">
+    <!-- Background graphics by Tessie Gresley -->
+    <script>
+    (function () {
+      const starGridSize = 20, heartGridSize = 22;
+
+      const starPattern = [
+        [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
+        [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
+        [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
+        [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
+        [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
+        [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
+        [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
+        [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
+        [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
+        [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
+        [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
+        [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
+      ];
+
+      const heartPattern = [
+        [0,7,7,8,8,8,0,8,8,8,8,0],
+        [7,8,0,7,7,8,0,8,8,7,7,8],
+        [8,8,7,7,7,7,7,7,8,8,7,7],
+        [7,7,7,8,8,7,7,8,8,8,7,8],
+        [7,7,0,7,7,7,7,0,0,7,7,8],
+        [7,8,8,8,7,8,7,7,7,8,8,8],
+        [0,7,7,7,7,8,7,7,8,8,8,0],
+        [0,0,8,7,7,8,8,7,8,8,0,0],
+        [0,0,0,7,0,8,7,8,8,0,0,0],
+        [0,0,0,0,8,7,8,8,0,0,0,0],
+        [0,0,0,0,0,7,8,0,0,0,0,0],
+      ];
+
+      const sketch = (p) => {
+        let footerEl, layer;
+        let cells = [], starBounds = [], heartBounds = [];
+        let starOX, starOY, heartOX, heartOY;
+        let activeStarSize, activeHeartSize;
+        let heartHover = false;
+
+        function buildCells() {
+          cells = []; starBounds = []; heartBounds = [];
+
+          const narrow = p.width < 700;              // phone-ish
+          const gs  = narrow ? 12 : starGridSize;    // shrink grids on small screens
+          const hs  = narrow ? 13 : heartGridSize;
+          const pad = narrow ? 24 : 60;              // smaller corner offset
+
+          activeStarSize = gs;
+          activeHeartSize = hs;
+
+          heartOX = pad; heartOY = pad;              // heart top-left
+          starOX = p.width  - starPattern[0].length * gs - pad;  // star bottom-right
+          starOY = p.height - starPattern.length    * gs - pad;
+
+          // heart always shown
+          for (let y = 0; y < heartPattern.length; y++)
+            for (let x = 0; x < heartPattern[y].length; x++)
+              if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
+
+          // star only on wider screens (dropped on phones to avoid overlap)
+          if (!narrow) {
+            for (let y = 0; y < starPattern.length; y++)
+              for (let x = 0; x < starPattern[y].length; x++)
+                if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
+          }
+        }
+
+        function reveal() {
+          if (!cells.length) return;
+          const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
+          const size = c.src === 'star' ? activeStarSize : activeHeartSize;
+          const ox   = c.src === 'star' ? starOX : heartOX;
+          const oy   = c.src === 'star' ? starOY : heartOY;
+          const px = ox + c.x * size, py = oy + c.y * size;
+          layer.noStroke();
+          if (c.type === 5 || c.type === 6) {
+            layer.fill(77, 240, 229); //box color
+            c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+            starBounds.push({ x:px, y:py, size });
+          } else if (c.type === 7 || c.type === 8) {
+            layer.fill(255,105,180);
+            c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+            heartBounds.push({ x:px, y:py, size });
+          }
+        }
+
+        p.setup = () => {
+          footerEl = document.getElementById('contact');
+          const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+          cv.parent('footer-pixel-art');
+          layer = p.createGraphics(p.width, p.height);
+          buildCells();
+          for (let i = 0; i < 500; i++) reveal();
+        };
+
+        p.windowResized = () => {
+          p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+          layer = p.createGraphics(p.width, p.height);
+          buildCells();
+          for (let i = 0; i < 500; i++) reveal();
+        };
+
+        p.draw = () => {
+          p.clear();
+          p.image(layer, 0, 0);
+
+          let starH = false;
+          for (const s of starBounds) {
+            const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
+            p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229)); //star hover color then fill
+            p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
+            if (on) starH = true;
+          }
+          heartHover = false;
+          for (const h of heartBounds) {
+            const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
+            p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180)); //heart hover then fill color
+            p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
+            if (on) heartHover = true;
+          }
+          document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
+        };
+
+        p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+      };
+
+      window.addEventListener('load', () => new p5(sketch));
+    })();
+    </script>
+  </div>
+</footer>
+
 
 <script>
   // copy-email interaction
