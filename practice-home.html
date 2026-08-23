@@ -6,7 +6,8 @@
 <title>Nadia Go — Product & Multidisciplinary Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+
 <style>
   :root{
     --bg:#FFFFFF;             /* page background (white) */
@@ -20,6 +21,7 @@
     --accent:#2F7A57;         /* calm green — used sparingly for tags/metrics */
     --accent-soft:#E4EFE8;
     --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+    --title:'Syne',system-ui,-apple-system,sans-serif;
     --pad:clamp(26px,3.2vw,48px);
     --section-gap:24px;       /* consistent vertical spacing between rail sections */
   }
@@ -35,7 +37,9 @@
   a:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px;}
   img{max-width:100%; display:block;}
 
+  
   /* ── LAYOUT ─────────────────────────────────────── */
+  
   .shell{
     display:grid;
     grid-template-columns:minmax(300px,0.82fr) 1.5fr;
@@ -56,10 +60,10 @@
   }
   .rail > *:last-child{margin-bottom:0;}   /* drop trailing margin so centering stays even */
   .rail-name{
-    font-size:clamp(1.5rem,2vw,1.9rem); font-weight:600; letter-spacing:-0.02em;
-    margin:0 0 2px;
+    font-size:clamp(3rem,2vw,1.9rem); font-family:var(--title); letter-spacing:-0.02em;
+    margin:0 0 0px;
   }
-  .rail-role{color:var(--muted); font-size:1rem; margin-bottom:var(--section-gap);}
+  .rail-role{color:var(--muted); font-size:1rem; margin-bottom:var(--section-gap); margin-top:0;}
   .rail-tags{
     display:flex; gap:8px; flex-wrap:wrap; margin-bottom:var(--section-gap);
   }
@@ -130,6 +134,7 @@
   /* ── PROJECT FEED ───────────────────────────────── */
   .feed{padding:var(--pad) 0;}
   .feed-head{
+    background:var(--ink);
     display:flex; justify-content:space-between; align-items:baseline;
     font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--faint);
     padding-bottom:16px; margin-bottom:22px; border-bottom:1px solid var(--line);
@@ -167,11 +172,12 @@
   .m-daisy {background:linear-gradient(135deg,#7FB77E,#3B7A54);}
   .m-notes {background:linear-gradient(135deg,#C9B79C,#8A7355);}
 
+  /*
   .tag-new{
     position:absolute; top:14px; right:14px; z-index:2;
     background:#fff; color:var(--accent); font-size:0.68rem; font-weight:700;
     letter-spacing:0.06em; text-transform:uppercase; padding:5px 10px; border-radius:999px;
-  }
+  } */
 
   .card-body{padding:22px 24px 24px;}
   .card-eyebrow{font-size:0.78rem; font-weight:600; color:var(--muted); margin-bottom:8px;}
@@ -219,6 +225,14 @@
     .card{transition:none;}
     .card:hover{transform:none;}
   }
+
+
+.syne {
+  font-family: "Syne", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400, 600, 800;
+  font-style: normal;
+}
 </style>
 </head>
 <body>
@@ -278,13 +292,13 @@
 
   <!-- ══ PROJECT FEED ══ -->
   <main class="feed">
-    <div class="feed-head"><span>Selected work</span><span>2024 — 2026</span></div>
+    <!-- <div class="feed-head"><span>Selected work</span><span>2024 — 2026</span></div> -->
 
     <div class="card-list">
 
       <!-- Nai Nai -->
       <a class="card" href="#">
-        <span class="tag-new">New</span>
+        <!-- <span class="tag-new">New</span> -->
         <div class="card-media m-nainai"><span class="m-name">Nai Nai — packaging</span></div>
         <div class="card-body">
           <div class="card-eyebrow">Nai Nai · Brand &amp; Packaging</div>
