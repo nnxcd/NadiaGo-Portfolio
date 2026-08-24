@@ -19,6 +19,7 @@
     --muted:#6C6A62;
     --faint:#98968C;
     --line:#E4E1D8;
+    --gradient: linear-gradient(#68f4e8,#FBFAF6);
     --menu-bg:#dfdfdf;
     --overview-menu:#ebe5d3;
     --line-2:#EDEAE2;
@@ -29,7 +30,7 @@
     --title-alt:'BioRhyme',system-ui,-apple-system,sans-serif;
     --pad:clamp(26px,3.2vw,48px);
     --section-gap:24px;       /* consistent vertical spacing between rail sections */
-    --footer-h:100vh;         /* height of the reveal footer (matches the reveal space) */
+    --footer-h:clamp(520px,68vh,720px);  /* footer height */
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -45,15 +46,13 @@
 
 
   /* ── LAYOUT ─────────────────────────────────────────
-     .shell is the scrolling "page" that sits ON TOP of the
-     fixed footer. It has a solid background so it fully hides
-     the footer until you scroll into the reveal space created
-     by its bottom margin. */
+     .shell is the scrolling "page". The footer now sits in normal
+     flow directly beneath it (no reveal / parallax). */
   .shell{
     position:relative;
     z-index:1;
     background:var(--bg);
-    margin:0 auto var(--footer-h) 0;   /* right:auto → flush LEFT; bottom → reveal space */
+    margin:0 auto 0 0;                 /* right:auto → flush LEFT */
     max-width:1500px;                  /* cap width on ultra-wide, still left-aligned */
 
     display:grid;
@@ -69,7 +68,8 @@
     padding:var(--pad);                /* internal padding so text isn't jammed to the edge */
     display:flex; flex-direction:column;
     justify-content:center;            /* center content → equal gap top & bottom */
-    background-color:var(--card);
+    background:var(--card); /* HERE MOM HERE */
+    outline:1px solid var(--line);
   }
   .rail > *:last-child{margin-bottom:0;}   /* drop trailing margin so centering stays even */
   .rail-name{
@@ -111,7 +111,7 @@
     font-size:0.95rem; font-weight:500;
     transition:padding-left .2s ease, color .2s ease;
   }
-  .rail-links a .arr{color:var(--faint); transition:transform .2s ease, color .2s ease;} 
+  .rail-links a .arr{color:var(--faint); transition:transform .2s ease, color .2s ease;}
   .rail-links a:hover{padding-left:6px; color:var(--accent);}
   .rail-links a:hover .arr{transform:translate(3px,-3px); color:var(--accent);}
 
@@ -225,15 +225,12 @@
   .card-gallery:hover{border-color:var(--accent); transform:none; box-shadow:none;}
   .card-gallery:hover .arr{transform:translate(4px,-4px);}
 
-  /* ── REVEAL FOOTER ──────────────────────────────────
-     Fixed to the bottom of the viewport, sitting BEHIND the
-     page (.shell covers it). As the page scrolls into the
-     reveal space (.shell's bottom margin), this comes into view. */
+  /* ── FOOTER ─────────────────────────────────────────
+     A normal in-flow footer that sits at the bottom of the page
+     (no reveal / parallax). The p5 pixel-art fills the background. */
   .micro-footer{
-    position:fixed;
-    inset:auto 0 0 0;          /* bottom:0; left:0; right:0 */
-    height:var(--footer-h);
-    z-index:0;
+    position:relative;         /* positioning context for the canvas */
+    min-height:var(--footer-h);
     background:var(--ink);
     color:var(--bg);
     display:flex; align-items:center; justify-content:center;
@@ -304,7 +301,7 @@
       <span>Melbourne, AU</span>
     </div>
 
-    <p class="rail-bio">I'm a UI/UX Designer and Researcher focused on finding the holes that other people can't identify first.</p>
+    <p class="rail-bio"> Focused on finding the holes that other people can't identify first, and conducting user research to create an end-product that satisfies.</p>
 
     <nav class="rail-menu">
       <span class="rail-menu-title">EXPLORE</span>
@@ -403,7 +400,7 @@
 </div>
 
 
-<!-- ══ CONTACT / REVEAL FOOTER ══ -->
+<!-- ══ CONTACT / FOOTER ══ -->
 <footer class="contact micro-footer" id="contact">
   <!-- content sits above the p5 canvas -->
   <div class="micro-inner">
