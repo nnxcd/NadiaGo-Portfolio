@@ -7,9 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-<!-- 2. Modern vector icon for scalable design -->
-    <link rel="icon" href="Character-building/favicon.png" type="image/svg+xml">
-    
+
 <!-- p5.js — powers the pixel-art footer canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 
@@ -176,61 +174,89 @@
   }
   .card-list{
     display:grid; grid-template-columns:1fr; gap:16px;
+    align-items:start;            /* let a hovered card grow without stretching its row-mate */
   }
   @media (min-width:1050px){
     .card-list{grid-template-columns:1fr 1fr;}
   }
 
-  /* a case study = a colored square; the cover image shows by default */
+  /* ── CASE-STUDY CARD — framed cover + hover drawer (Megan-Yap style) ── */
   .card{
-    position:relative; display:block; overflow:hidden;
-    aspect-ratio:4/3; border-radius:14px;
-    transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+    position:relative; display:flex; flex-direction:column;
+    background:#0E0E0E; border:1px solid rgba(255,255,255,0.14);
+    border-radius:16px; padding:12px;
+    transition:border-color .3s ease, box-shadow .3s ease, transform .3s ease;
   }
-  .card:hover{transform:translateY(-3px); box-shadow:0 18px 44px rgba(0,0,0,0.45);}
-  .card.green{background:var(--sq-green);}
-  .card.blue {background:var(--sq-blue);}
-  .card.pink {background:var(--sq-pink);}
-  .card img{
-    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-    opacity:1;                    /* cover is visible by default (colored fill is just a fallback) */
+  .card:hover{
+    border-color:rgba(255,255,255,0.55);
+    box-shadow:0 18px 44px rgba(0,0,0,0.5);
+    transform:translateY(-3px);
   }
 
-  /* text sits in a soft bottom band so the cover stays clearly visible */
-  .card-info{
-    position:absolute; inset:0; z-index:2;
-    display:flex; flex-direction:column; justify-content:flex-end;
-    padding:20px;
-    background:linear-gradient(to top,rgba(0,0,0,0.60),rgba(0,0,0,0.02) 45%,transparent 62%);
-    color:#fff;
+  /* the cover, contained inside its rounded frame */
+  .card-frame{
+    position:relative; aspect-ratio:4/3; overflow:hidden;
+    border-radius:10px;
   }
-  .card-tag{
-    align-self:flex-start; margin-bottom:auto;
-    font-size:0.62rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
-    padding:5px 10px; border-radius:6px;
-    background:rgba(0,0,0,0.42); color:#fff; backdrop-filter:blur(2px);
+  .card.green .card-frame{background:var(--sq-green);}
+  .card.blue  .card-frame{background:var(--sq-blue);}
+  .card.pink  .card-frame{background:var(--sq-pink);}
+  .card-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+
+  /* title + category, always visible on the surrounding square */
+  .card-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    padding:12px 4px 0;
   }
-  .card-tag.win{background:var(--sq-green); color:#fff;}
   .card-title{
     font-family:var(--title-alt); font-weight:550; letter-spacing:-0.03em;
-    font-size:clamp(1.6rem,2.4vw,2.1rem); line-height:1; margin:0 0 6px;
-    text-shadow:0 1px 12px rgba(0,0,0,0.35);
+    font-size:clamp(1.3rem,1.8vw,1.75rem); line-height:1; margin:0; color:#fff;
   }
+  .card-cat{
+    font-size:0.62rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    color:rgba(255,255,255,0.5); white-space:nowrap;
+  }
+
+  /* the drawer that drops down on hover */
+  .card-drop{
+    max-height:0; opacity:0; overflow:hidden;
+    padding:0 4px;
+    transition:max-height .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, margin-top .4s ease;
+  }
+  .card:hover .card-drop{max-height:260px; opacity:1; margin-top:12px;}
   .card-desc{
-    font-size:0.98rem; line-height:1.35; margin:0; max-width:40ch;
-    color:rgba(255,255,255,0.92); text-shadow:0 1px 10px rgba(0,0,0,0.35);
+    font-size:0.95rem; line-height:1.4; margin:0 0 14px;
+    color:rgba(255,255,255,0.72);
   }
+  .card-meta{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    border-top:1px solid rgba(255,255,255,0.12); padding-top:12px;
+  }
+  .card-meta > div{display:flex; flex-direction:column; gap:4px; min-width:0;}
+  .card-meta dt{
+    font-size:0.58rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:rgba(255,255,255,0.45); margin:0;
+  }
+  .card-meta dd{
+    font-size:0.82rem; font-weight:600; line-height:1.2; margin:0;
+    color:rgba(255,255,255,0.92);
+  }
+  .card-cta{
+    display:inline-block; margin-top:14px;
+    font-size:0.8rem; font-weight:600; color:#fff;
+  }
+  .card:hover .card-cta{color:var(--cyan);}
 
   /* 4th cell — playground, kept minimal on the black */
   .card-playground{
-    aspect-ratio:4/3; border-radius:14px;
+    align-self:stretch; min-height:260px; border-radius:16px;
     border:1px dashed rgba(255,255,255,0.28); background:transparent;
     display:flex; align-items:flex-end; justify-content:space-between;
     padding:20px; color:rgba(255,255,255,0.72); font-weight:600;
     transition:border-color .25s ease, color .25s ease;
   }
   .card-playground .arr{transition:transform .2s ease;}
-  .card-playground:hover{border-color:#fff; color:#fff; transform:none; box-shadow:none;}
+  .card-playground:hover{border-color:#fff; color:#fff;}
   .card-playground:hover .arr{transform:translate(4px,-4px);}
 
   /* ── FOOTER (unchanged pixel-art) ───────────────── */
@@ -267,7 +293,7 @@
   @media (max-width:560px){ .card-list{grid-template-columns:1fr;} }
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
-    .card,.card-media img,.pet__eyes,.pet__eyes img{transition:none;}
+    .card,.pet__eyes,.pet__eyes img{transition:none;}
     .card:hover{transform:none;}
   }
 </style>
@@ -302,7 +328,7 @@
         <span>Melbourne, AU</span>
       </div>
 
-      <p class="rail-bio">Studied at the <strong bold>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
+      <p class="rail-bio">Studied at the <strong>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
       <p class="rail-bio">Focused on <strong>finding the holes</strong> that other people can't identify first, and conducting user research to create an end-product that <strong>satisfies</strong>.</p>
 
       <nav class="rail-menu">
@@ -335,31 +361,61 @@
 
         <!-- Nai Nai -->
         <a class="card green" href="nainai.html">
-          <img src="Case-study-images/CS(nainai).jpg" alt="" onerror="this.remove()">
-          <div class="card-info">
-             <!-- <span class="card-tag win">Winner · CISSA</span> -->
+          <div class="card-frame">
+            <img src="Case-study-images/CS(nainai).jpg" alt="Nai Nai cover" onerror="this.remove()">
+          </div>
+          <div class="card-head">
             <h3 class="card-title">Nai Nai</h3>
+            <span class="card-cat">Winner · CISSA</span>
+          </div>
+          <div class="card-drop">
             <p class="card-desc">A virtual grandma for safe, community-vetted home remedies.</p>
+            <dl class="card-meta">
+              <div><dt>Role</dt><dd>Lead UI · Research</dd></div>
+              <div><dt>Team</dt><dd>CISSA Hackathon</dd></div>
+              <div><dt>Focus</dt><dd>Medical · TCM</dd></div>
+            </dl>
+            <span class="card-cta">View case study ↗</span>
           </div>
         </a>
 
         <!-- Mongie -->
         <a class="card blue" href="#">
-          <img src="Case-study-images/CS(mongie).jpg" alt="" onerror="this.remove()">
-          <div class="card-info">
-          <!--   <span class="card-tag">Runner-up · CISSA</span> -->
+          <div class="card-frame">
+            <img src="Case-study-images/CS(mongie).jpg" alt="Mongie cover" onerror="this.remove()">
+          </div>
+          <div class="card-head">
             <h3 class="card-title">Mongie</h3>
+            <span class="card-cat">Runner-up · CISSA</span>
+          </div>
+          <div class="card-drop">
             <p class="card-desc">A virtual pet that grows as kids take their breaks.</p>
+            <dl class="card-meta">
+              <div><dt>Role</dt><dd>Lead UI · Research</dd></div>
+              <div><dt>Team</dt><dd>CISSA</dd></div>
+              <div><dt>Timeframe</dt><dd>4-day sprint</dd></div>
+            </dl>
+            <span class="card-cta">View case study ↗</span>
           </div>
         </a>
 
         <!-- Daisy -->
         <a class="card pink" href="#">
-          <img src="Case-study-images/CS(Daisy).jpg" alt="" onerror="this.remove()">
-          <div class="card-info">
-            <!-- <span class="card-tag">Capstone</span> -->
+          <div class="card-frame">
+            <img src="Case-study-images/CS(Daisy).jpg" alt="Daisy cover" onerror="this.remove()">
+          </div>
+          <div class="card-head">
             <h3 class="card-title">Daisy</h3>
+            <span class="card-cat">Capstone</span>
+          </div>
+          <div class="card-drop">
             <p class="card-desc">Track your wishlist before it wrecks your budget.</p>
+            <dl class="card-meta">
+              <div><dt>Role</dt><dd>UI · UX · Branding</dd></div>
+              <div><dt>Team</dt><dd>Solo</dd></div>
+              <div><dt>Focus</dt><dd>Fashion × Finance</dd></div>
+            </dl>
+            <span class="card-cta">View case study ↗</span>
           </div>
         </a>
 
