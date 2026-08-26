@@ -7,7 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
+<!-- 2. Modern vector icon for scalable design -->
+    <link rel="icon" href="Character-building/favicon.png" type="image/svg+xml">
+    
 <!-- p5.js — powers the pixel-art footer canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 
@@ -34,6 +36,7 @@
     --line-soft:#E4E1D8;
     --cyan:#18C6E7; /* copy-email pill */
     --cyan-lighter:#5ddef8;
+    --red:#f53c04;
     /* case-study square fills */
     --sq-green:#3E8E5F;
     --green-dark:#1C6B41;     /* readable "copied" state */
@@ -54,7 +57,7 @@
     font-family:var(--sans); font-size:16px; line-height:1.55;
     -webkit-font-smoothing:antialiased;
   }
-  ::selection{background:var(--ink); color:var(--bg);}
+  ::selection{background:var(--red); color:var(--bg);}
   a{color:inherit; text-decoration:none;}
   a:focus-visible,button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
   img{max-width:100%; display:block;}
@@ -116,6 +119,7 @@
     padding:7px 15px; border-radius:999px;
     background:var(--ink); color:#fff;
   }
+  .rail-tags span:nth-child(2){background:var(--red); color:#fff;}   /* "Product Designer" */
 
   .rail-bio{color:var(--muted); font-size:1rem; max-width:34ch; margin:0;}
   .rail-bio strong{color:var(--ink); font-weight:inherit;}   /* emphasized phrases */
@@ -298,7 +302,7 @@
         <span>Melbourne, AU</span>
       </div>
 
-      <p class="rail-bio">Studied at the <strong>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
+      <p class="rail-bio">Studied at the <strong bold>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
       <p class="rail-bio">Focused on <strong>finding the holes</strong> that other people can't identify first, and conducting user research to create an end-product that <strong>satisfies</strong>.</p>
 
       <nav class="rail-menu">
