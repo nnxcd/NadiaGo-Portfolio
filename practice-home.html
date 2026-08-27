@@ -26,10 +26,10 @@
   }
   :root{
     --bg:#FFFFFF;             /* page + rail background (white) */
-    --feed-bg:#000000;        /* black gallery area */
+    --feed-bg:#FFFF;        /* black gallery area */
     --ink:#111111;
     --muted:#6C6A62;
-    --faint:#98968C;
+    --faint:#98968C; 
     --line:#111111;           /* header grid lines (matches screenshot's crisp black rules) */
     --line-soft:#E4E1D8;
     --cyan:#18C6E7; /* copy-email pill */
@@ -183,13 +183,12 @@
   /* ── CASE-STUDY CARD — framed cover + hover drawer (Megan-Yap style) ── */
   .card{
     position:relative; display:flex; flex-direction:column;
-    background:#0E0E0E; border:1px solid rgba(255,255,255,0.14);
+    background:#0E0E0E;
     border-radius:16px; padding:12px;
-    transition:border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+    transition:border-color .3s ease, transform .3s ease;
   }
   .card:hover{
     border-color:rgba(255,255,255,0.55);
-    box-shadow:0 18px 44px rgba(0,0,0,0.5);
     transform:translateY(-3px);
   }
 
@@ -265,20 +264,21 @@
     background:var(--feed-bg); color:#fff;
     display:flex; align-items:center; justify-content:center;
     overflow:hidden; padding:var(--pad);
+    border: 1px solid var(--line);
   }
   .micro-inner{position:relative; z-index:2; text-align:center; max-width:44ch;}
   .micro-title{
     font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
-    font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:#fff;
+    font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:var(--ink);
   }
-  .micro-sub{color:rgba(255,255,255,0.72); font-size:1.05rem; margin:0 0 26px;}
+  .micro-sub{color:rgba(68, 68, 68, 1); font-size:1.05rem; margin:0 0 26px;}
   .micro-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
   .micro-btn{
-    display:inline-flex; align-items:center; padding:12px 24px; border-radius:999px;
-    border:1px solid rgba(255,255,255,0.28); color:#fff; font-weight:600; font-size:0.95rem;
+    display:inline-flex; align-items:center; padding:8px 24px; border-radius:999px;
+    border:1px solid var(--ink); color:var(--ink); font-weight:600; font-size:0.95rem;
     transition:background .2s ease, border-color .2s ease, transform .2s ease;
   }
-  .micro-btn:hover{background:rgba(255,255,255,0.12); border-color:#fff; transform:translateY(-2px);}
+  .micro-btn:hover{background:rgba(255,255,255,0.12); border-color:var(--ink); transform:translateY(-2px);}
   #footer-pixel-art{position:absolute; inset:0; z-index:1;}
   #footer-pixel-art canvas{display:block;}
 
@@ -372,8 +372,8 @@
             <p class="card-desc">A virtual grandma for safe, community-vetted home remedies.</p>
             <dl class="card-meta">
               <div><dt>Role</dt><dd>Lead UI · Research</dd></div>
-              <div><dt>Team</dt><dd>CISSA Hackathon</dd></div>
               <div><dt>Focus</dt><dd>Medical · TCM</dd></div>
+              <div><dt>Timeframe</dt><dd>September 2025</dd></div>
             </dl>
             <span class="card-cta">View case study ↗</span>
           </div>
@@ -393,7 +393,7 @@
             <dl class="card-meta">
               <div><dt>Role</dt><dd>Lead UI · Research</dd></div>
               <div><dt>Team</dt><dd>CISSA</dd></div>
-              <div><dt>Timeframe</dt><dd>4-day sprint</dd></div>
+              <div><dt>Timeframe</dt><dd>February 2024</dd></div>
             </dl>
             <span class="card-cta">View case study ↗</span>
           </div>
@@ -412,8 +412,8 @@
             <p class="card-desc">Track your wishlist before it wrecks your budget.</p>
             <dl class="card-meta">
               <div><dt>Role</dt><dd>UI · UX · Branding</dd></div>
-              <div><dt>Team</dt><dd>Solo</dd></div>
               <div><dt>Focus</dt><dd>Fashion × Finance</dd></div>
+              <div><dt>Timeframe</dt><dd>November 2025</dd></div>
             </dl>
             <span class="card-cta">View case study ↗</span>
           </div>
