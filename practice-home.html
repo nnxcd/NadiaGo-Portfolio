@@ -60,7 +60,7 @@
   a:focus-visible,button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
   img{max-width:100%; display:block;}
 
-  .page{max-width:1500px; margin:0;}
+ .page{max-width:none; margin:0;}
 
   /* ── TOP HEADER: name box + pet box ─────────────── */
   .topbar{
@@ -80,13 +80,17 @@
     font-size:clamp(2.6rem,7.4vw,6rem);
     line-height:0.82; margin:0; white-space:nowrap;
   }
+  /* pet on the left, copy-email pinned to the right */
   .topbar-pet{
-    display:flex; align-items:center; justify-content:flex-start;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px;
     padding:var(--pad);
   }
+  /* button hugs its own text instead of filling the box */
+  .topbar-pet .rail-email{width:max-content;}
 
   /* the pet, sitting in its box */
-  .pet{width:clamp(48px,4vw,64px); aspect-ratio:1; position:relative;}
+  .pet{width:clamp(48px,4vw,64px); aspect-ratio:1; position:relative; flex:none;}
   .pet__inner{position:relative; width:100%; height:100%; transform-origin:center bottom;}
   .pet__body{position:absolute; inset:0; width:100%; height:100%;}
   .pet__eyes{position:absolute; inset:0; transition:transform .08s linear; will-change:transform;}
@@ -119,14 +123,14 @@
   }
   .rail-tags span:nth-child(2){background:var(--red); color:#fff;}   /* "Product Designer" */
 
-  .rail-bio{color:var(--muted); font-size:1rem; max-width:34ch; margin:0;}
+  .rail-bio{color:var(--muted); font-size:1rem; max-width:45ch; margin:0;}
   .rail-bio strong{color:var(--ink); font-weight:inherit;}   /* emphasized phrases */
 
   /* ── EXPLORE MENU — full-bleed rows, edge-to-edge rules ── */
   .rail-menu{margin:0 calc(var(--pad) * -1);}   /* break out of the rail padding */
   .rail-menu-title{
     display:block; font-size:1rem; color:var(--faint);
-    margin:0; padding:0 var(--pad) 10px; border-bottom:1px solid var(--line);
+    margin:0; padding:0 var(--pad) 10px; padding: var(--pad); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
   }
   .rail-menu ul{list-style:none; margin:0; padding:0;}
   .rail-menu li{border-bottom:1px solid var(--line);}
@@ -248,14 +252,15 @@
 
   /* 4th cell — playground, kept minimal on the black */
   .card-playground{
-    align-self:stretch; min-height:260px; border-radius:16px;
-    border:1px dashed rgba(255,255,255,0.28); background:transparent;
-    display:flex; align-items:flex-end; justify-content:space-between;
-    padding:20px; color:rgba(255,255,255,0.72); font-weight:600;
-    transition:border-color .25s ease, color .25s ease;
-  }
+  align-self:stretch; min-height:260px; border-radius:16px;
+  border:1px dashed rgba(0,0,0,0.28);          /* dark, so it shows on white */
+  background:transparent;
+  display:flex; align-items:flex-end; justify-content:space-between;
+  padding:20px; color:rgba(12,12,12,0.72); font-weight:600;
+  transition:border-color .25s ease, color .25s ease;
+}
   .card-playground .arr{transition:transform .2s ease;}
-  .card-playground:hover{border-color:#fff; color:#fff;}
+  .card-playground:hover{border-color:var(--red); color:var(--red);}
   .card-playground:hover .arr{transform:translate(4px,-4px);}
 
   /* ── FOOTER (unchanged pixel-art) ───────────────── */
@@ -264,7 +269,7 @@
     background:var(--feed-bg); color:#fff;
     display:flex; align-items:center; justify-content:center;
     overflow:hidden; padding:var(--pad);
-    border: 1px solid var(--line);
+    border-top: 1px solid var(--line);
   }
   .micro-inner{position:relative; z-index:2; text-align:center; max-width:44ch;}
   .micro-title{
@@ -286,6 +291,7 @@
   @media (max-width:880px){
     .topbar{grid-template-columns:1fr;}
     .topbar-name{border-right:none; border-bottom:1px solid var(--line);}
+    .topbar-pet{flex-wrap:wrap;}
     .shell{grid-template-columns:1fr;}
     .rail{position:static; min-height:auto; border-right:none; border-bottom:1px solid var(--line);}
     .card-list{grid-template-columns:1fr 1fr;}
@@ -315,6 +321,15 @@
           <div class="pet__eyes" id="petEyes"><img alt="" src="Character-building/eyes.png"></div>
         </div>
       </div>
+
+      <!-- copy-email, pinned to the far right of the pet's box -->
+      <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
+        <span class="ico">📨</span>
+        <span class="txt">
+          <b id="emailLabel">Copy my email</b>
+          <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
+        </span>
+      </button>
     </div>
   </header>
 
@@ -345,14 +360,6 @@
         <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener">Instagram</a>
         <a href="#">Read my CV</a>
       </nav>
-
-      <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
-        <span class="ico">📨</span>
-        <span class="txt">
-          <b id="emailLabel">Copy my email</b>
-          <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
-        </span>
-      </button>
     </aside>
 
     <!-- ── PROJECT FEED (black gallery) ── -->
@@ -604,7 +611,11 @@
       const cs = getComputedStyle(box);
       const padL = parseFloat(cs.paddingLeft) || 0;
       const padR = parseFloat(cs.paddingRight) || 0;
-      maxX = Math.max(0, box.clientWidth - padL - padR - pet.offsetWidth);
+      const email = box.querySelector('.rail-email');
+      const emailW = email ? email.offsetWidth : 0;
+      const gap = parseFloat(cs.columnGap || cs.gap) || 0;
+      // travel span = box inner width minus the pet AND the email pinned on the right
+      maxX = Math.max(0, box.clientWidth - padL - padR - pet.offsetWidth - emailW - gap);
       if(x > maxX) x = maxX;
     }
     measure();

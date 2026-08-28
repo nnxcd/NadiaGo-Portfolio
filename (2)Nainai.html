@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Case study: Nai Nai, a virtual-grandmother concept closing Australia's rural Traditional Chinese Medicine trust gap. CISSA Hackathon winner, Medical track.">
+<title>Nai Nai — Your Virtual Grandma — Nadia Go</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="Character-building/looking-glass.png" sizes="32x32">
+<!-- p5.js — powers the pixel-art footer canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+<style>
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:450;
+    src:url('Fonts/NeueHaasGrotDisp-45Light-Trial.otf') format('opentype');
+  }
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:550;
+    src:url('Fonts/NeueHaasGrotDisp-55Roman-Trial.otf') format('opentype');
+  }
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:650;
+    src:url('Fonts/NeueHaasGrotDisp-65Medium-Trial.otf') format('opentype');
+  }
+  :root{
+    --bg:#FFFFFF;
+    --feed-bg:#FFFF;
+    --ink:#111111;
+    --muted:#6C6A62;
+    --faint:#98968C;
+    --line:#111111;
+    --line-soft:#E4E1D8;
+    --cyan:#18C6E7;
+    --cyan-lighter:#5ddef8;
+    --red:#f53c04;
+    --sq-green:#3E8E5F;
+    --green-dark:#1C6B41;
+    --sq-blue:#D6E0E7;
+    --sq-pink:#EFA9DA;
+    /* Nai Nai warm accent — a soft brand tint for this case study */
+    --nn-cream:#F6EFE4;
+    --nn-warm:#C8632B;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+    --title:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
+    --title-alt:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
+    --pad:clamp(12px,1.4vw,18px);
+    --section-gap:22px;
+    --footer-h:clamp(520px,68vh,720px);
+    --cols:minmax(240px,0.6fr) 1.7fr;   /* shared grid: rail | content */
+    --maxw:1100px;                       /* readable measure for case-study prose */
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--red); color:var(--bg);}
+  a{color:inherit; text-decoration:none;}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
+  img{max-width:100%; display:block;}
+
+  .page{max-width:none; margin:0;}
+
+  /* ── TOP HEADER: name box + pet box ─────────────── */
+  .topbar{
+    display:grid; grid-template-columns:var(--cols);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-name{
+    padding:var(--pad);
+    padding-right:calc(var(--pad) + 28px);
+    border-right:1px solid var(--line);
+    display:flex; align-items:center;
+    overflow:hidden;
+  }
+  .rail-name{
+    font-family:var(--title-alt); font-weight:550;
+    letter-spacing:-0.06em;
+    font-size:clamp(2.6rem,7.4vw,6rem);
+    line-height:0.82; margin:0; white-space:nowrap;
+  }
+  .rail-name a{display:inline-block;}
+  .topbar-pet{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px;
+    padding:var(--pad);
+  }
+  .topbar-pet .rail-email{width:max-content;}
+
+  /* the pet, sitting in its box */
+  .pet{width:clamp(48px,4vw,64px); aspect-ratio:1; position:relative; flex:none;}
+  .pet__inner{position:relative; width:100%; height:100%; transform-origin:center bottom;}
+  .pet__body{position:absolute; inset:0; width:100%; height:100%;}
+  .pet__eyes{position:absolute; inset:0; transition:transform .08s linear; will-change:transform;}
+  .pet__eyes img{
+    width:100%; height:100%; display:block;
+    transform-origin:45.75% 35.25%;
+    transition:transform .09s ease;
+  }
+  .pet.is-blinking .pet__eyes img{transform:scaleY(.08);}
+  .pet img{-webkit-user-drag:none; user-select:none;}
+
+  /* ── BODY GRID: rail | content ──────────────────── */
+  .shell{display:grid; grid-template-columns:var(--cols);}
+
+  /* ── STICKY RAIL — slimmed to intro + section nav ─ */
+  .rail{
+    position:sticky; top:0; align-self:start;
+    min-height:calc(100vh - 0px);
+    padding:var(--pad);
+    border-right:1px solid var(--line);
+    background:var(--bg);
+    display:flex; flex-direction:column; gap:var(--section-gap);
+  }
+  .rail-tags{display:flex; gap:10px; flex-wrap:wrap;}
+  .rail-tags span{
+    font-size:0.82rem; font-weight:500;
+    padding:7px 15px; border-radius:999px;
+    background:var(--ink); color:#fff;
+  }
+  .rail-tags span:nth-child(2){background:var(--red); color:#fff;}
+
+  .rail-bio{color:var(--muted); font-size:1rem; max-width:45ch; margin:0;}
+  .rail-bio strong{color:var(--ink); font-weight:inherit;}
+
+  /* in-page section nav */
+  .rail-menu{margin:0 calc(var(--pad) * -1);}
+  .rail-menu-title{
+    display:block; font-size:1rem; color:var(--faint);
+    margin:0; padding:var(--pad); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .rail-menu ul{list-style:none; margin:0; padding:0;}
+  .rail-menu li{border-bottom:1px solid var(--line);}
+  .rail-menu a{
+    display:flex; align-items:center; gap:18px;
+    padding:13px var(--pad); color:var(--ink); font-size:1.02rem;
+    transition:padding-left .18s ease, color .18s ease;
+  }
+  .rail-menu a .num{color:var(--ink); font-variant-numeric:tabular-nums; min-width:1.6em;}
+  .rail-menu a .lbl{flex:1;}
+  .rail-menu a .arr{color:var(--ink); transition:transform .18s ease;}
+  .rail-menu a:hover{padding-left:calc(var(--pad) + 6px); color:#000;}
+  .rail-menu a:hover .arr{transform:translate(3px,-3px);}
+
+  .rail-links{display:flex; flex-direction:column; gap:10px;}
+  .rail-links a{
+    font-size:1.05rem; width:max-content;
+    transition:padding-left .18s ease, opacity .18s ease;
+  }
+  .rail-links a:hover{padding-left:5px; opacity:.65;}
+
+  /* ── COPY-EMAIL CARD ────────────────────────────── */
+  .rail-email{
+    display:flex; align-items:center; gap:12px; width:100%;
+    background:#fff; border:1px solid var(--ink); border-radius:12px;
+    padding:12px 14px; cursor:pointer;
+    font-family:var(--sans); font-size:0.9rem; color:var(--ink); text-align:left;
+    transition:background .18s ease, transform .18s ease, border-color .18s ease;
+  }
+  .rail-email:hover{color:var(--ink); background:var(--bg); transform:translateY(-1px);}
+  .rail-email .ico{font-size:1.15rem; line-height:1;}
+  .rail-email .txt{display:flex; flex-direction:column; line-height:1.25;}
+  .rail-email .txt b{font-weight:650;}
+  .rail-email .txt small{color:var(--muted); font-size:0.76rem;}
+  .rail-email.copied{background:var(--green-dark); border-color:var(--green-dark); color:#fff;}
+  .rail-email.copied .txt b{color:#fff;}
+  .rail-email.copied .txt small{color:rgba(255,255,255,0.88);}
+
+  /* ── CASE STUDY CONTENT COLUMN ──────────────────── */
+  .study{padding:0;}
+
+  /* hero */
+  .study-hero{
+    position:relative; padding:clamp(28px,5vw,72px) var(--pad) clamp(24px,3.5vw,44px);
+    border-bottom:1px solid var(--line);
+    background:var(--nn-cream);
+  }
+  .study-hero .wrap{max-width:var(--maxw); margin:0 auto;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+    color:#fff; background:var(--nn-warm);
+    padding:7px 14px; border-radius:999px; margin:0 0 22px;
+  }
+  .study-title{
+    font-family:var(--title); font-weight:650; letter-spacing:-0.03em;
+    font-size:clamp(2.1rem,4.6vw,4rem); line-height:1.02; margin:0 0 20px; color:var(--ink);
+    max-width:20ch;
+  }
+  .study-lede{
+    font-size:clamp(1.05rem,1.4vw,1.3rem); line-height:1.5; color:var(--muted);
+    max-width:60ch; margin:0;
+  }
+  .study-lede strong{color:var(--ink); font-weight:600;}
+
+  /* hero meta — project details as an inline row (Lingofable-style) */
+  .hero-meta{
+    display:flex; flex-wrap:wrap; gap:0;
+    margin:clamp(24px,3vw,36px) 0 0;
+    border-top:1px solid rgba(17,17,17,0.18);
+  }
+  .hero-meta > div{
+    flex:1 1 180px; min-width:150px;
+    padding:18px 22px 4px 0;
+    display:flex; flex-direction:column; gap:5px;
+  }
+  .hero-meta > div + div{padding-left:22px; border-left:1px solid rgba(17,17,17,0.18);}
+  .hero-meta dt{
+    font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--nn-warm); margin:0;
+  }
+  .hero-meta dd{margin:0; font-size:0.98rem; font-weight:600; color:var(--ink); line-height:1.3;}
+
+  /* banner image under hero */
+  .study-banner{
+    max-width:var(--maxw); margin:clamp(24px,3vw,40px) auto 0;
+    border-radius:16px; overflow:hidden; aspect-ratio:16/9; background:#e8e2d6;
+  }
+  .study-banner img{width:100%; height:100%; object-fit:cover;}
+
+  /* generic section */
+  .sec{
+    padding:clamp(40px,6vw,88px) var(--pad);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .sec .wrap{max-width:var(--maxw); margin:0 auto;}
+  .sec-kicker{
+    font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--red); margin:0 0 14px;
+  }
+  .sec-h{
+    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
+    font-size:clamp(1.7rem,3vw,2.7rem); line-height:1.08; margin:0 0 22px; color:var(--ink);
+    max-width:22ch;
+  }
+  .sec p{font-size:1.06rem; line-height:1.6; color:#2b2a27; max-width:64ch; margin:0 0 18px;}
+  .sec p strong{font-weight:600; color:var(--ink);}
+  .sec p:last-child{margin-bottom:0;}
+
+  /* big stat pair */
+  .stats{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px;
+    margin:34px 0 0;
+  }
+  .stat{
+    border:1px solid var(--line); border-radius:16px; padding:24px;
+    display:flex; flex-direction:column; gap:8px; background:#fff;
+  }
+  .stat b{
+    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
+    font-size:clamp(2rem,4vw,3.2rem); line-height:1; color:var(--nn-warm);
+  }
+  .stat span{font-size:0.98rem; color:var(--muted); line-height:1.4;}
+
+  /* two-column sub-cards (supply / trust, learnings) */
+  .duo, .trio{display:grid; gap:16px; margin:30px 0 0;}
+  .duo{grid-template-columns:1fr 1fr;}
+  .trio{grid-template-columns:repeat(3,1fr);}
+  .mini{
+    border:1px solid var(--line-soft); border-radius:16px; padding:24px;
+    background:#fff; display:flex; flex-direction:column; gap:10px;
+  }
+  .mini h4{
+    font-family:var(--title-alt); font-weight:650; font-size:1.15rem; letter-spacing:-0.01em;
+    margin:0; color:var(--ink);
+  }
+  .mini p{font-size:0.98rem; line-height:1.5; color:var(--muted); margin:0; max-width:none;}
+
+  /* HMW / pull quote band */
+  .band{
+    background:var(--ink); color:#fff; border-radius:20px;
+    padding:clamp(28px,4vw,52px); margin:34px 0 0;
+  }
+  .band .q{
+    font-family:var(--title); font-weight:550; letter-spacing:-0.01em;
+    font-size:clamp(1.3rem,2.4vw,2rem); line-height:1.28; margin:0; color:#fff;
+    max-width:34ch;
+  }
+  .band .q em{color:var(--cyan-lighter); font-style:normal;}
+
+  /* the "person, not an app" character moment */
+  .char{
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:clamp(20px,3vw,44px);
+    align-items:center; margin:34px 0 0;
+  }
+  .char-word{
+    background:var(--nn-cream); border-radius:20px; padding:clamp(28px,4vw,48px);
+    text-align:center; display:flex; flex-direction:column; gap:8px; align-items:center; justify-content:center;
+  }
+  .char-word .hanzi{
+    font-family:var(--title); font-weight:650; font-size:clamp(3.4rem,7vw,5.5rem); line-height:1; color:var(--nn-warm);
+  }
+  .char-word .pin{font-size:1.05rem; color:var(--muted);}
+  .char-word .pin em{font-style:italic;}
+  .char-copy p{margin:0 0 16px;}
+  .char-copy .tag{
+    font-family:var(--title-alt); font-weight:650; font-size:1.25rem; color:var(--ink); margin:0;
+  }
+
+  /* media figure */
+  .fig{margin:30px 0 0;}
+  .fig-media{
+    border-radius:16px; overflow:hidden; background:#eee; border:1px solid var(--line-soft);
+    aspect-ratio:16/10;
+  }
+  .fig-media img, .fig-media video{width:100%; height:100%; object-fit:cover; display:block;}
+  .fig figcaption{
+    font-size:0.86rem; color:var(--faint); margin:12px 2px 0; font-style:italic;
+  }
+
+  /* feature list */
+  .features{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:30px 0 0;}
+  .feat{
+    border:1px solid var(--line); border-radius:16px; padding:24px; background:#fff;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .feat .n{
+    font-family:var(--title); font-weight:650; font-size:0.9rem; color:var(--nn-warm);
+    font-variant-numeric:tabular-nums;
+  }
+  .feat h4{
+    font-family:var(--title-alt); font-weight:650; font-size:1.15rem; margin:0; color:var(--ink); letter-spacing:-0.01em;
+  }
+  .feat p{font-size:0.96rem; line-height:1.5; color:var(--muted); margin:0; max-width:none;}
+
+  /* "what we heard" quote chips */
+  .voices{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:30px 0 0;}
+  .voice{
+    border:1px dashed rgba(0,0,0,0.28); border-radius:14px; padding:20px 22px;
+    font-size:1.05rem; color:#2b2a27; line-height:1.4; background:#fff;
+  }
+  .voice::before{content:"“"; color:var(--nn-warm); font-weight:700;}
+  .voice::after{content:"”"; color:var(--nn-warm); font-weight:700;}
+
+  /* project pager */
+  .pager{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    padding:clamp(28px,4vw,48px) var(--pad);
+    max-width:var(--maxw); margin:0 auto;
+  }
+  .pager a{
+    display:inline-flex; align-items:center; gap:10px; font-weight:600; font-size:1.05rem;
+    padding:12px 20px; border:1px solid var(--line); border-radius:999px;
+    transition:background .18s ease, color .18s ease, transform .18s ease;
+  }
+  .pager a:hover{background:var(--ink); color:#fff; transform:translateY(-2px);}
+
+  /* ── FOOTER (unchanged pixel-art) ───────────────── */
+  .micro-footer{
+    position:relative; min-height:var(--footer-h);
+    background:var(--feed-bg); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; padding:var(--pad);
+    border-top: 1px solid var(--line);
+  }
+  .micro-inner{position:relative; z-index:2; text-align:center; max-width:44ch;}
+  .micro-title{
+    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
+    font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:var(--ink);
+  }
+  .micro-sub{color:rgba(68, 68, 68, 1); font-size:1.05rem; margin:0 0 26px;}
+  .micro-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+  .micro-btn{
+    display:inline-flex; align-items:center; padding:8px 24px;
+   
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .micro-btn:hover{background:rgba(255,255,255,0.12); transform:translateY(-2px);}
+  #footer-pixel-art{position:absolute; inset:0; z-index:1;}
+  #footer-pixel-art canvas{display:block;}
+
+  /* ── RESPONSIVE ─────────────────────────────────── */
+  @media (max-width:880px){
+    .topbar{grid-template-columns:1fr;}
+    .topbar-name{border-right:none; border-bottom:1px solid var(--line);}
+    .topbar-pet{flex-wrap:wrap;}
+    .shell{grid-template-columns:1fr;}
+    .rail{position:static; min-height:auto; border-right:none; border-bottom:1px solid var(--line);}
+  }
+  @media (max-width:720px){
+    .stats,.duo,.trio,.features,.voices,.char{grid-template-columns:1fr;}
+    /* meta pairs stack cleanly, drop the vertical dividers */
+    .hero-meta > div{flex:1 1 100%; padding:16px 0 4px; border-top:1px solid rgba(17,17,17,0.12);}
+    .hero-meta > div + div{padding-left:0; border-left:none;}
+    .hero-meta{border-top:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .pet__eyes,.pet__eyes img{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ══ TOP HEADER ══ -->
+  <header class="topbar" id="top">
+    <div class="topbar-name">
+      <h1 class="rail-name"><a href="index.html"><img src="Character-building/name logo.png"></a></h1>
+    </div>
+    <div class="topbar-pet">
+      <div class="pet" id="pet" aria-hidden="true">
+        <div class="pet__inner">
+          <img class="pet__body" alt="" src="Character-building/whole.png">
+          <div class="pet__eyes" id="petEyes"><img alt="" src="Character-building/eyes.png"></div>
+        </div>
+      </div>
+
+      <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
+        <span class="ico">📨</span>
+        <span class="txt">
+          <b id="emailLabel">Copy my email</b>
+          <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ══ BODY ══ -->
+  <div class="shell">
+
+    <!-- ── STICKY RAIL (slimmed) ── -->
+    <aside class="rail">
+        <!--
+      <div class="rail-tags">
+        <span>Case Study</span>
+        <span>Winner · CISSA</span>
+      </div> -->
+
+    <!--  <p class="rail-bio"><strong>Nai Nai</strong> — a virtual grandmother that turns a daily mood check-in into a safe, community-vetted Traditional Chinese Medicine remedy.</p> -->
+        
+      <nav class="rail-links">
+        <a href="index.html#work">← Back to all work</a> </nav>
+      <nav class="rail-menu">
+        <span class="rail-menu-title">On this page</span>
+        <ul>
+          <li><a href="#context"><span class="num">01</span><span class="lbl">Context</span><span class="arr">↗</span></a></li>
+          <li><a href="#problem"><span class="num">02</span><span class="lbl">The Problem</span><span class="arr">↗</span></a></li>
+          <li><a href="#solution"><span class="num">03</span><span class="lbl">A Proposed Solution</span><span class="arr">↗</span></a></li>
+          <li><a href="#features"><span class="num">04</span><span class="lbl">Features</span><span class="arr">↗</span></a></li>
+          <li><a href="#findings"><span class="num">05</span><span class="lbl">Findings</span><span class="arr">↗</span></a></li>
+          <li><a href="#reflection"><span class="num">06</span><span class="lbl">Reflection</span><span class="arr">↗</span></a></li>
+        </ul>
+      </nav>
+
+      <nav class="rail-links">
+        
+        <a href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener">Instagram</a>
+        
+      </nav>
+    </aside>
+
+    <!-- ── CASE STUDY CONTENT ── -->
+    <main class="study">
+
+      <!-- HERO -->
+      <section class="study-hero">
+        <div class="wrap">
+        <!--  <span class="eyebrow">CISSA Hackathon Winner — Medical Track</span> -->
+          <h2 class="study-title">Building Nai Nai, for the people the healthcare system can't reach</h2>
+          <p class="study-lede">Nai Nai is a concept I designed for CISSA's Medical track — a digital companion that turns a daily mood check-in into a safe, community-vetted Traditional Chinese Medicine remedy. It took <strong>1st place</strong> by treating <strong>trust, not information</strong>, as the actual problem to solve.</p>
+
+          <!-- project details, now inline under the hero (Lingofable-style) -->
+          <dl class="hero-meta">
+            <div><dt>Role</dt><dd>Lead UI · UX Research</dd></div>
+            <div><dt>Tools</dt><dd>Illustrator · Photoshop · Figma</dd></div>
+            <div><dt>Built for</dt><dd>CISSA Hackathon</dd></div>
+            <div><dt>Outcome</dt><dd>1st place, Medical track</dd></div>
+          </dl>
+        </div>
+        <figure class="study-banner">
+          <img src="Case-study-images/CS(nainai).jpg" alt="Nai Nai app concept — overview banner" onerror="this.closest('.study-banner').style.display='none'">
+        </figure>
+      </section>
+
+      <!-- 01 CONTEXT -->
+      <section class="sec" id="context">
+        <div class="wrap">
+          <p class="sec-kicker">01 — Context</p>
+          <h3 class="sec-h">A health system that doesn't reach everyone equally</h3>
+          <p>28% of Australians live in rural and remote areas, where health outcomes already trail the cities. Traditional Chinese Medicine could help close some of that gap — non-invasive, well suited to age-related conditions, and in rising demand. But the workforce that delivers it is shrinking and ageing out, fastest in exactly the regions that need it most.</p>
+          <div class="stats">
+            <div class="stat"><b>28%</b><span>of Australians live in rural or remote areas (ABS, 2023).</span></div>
+            <div class="stat"><b>51.4</b><span>average age of a TCM practitioner today (Ahpra, 2022).</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 PROBLEM -->
+      <section class="sec" id="problem">
+        <div class="wrap">
+          <p class="sec-kicker">02 — The Problem</p>
+          <h3 class="sec-h">The Supply-Trust Paradox</h3>
+          <p>Demand for TCM is rising as Australia ages — but the profession is short on practitioners and short on trust at the same time, and neither half fixes the other on its own.</p>
+          <div class="duo">
+            <div class="mini">
+              <h4>The Supply Crisis</h4>
+              <p>The workforce has shrunk 1.9% over five years and is ageing fast. Practitioner density in regional areas has dropped sharply, leaving remote Australians with little to no access at all.</p>
+            </div>
+            <div class="mini">
+              <h4>The Trust Gap</h4>
+              <p>Consumer interest is high, but medical skepticism isn't going away. Clinical evidence is hard to find in English, and safety concerns around herbal toxicity persist. A directory of strangers doesn't fix that.</p>
+            </div>
+          </div>
+          <div class="band">
+            <p class="q">How might we <em>democratise access</em> to Traditional Chinese Medicine information for remote users, while <em>rebuilding trust</em> in a shrinking profession?</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 SOLUTION -->
+      <section class="sec" id="solution">
+        <div class="wrap">
+          <p class="sec-kicker">03 — A Proposed Solution</p>
+          <h3 class="sec-h">Have you spoken to grandma yet?</h3>
+          <p>We decided the trust gap wasn't only clinical — it was emotional. A directory of vetted strangers doesn't feel like anyone you'd actually listen to. So instead of another clinical app, we built a person.</p>
+
+          <div class="char">
+            <div class="char-word">
+              <span class="hanzi">奶奶</span>
+              <span class="pin"><em>nǎinai</em> — noun. Grandmother, in Mandarin.</span>
+            </div>
+            <div class="char-copy">
+              <p>The brief split into two jobs Nai Nai had to do at once: build long-term trust in TCM, and get someone through today. We worked with cultural advisors throughout to keep the content TCM-aligned and respectful, not decorative.</p>
+              <p class="tag">Ask Nai Nai. Nai Nai knows.</p>
+            </div>
+          </div>
+
+          <figure class="fig">
+            <div class="fig-media">
+              <img src="Case-study-images/Nainai-tcminsights.jpg" alt="Nai Nai character illustration" onerror="this.closest('.fig').style.display='none'">
+            </div>
+            <figcaption>奶奶, brought to life — a warm character instead of a clinical interface.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 04 FEATURES -->
+      <section class="sec" id="features">
+        <div class="wrap">
+          <p class="sec-kicker">04 — Features</p>
+          <h3 class="sec-h">How can Nai Nai help you?</h3>
+          <p>The three core features all work together to make TCM feel like a safe, doable option — not just more information to sort through.</p>
+          <div class="features">
+            <div class="feat">
+              <span class="n">01</span>
+              <h4>Daily check-in → real remedy</h4>
+              <p>A one-tap mood check-in goes straight to a specific, doable home remedy — not a wall of information to sort through alone.</p>
+            </div>
+            <div class="feat">
+              <span class="n">02</span>
+              <h4>TCM Insights</h4>
+              <p>A searchable library of recipes, plain-language articles, and an ingredient "hot/cold energy" guide — vetted, not just searched for.</p>
+            </div>
+            <div class="feat">
+              <span class="n">03</span>
+              <h4>Community + Ask Nai Nai</h4>
+              <p>A forum for swapping remedies with other users and practitioners, plus an in-app chat with Nai Nai herself between check-ins.</p>
+            </div>
+          </div>
+
+          <figure class="fig">
+            <div class="fig-media">
+              <img src="Case-study-images/nainai-community.jpg" alt="Community forum and Ask Nai Nai chatbot screen" onerror="this.closest('.fig').style.display='none'">
+            </div>
+            <figcaption>Community forum & Ask Nai Nai chatbot.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 05 FINDINGS -->
+      <section class="sec" id="findings">
+        <div class="wrap">
+          <p class="sec-kicker">05 — Findings</p>
+          <h3 class="sec-h">From sticky notes to a grandmother</h3>
+          <p>Direction came from rapid ideation — Post-its, one-minute bursts of five ideas each, then a fifteen-minute group walkthrough to argue for the strongest ones and funnel down. Health-tracking, pill-logging, and inter-family wellness apps all had a turn before Traditional Chinese Medicine stuck, once we realised it sat exactly at the intersection of the Medical track and an actual demographic shift already underway.</p>
+
+          <p class="sec-kicker" style="margin-top:34px;">What we heard</p>
+          <div class="voices">
+            <div class="voice">I take a Panadol and avoid coffee.</div>
+            <div class="voice">I power through the pain and go to sleep.</div>
+            <div class="voice">I take a nap, and if that doesn't work, I take a Panadol.</div>
+            <div class="voice">I drink energy drinks.</div>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><b>50%</b><span>of Australians self-diagnose, driven largely by GP shortages and cost (2024).</span></div>
+            <div class="stat"><b>7M</b><span>Australians have poorer access to primary care simply because of where they live.</span></div>
+          </div>
+
+          <p style="margin-top:28px;">Nobody disliked the idea of expert advice. They just didn't have it nearby, in time, or in a way that felt like it was for them — which is exactly the gap a character, not another feature, could close.</p>
+        </div>
+      </section>
+
+      <!-- 06 REFLECTION -->
+      <section class="sec" id="reflection">
+        <div class="wrap">
+          <p class="sec-kicker">06 — Reflection</p>
+          <h3 class="sec-h">What did I learn?</h3>
+          <p>Nai Nai won CISSA's Medical track by refusing to treat trust as a UI problem solvable with badges or directories. It's still a concept — untested with real TCM practitioners, and far from a build — but it proved the more useful question wasn't "how do we share more information," but "who would someone actually believe."</p>
+          <div class="trio">
+            <div class="mini">
+              <h4>Trust isn't a UI problem</h4>
+              <p>A believable character did more work for the trust gap than another feature ever would have.</p>
+            </div>
+            <div class="mini">
+              <h4>Constraints sharpen ideas</h4>
+              <p>Funnelling from three other directions under hackathon time pressure forced a sharper, more specific problem than more time alone would have found.</p>
+            </div>
+            <div class="mini">
+              <h4>Still just a concept</h4>
+              <p>No real practitioners or safety review yet — that's the real next step, not a finished product.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGER -->
+      <nav class="pager">
+        <a href="index.html#work">← Back to all work</a>
+        <a href="index.html#work">Next project — Mongie →</a>
+      </nav>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ══ CONTACT / FOOTER ══ -->
+<footer class="contact micro-footer" id="contact">
+  <div class="micro-inner">
+    <h2 class="micro-title">Thank you for coming!</h2>
+    <p class="micro-sub">Let's connect — find me across the web.</p>
+    <div class="micro-actions">
+      <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/"><img src="Draggable-icon-logo/(n)instagram-logo.png" alt= "Nadia Instagram"></a>
+      <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/"><img src="Draggable-icon-logo/(n)linkedin.png" alt= "Nadia LinkedIn"></a>
+    </div>
+  </div>
+
+  <div class="footer-pixel-art" id="footer-pixel-art">
+    <!-- Background graphics by Tessie Gresley -->
+    <script>
+    (function () {
+      const starGridSize = 20, heartGridSize = 22;
+
+      const starPattern = [
+        [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
+        [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
+        [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
+        [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
+        [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
+        [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
+        [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
+        [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
+        [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
+        [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
+        [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
+        [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
+      ];
+
+      const heartPattern = [
+        [0,7,7,8,8,8,0,8,8,8,8,0],
+        [7,8,0,7,7,8,0,8,8,7,7,8],
+        [8,8,7,7,7,7,7,7,8,8,7,7],
+        [7,7,7,8,8,7,7,8,8,8,7,8],
+        [7,7,0,7,7,7,7,0,0,7,7,8],
+        [7,8,8,8,7,8,7,7,7,8,8,8],
+        [0,7,7,7,7,8,7,7,8,8,8,0],
+        [0,0,8,7,7,8,8,7,8,8,0,0],
+        [0,0,0,7,0,8,7,8,8,0,0,0],
+        [0,0,0,0,8,7,8,8,0,0,0,0],
+        [0,0,0,0,0,7,8,0,0,0,0,0],
+      ];
+
+      const sketch = (p) => {
+        let footerEl, layer;
+        let cells = [], starBounds = [], heartBounds = [];
+        let starOX, starOY, heartOX, heartOY;
+        let activeStarSize, activeHeartSize;
+        let heartHover = false;
+
+        function buildCells() {
+          cells = []; starBounds = []; heartBounds = [];
+
+          const narrow = p.width < 700;
+          const gs  = narrow ? 12 : starGridSize;
+          const hs  = narrow ? 13 : heartGridSize;
+          const pad = narrow ? 24 : 60;
+
+          activeStarSize = gs;
+          activeHeartSize = hs;
+
+          heartOX = pad; heartOY = pad;
+          starOX = p.width  - starPattern[0].length * gs - pad;
+          starOY = p.height - starPattern.length    * gs - pad;
+
+          for (let y = 0; y < heartPattern.length; y++)
+            for (let x = 0; x < heartPattern[y].length; x++)
+              if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
+
+          if (!narrow) {
+            for (let y = 0; y < starPattern.length; y++)
+              for (let x = 0; x < starPattern[y].length; x++)
+                if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
+          }
+        }
+
+        function reveal() {
+          if (!cells.length) return;
+          const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
+          const size = c.src === 'star' ? activeStarSize : activeHeartSize;
+          const ox   = c.src === 'star' ? starOX : heartOX;
+          const oy   = c.src === 'star' ? starOY : heartOY;
+          const px = ox + c.x * size, py = oy + c.y * size;
+          layer.noStroke();
+          if (c.type === 5 || c.type === 6) {
+            layer.fill(77, 240, 229);
+            c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+            starBounds.push({ x:px, y:py, size });
+          } else if (c.type === 7 || c.type === 8) {
+            layer.fill(255,105,180);
+            c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+            heartBounds.push({ x:px, y:py, size });
+          }
+        }
+
+        p.setup = () => {
+          footerEl = document.getElementById('contact');
+          const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+          cv.parent('footer-pixel-art');
+          layer = p.createGraphics(p.width, p.height);
+          buildCells();
+          for (let i = 0; i < 500; i++) reveal();
+        };
+
+        p.windowResized = () => {
+          p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+          layer = p.createGraphics(p.width, p.height);
+          buildCells();
+          for (let i = 0; i < 500; i++) reveal();
+        };
+
+        p.draw = () => {
+          p.clear();
+          p.image(layer, 0, 0);
+
+          let starH = false;
+          for (const s of starBounds) {
+            const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
+            p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229));
+            p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
+            if (on) starH = true;
+          }
+          heartHover = false;
+          for (const h of heartBounds) {
+            const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
+            p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180));
+            p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
+            if (on) heartHover = true;
+          }
+          document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
+        };
+
+        p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+      };
+
+      window.addEventListener('load', () => new p5(sketch));
+    })();
+    </script>
+  </div>
+</footer>
+
+
+<script>
+  /* ── pet: walks back & forth with a hop, blinks, eyes track cursor ── */
+  (function(){
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const pet   = document.getElementById('pet');
+    const inner = pet && pet.querySelector('.pet__inner');
+    const eyes  = document.getElementById('petEyes');
+    if(!pet || !inner || !eyes) return;
+
+    const EYE_MAX_X = 6.5, EYE_MAX_Y = 4.5;
+    const EYE_CX = 0.4575, EYE_TOP = 0.3525;
+    const SPEED    = 26;
+    const BOB_RATE = 7.5;
+    const BOB_AMP  = 2.4;
+
+    let mx = -9999, my = -9999;
+    let x = 0, dir = 1, phase = 0, bob = 0, maxX = 0;
+
+    const box = pet.parentElement;
+    function measure(){
+      const cs = getComputedStyle(box);
+      const padL = parseFloat(cs.paddingLeft) || 0;
+      const padR = parseFloat(cs.paddingRight) || 0;
+      const email = box.querySelector('.rail-email');
+      const emailW = email ? email.offsetWidth : 0;
+      const gap = parseFloat(cs.columnGap || cs.gap) || 0;
+      maxX = Math.max(0, box.clientWidth - padL - padR - pet.offsetWidth - emailW - gap);
+      if(x > maxX) x = maxX;
+    }
+    measure();
+    addEventListener('resize', measure, {passive:true});
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, {passive:true});
+
+    let last = performance.now();
+    function frame(now){
+      const dt = Math.min(0.05, (now - last)/1000); last = now;
+
+      if(!reduce){
+        x += SPEED * dir * dt;
+        if(x >= maxX){ x = maxX; dir = -1; }
+        else if(x <= 0){ x = 0; dir = 1; }
+        phase += BOB_RATE * dt;
+        const target = -BOB_AMP * Math.abs(Math.sin(phase));
+        bob += (target - bob) * Math.min(1, dt*18);
+        pet.style.transform   = `translateX(${x.toFixed(2)}px)`;
+        inner.style.transform = `translateY(${bob.toFixed(2)}px) scaleX(${dir})`;
+      }
+
+      if(mx > -9999){
+        const r = pet.getBoundingClientRect();
+        const cx = r.left + r.width * EYE_CX, cy = r.top + r.height * EYE_TOP;
+        const dx = mx - cx, dy = my - cy, len = Math.hypot(dx,dy) || 1;
+        const ox = Math.max(-EYE_MAX_X, Math.min(EYE_MAX_X, dx/len*EYE_MAX_X)) * dir;
+        const oy = Math.max(-EYE_MAX_Y, Math.min(EYE_MAX_Y, dy/len*EYE_MAX_Y));
+        eyes.style.transform = `translate(${ox.toFixed(2)}px, ${oy.toFixed(2)}px)`;
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    if(!reduce){
+      (function blink(){
+        setTimeout(() => {
+          pet.classList.add('is-blinking');
+          setTimeout(() => pet.classList.remove('is-blinking'), 150);
+          blink();
+        }, 2600 + Math.random()*4000);
+      })();
+    }
+  })();
+
+  /* ── copy-email card ── */
+  (function(){
+    const btn = document.getElementById('copyEmail');
+    const label = document.getElementById('emailLabel');
+    const sub = document.getElementById('emailSub');
+    const original = {l: label.textContent, s: sub.textContent};
+    btn.addEventListener('click', async () => {
+      try{
+        await navigator.clipboard.writeText(btn.dataset.email);
+        btn.classList.add('copied');
+        label.textContent = 'Copied ✓';
+        sub.textContent = btn.dataset.email;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          label.textContent = original.l; sub.textContent = original.s;
+        }, 1800);
+      }catch(e){ sub.textContent = btn.dataset.email; }
+    });
+  })();
+</script>
+
+</body>
+</html>
