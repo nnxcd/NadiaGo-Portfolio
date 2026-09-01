@@ -1,501 +1,720 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nadia Go — Portfolio</title>
-  <meta name="description" content="Nadia Go — multidisciplinary designer based in Melbourne, AU. Selected work: Nai Nai, Mongie, and Daisy.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadia Go — Product & Multidisciplinary Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="Character-building/favicon(2).png" sizes="32x32">
+<!-- p5.js — powers the pixel-art footer canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:wght@400..700&family=Joan&family=Pixelify+Sans:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<style>
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:450;
+    src:url('Fonts/NeueHaasGrotDisp-45Light-Trial.otf') format('opentype');
+  }
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:550;
+    src:url('Fonts/NeueHaasGrotDisp-55Roman-Trial.otf') format('opentype');
+  }
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:650;
+    src:url('Fonts/NeueHaasGrotDisp-65Medium-Trial.otf') format('opentype');
+  }
+  :root{
+    --bg:#FFFFFF;             /* page + rail background (white) */
+    --feed-bg:#FFFF;        /* black gallery area */
+    --ink:#111111;
+    --muted:#6C6A62;
+    --faint:#98968C; 
+    --line:#111111;           /* header grid lines (matches screenshot's crisp black rules) */
+    --line-soft:#E4E1D8;
+    --cyan:#18C6E7; /* copy-email pill */
+    --cyan-lighter:#5ddef8;
+    --red:#f53c04;
+    /* case-study square fills */
+    --sq-green:#3E8E5F;
+    --green-dark:#1C6B41;     /* readable "copied" state */
+    --sq-blue:#D6E0E7;
+    --sq-pink:#EFA9DA;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+    --title:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
+    --title-alt:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
+    --pad:clamp(12px,1.4vw,18px);
+    --section-gap:22px;
+    --footer-h:clamp(520px,68vh,720px);
+    --cols:minmax(240px,0.6fr) 1.7fr;   /* shared grid: rail | feed (lower the rail's fraction to make it skinnier) */
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--red); color:var(--bg);}
+  a{color:inherit; text-decoration:none;}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
+  img{max-width:100%; display:block;}
 
+ .page{max-width:none; margin:0;}
+
+  /* ── TOP HEADER: name box + pet box ─────────────── */
+  .topbar{
+    display:grid; grid-template-columns:var(--cols);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-name{
+    padding:var(--pad);
+    padding-right:calc(var(--pad) + 28px);   /* extra air to the right of "Go" */
+    border-right:1px solid var(--line);
+    display:flex; align-items:center;
+    overflow:hidden;                 /* keep the big type inside its box */
+  }
+  .rail-name{
+    font-family:var(--title-alt); font-weight:550;   /* Roman */
+    letter-spacing:-0.06em;
+    font-size:clamp(2.6rem,7.4vw,6rem);
+    line-height:0.82; margin:0; white-space:nowrap;
+  }
+  /* pet on the left, copy-email pinned to the right */
+  .topbar-pet{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px;
+    padding:var(--pad);
+  }
+  /* button hugs its own text instead of filling the box */
+  .topbar-pet .rail-email{width:max-content;}
+
+  /* the pet, sitting in its box */
+  .pet{width:clamp(48px,4vw,64px); aspect-ratio:1; position:relative; flex:none;}
+  .pet__inner{position:relative; width:100%; height:100%; transform-origin:center bottom;}
+  .pet__body{position:absolute; inset:0; width:100%; height:100%;}
+  .pet__eyes{position:absolute; inset:0; transition:transform .08s linear; will-change:transform;}
+  .pet__eyes img{
+    width:100%; height:100%; display:block;
+    transform-origin:45.75% 35.25%;
+    transition:transform .09s ease;
+  }
+  .pet.is-blinking .pet__eyes img{transform:scaleY(.08);}
+  .pet img{-webkit-user-drag:none; user-select:none;}
+
+  /* ── BODY GRID: rail | feed ─────────────────────── */
+  .shell{display:grid; grid-template-columns:var(--cols);}
+
+  /* ── STICKY BIO RAIL ────────────────────────────── */
+  .rail{
+    position:sticky; top:0; align-self:start;
+    min-height:calc(100vh - 0px);
+    padding:var(--pad);
+    border-right:1px solid var(--line);
+    background:var(--bg);
+    display:flex; flex-direction:column; gap:var(--section-gap);
+  }
+
+  .rail-tags{display:flex; gap:10px; flex-wrap:wrap;}
+  .rail-tags span{
+    font-size:0.82rem; font-weight:500;
+    padding:7px 15px; border-radius:999px;
+    background:var(--ink); color:#fff;
+  }
+  .rail-tags span:nth-child(2){background:var(--red); color:#fff;}   /* "Product Designer" */
+
+  .rail-bio{color:var(--muted); font-size:1rem; max-width:45ch; margin:0;}
+  .rail-bio strong{color:var(--ink); font-weight:inherit;}   /* emphasized phrases */
+
+  /* ── EXPLORE MENU — full-bleed rows, edge-to-edge rules ── */
+  .rail-menu{margin:0 calc(var(--pad) * -1);}   /* break out of the rail padding */
+  .rail-menu-title{
+    display:block; font-size:1rem; color:var(--faint);
+    margin:0; padding:0 var(--pad) 10px; padding: var(--pad); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .rail-menu ul{list-style:none; margin:0; padding:0;}
+  .rail-menu li{border-bottom:1px solid var(--line);}
+  .rail-menu a{
+    display:flex; align-items:center; gap:18px;
+    padding:13px var(--pad); color:var(--ink); font-size:1.05rem;
+    transition:padding-left .18s ease, color .18s ease;
+  }
+  .rail-menu a .num{color:var(--ink); font-variant-numeric:tabular-nums; min-width:1.6em;}
+  .rail-menu a .lbl{flex:1;}
+  .rail-menu a .arr{color:var(--ink); transition:transform .18s ease;}
+  .rail-menu a:hover{padding-left:calc(var(--pad) + 6px); color:#000;}
+  .rail-menu a:hover .arr{transform:translate(3px,-3px);}
+
+  /* ── EXPERIENCE LIST — three-column ledger (year · company · role) ── */
+  .rail-exp{margin:0 calc(var(--pad) * -1); margin-top:var(--section-gap);}
+  .rail-exp-title{
+    display:block; font-size:1rem; color:var(--faint);
+    margin:0; padding:var(--pad);
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .rail-exp ul{list-style:none; margin:0; padding:6px 0;}
+  .rail-exp li{
+    display:grid;
+    grid-template-columns:2.9em minmax(0,1fr) minmax(0,1.15fr);
+    column-gap:14px; align-items:baseline;
+    padding:9px var(--pad);
+  }
+  .rail-exp .yr{
+    font-variant-numeric:tabular-nums; color:var(--faint);
+    font-size:0.92rem; line-height:1.3;
+  }
+  .rail-exp .co{
+    font-family:var(--title-alt); font-weight:650; letter-spacing:-0.01em;
+    font-size:0.98rem; color:var(--ink); line-height:1.3;
+  }
+  .rail-exp .rl{
+    font-size:0.9rem; color:#8496a8; line-height:1.3;
+  }
+
+  /* ── EXTERNAL LINKS — plain stacked ─────────────── */
+  .rail-links{display:flex; flex-direction:column; gap:10px;}
+  .rail-links a{
+    font-size:1.05rem; width:max-content;
+    transition:padding-left .18s ease, opacity .18s ease;
+  }
+  .rail-links a:hover{padding-left:5px; opacity:.65;}
+
+  /* ── COPY-EMAIL CARD (original layout, black outline) ── */
+  .rail-email{
+    display:flex; align-items:center; gap:12px; width:100%;
+    background:#fff; border:1px solid var(--ink); border-radius:12px;
+    padding:12px 14px; cursor:pointer;
+    font-family:var(--sans); font-size:0.9rem; color:var(--ink); text-align:left;
+    transition:background .18s ease, transform .18s ease, border-color .18s ease;
+  }
+  .rail-email:hover{color:var(--ink); background:var(--bg); transform:translateY(-1px);}
+  .rail-email .ico{font-size:1.15rem; line-height:1;}
+  .rail-email .txt{display:flex; flex-direction:column; line-height:1.25;}
+  .rail-email .txt b{font-weight:650;}
+  .rail-email .txt small{color:var(--muted); font-size:0.76rem;}
+  /* readable copied state: dark green fill, white text */
+  .rail-email.copied{background:var(--green-dark); border-color:var(--green-dark); color:#fff;}
+  .rail-email.copied .txt b{color:#fff;}
+  .rail-email.copied .txt small{color:rgba(255,255,255,0.88);}
+
+  /* ── PROJECT FEED (black gallery) ───────────────── */
+  .feed{
+    background:var(--feed-bg);
+    padding:var(--pad);
+  }
+  .card-list{
+    display:grid; grid-template-columns:1fr; gap:16px;
+    align-items:start;            /* let a hovered card grow without stretching its row-mate */
+  }
+  @media (min-width:1050px){
+    .card-list{grid-template-columns:1fr 1fr;}
+  }
+
+  /* ── CASE-STUDY CARD — framed cover + hover drawer (Megan-Yap style) ── */
+  .card{
+    position:relative; display:flex; flex-direction:column;
+    background:#0E0E0E;
+    border-radius:16px; padding:12px;
+    transition:border-color .3s ease, transform .3s ease;
+  }
+  .card:hover{
+    border-color:rgba(255,255,255,0.55);
+    transform:translateY(-3px);
+  }
+
+  /* the cover, contained inside its rounded frame */
+  .card-frame{
+    position:relative; aspect-ratio:4/3; overflow:hidden;
+    border-radius:10px;
+  }
+  .card.green .card-frame{background:var(--sq-green);}
+  .card.blue  .card-frame{background:var(--sq-blue);}
+  .card.pink  .card-frame{background:var(--sq-pink);}
+  .card-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+
+  /* title + category, always visible on the surrounding square */
+  .card-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    padding:12px 4px 0;
+  }
+  .card-title{
+    font-family:var(--title-alt); font-weight:550; letter-spacing:-0.03em;
+    font-size:clamp(1.3rem,1.8vw,1.75rem); line-height:1; margin:0; color:#fff;
+  }
+  .card-cat{
+    font-size:0.62rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    color:rgba(255,255,255,0.5); white-space:nowrap;
+  }
+
+  /* the drawer that drops down on hover */
+  .card-drop{
+    max-height:0; opacity:0; overflow:hidden;
+    padding:0 4px;
+    transition:max-height .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, margin-top .4s ease;
+  }
+  .card:hover .card-drop{max-height:260px; opacity:1; margin-top:12px;}
+  .card-desc{
+    font-size:0.95rem; line-height:1.4; margin:0 0 14px;
+    color:rgba(255,255,255,0.72);
+  }
+  .card-meta{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    border-top:1px solid rgba(255,255,255,0.12); padding-top:12px;
+  }
+  .card-meta > div{display:flex; flex-direction:column; gap:4px; min-width:0;}
+  .card-meta dt{
+    font-size:0.58rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:rgba(255,255,255,0.45); margin:0;
+  }
+  .card-meta dd{
+    font-size:0.82rem; font-weight:600; line-height:1.2; margin:0;
+    color:rgba(255,255,255,0.92);
+  }
+  .card-cta{
+    display:inline-block; margin-top:14px;
+    font-size:0.8rem; font-weight:600; color:#fff;
+  }
+  .card:hover .card-cta{color:var(--cyan);}
+
+  /* 4th cell — playground, kept minimal on the black */
+  .card-playground{
+  align-self:stretch; min-height:260px; border-radius:16px;
+  border:1px dashed rgba(0,0,0,0.28);          /* dark, so it shows on white */
+  background:transparent;
+  display:flex; align-items:flex-end; justify-content:space-between;
+  padding:20px; color:rgba(12,12,12,0.72); font-weight:600;
+  transition:border-color .25s ease, color .25s ease;
+}
+  .card-playground .arr{transition:transform .2s ease;}
+  .card-playground:hover{border-color:var(--red); color:var(--red);}
+  .card-playground:hover .arr{transform:translate(4px,-4px);}
+
+  /* ── FOOTER (unchanged pixel-art) ───────────────── */
+  .micro-footer{
+    position:relative; min-height:var(--footer-h);
+    background:var(--feed-bg); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; padding:var(--pad);
+    border-top: 1px solid var(--line);
+  }
+  .micro-inner{position:relative; z-index:2; text-align:center; max-width:44ch;}
+  .micro-title{
+    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
+    font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:var(--ink);
+  }
+  .micro-sub{color:rgba(68, 68, 68, 1); font-size:1.05rem; margin:0 0 26px;}
+  .micro-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+  .micro-btn{
+    display:inline-flex; align-items:center; padding:8px 24px; border-radius:999px;
+    
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .micro-btn:hover{background:rgba(255,255,255,0.12); transform:translateY(-2px);}
+  #footer-pixel-art{position:absolute; inset:0; z-index:1;}
+  #footer-pixel-art canvas{display:block;}
+
+  /* ── RESPONSIVE: un-stick + stack ───────────────── */
+  @media (max-width:880px){
+    .topbar{grid-template-columns:1fr;}
+    .topbar-name{border-right:none; border-bottom:1px solid var(--line);}
+    .topbar-pet{flex-wrap:wrap;}
+    .shell{grid-template-columns:1fr;}
+    .rail{position:static; min-height:auto; border-right:none; border-bottom:1px solid var(--line);}
+    .card-list{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){ .card-list{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .card,.pet__eyes,.pet__eyes img{transition:none;}
+    .card:hover{transform:none;}
+  }
+</style>
 </head>
 <body>
 
-  <a class="skip-link" href="#main">Skip to content</a>
+<div class="page">
 
-  <div class="cursor-dot" aria-hidden="true"></div>
-  <div class="cursor-ring" aria-hidden="true"></div>
+  <!-- ══ TOP HEADER ══ -->
+  <header class="topbar">
+    <div class="topbar-name">
+      <h1 class="rail-name"><img src="Character-building/name logo(2).png"</h1>
+    </div>
+    <div class="topbar-pet">
+      <!-- the pet lives here -->
+      <div class="pet" id="pet" aria-hidden="true">
+        <div class="pet__inner">
+          <img class="pet__body" alt="" src="Character-building/whole.png">
+          <div class="pet__eyes" id="petEyes"><img alt="" src="Character-building/eyes.png"></div>
+        </div>
+      </div>
 
-  <!-- ============ NAVBAR ============ -->
-  <header class="navbar" id="navbar">
-    <p class="navbar-label">Multidisciplinary Designer — based in Melbourne, AU</p>
-    <nav class="navbar-nav" aria-label="Primary">
-      <a href="index.html">Home</a>
-      <a href="#work">Projects</a>
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a class="navbar-email" href="mailto:nadiajingxiang@gmail.com" data-cursor="hot">nadiajingxiang@gmail.com</a>
-    </nav>
+      <!-- copy-email, pinned to the far right of the pet's box -->
+      <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
+        <span class="ico">📨</span>
+        <span class="txt">
+          <b id="emailLabel">Copy my email</b>
+          <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
+        </span>
+      </button>
+    </div>
   </header>
 
-  <main id="main">
+  <!-- ══ BODY ══ -->
+  <div class="shell">
 
-
-    <!-- ============ HERO ============ -->
-    <section class="hero" id="top">
-
-      <!-- physics playground (relocated full-width band — same chips) -->
-      <div class="hero-physics-box" data-reveal>
-        <section class="physics-stage" aria-hidden="true">
-          <div class="chip chip-pill dark" data-shape="pill" draggable="false">
-            UNIMELB <span class="chip-dot"></span>
-          </div>
-          <div class="chip chip-pill outline" data-shape="pill" draggable="false">
-            UI/UX DESIGNER
-          </div>
-          <div class="chip chip-icon ai" data-shape="circle" draggable="false">
-            <img src="Draggable-icon-logo/illustrator-logo.webp" alt="">
-          </div>
-          <div class="chip chip-icon pr" data-shape="circle" draggable="false">Pr</div>
-          <div class="chip chip-icon ps" data-shape="circle" draggable="false">
-            <img src="Draggable-icon-logo/PS-logo.png" alt="">
-          </div>
-          <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
-            <img src="Draggable-icon-logo/figma-logo.png" alt="">
-          </div>
-          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
-          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
-          <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b22" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b30" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b34" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
-          <!-- second go -->
-           <div class="chip chip-pill dark" data-shape="pill" draggable="false">
-            UNIMELB <span class="chip-dot"></span>
-          </div>
-          <div class="chip chip-pill outline" data-shape="pill" draggable="false">
-            UI/UX DESIGNER
-          </div>
-          <div class="chip chip-icon ai" data-shape="circle" draggable="false">
-            <img src="Draggable-icon-logo/illustrator-logo.webp" alt="">
-          </div>
-          <div class="chip chip-icon pr" data-shape="circle" draggable="false">Pr</div>
-          <div class="chip chip-icon ps" data-shape="circle" draggable="false">
-            <img src="Draggable-icon-logo/PS-logo.png" alt="">
-          </div>
-          <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
-            <img src="Draggable-icon-logo/figma-logo.png" alt="">
-          </div>
-          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
-          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
-          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
-          <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b22" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b30" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b34" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
-          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
-        </section>
+    <!-- ── STICKY BIO RAIL ── -->
+    <aside class="rail">
+      <div class="rail-tags">
+        <span>Product Designer</span>
+        <span>Melbourne, AU</span>
       </div>
 
-      <!-- giant name -->
-      <h1 class="hero-name">Nadia Go</h1>
+      <p class="rail-bio">Studied at the <strong>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
+      <p class="rail-bio">Focused on <strong>finding the holes</strong> that other people can't identify first, and conducting user research to create an end-product that <strong>satisfies</strong>.</p>
 
-      <!-- intro + about link -->
-      <div class="hero-intro" data-reveal>
-        <p class="hero-lead">
-          A Product Designer and User Researcher committed to designing for communities that are
-          often overlooked — combining empathy with critical thinking to develop creative solutions
-          that are genuinely shaped by the people they serve.
-        </p>
-       <!-- <a class="hero-about-link" href="#about" data-cursor="hot">About me <span>↗</span></a> -->
+      <nav class="rail-menu">
+        <span class="rail-menu-title">Explore</span>
+        <ul>
+          <li><a href="#work"><span class="num">01</span><span class="lbl">My Work</span><span class="arr">↗</span></a></li>
+          <li><a href="#"><span class="num">02</span><span class="lbl">About Me</span><span class="arr">↗</span></a></li>
+          <li><a href="#playground"><span class="num">03</span><span class="lbl">Design Playground</span><span class="arr">↗</span></a></li>
+        </ul>
+      </nav>
+
+      <!-- ── EXPERIENCE ── -->
+      <nav class="rail-exp">
+        <span class="rail-exp-title">Experience</span>
+        <ul>
+          <li><span class="yr">2026</span><span class="co">Notion</span><span class="rl">Design Engineering Intern</span></li>
+          <li><span class="yr">2025</span><span class="co">Bloomberg</span><span class="rl">Software Engineering Intern</span></li>
+          <li><span class="yr">2025</span><span class="co">1Password</span><span class="rl">Product Design Intern</span></li>
+          <li><span class="yr">2024</span><span class="co">Royal Bank of Canada</span><span class="rl">Software Engineering Intern</span></li>
+          <li><span class="yr">2023</span><span class="co">Onova</span><span class="rl">Product Design + Engineering Intern</span></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ── PROJECT FEED (black gallery) ── -->
+    <main class="feed" id="work">
+      <div class="card-list">
+
+        <!-- Nai Nai -->
+        <a class="card green" href="(2)Nainai.html">
+          <div class="card-frame">
+            <img src="Case-study-images/CS(nainai).jpg" alt="Nai Nai cover" onerror="this.remove()">
+          </div>
+          <div class="card-head">
+            <h3 class="card-title">Nai Nai</h3>
+            <span class="card-cat">Winner · CISSA</span>
+          </div>
+          <div class="card-drop">
+            <p class="card-desc">A virtual grandma for safe, community-vetted home remedies.</p>
+            <dl class="card-meta">
+              <div><dt>Role</dt><dd>Lead UI · Research</dd></div>
+              <div><dt>Focus</dt><dd>Medical · TCM</dd></div>
+              <div><dt>Timeframe</dt><dd>September 2025</dd></div>
+            </dl>
+            <span class="card-cta">View case study ↗</span>
+          </div>
+        </a>
+
+        <!-- Mongie -->
+        <a class="card blue" href="#">
+          <div class="card-frame">
+            <img src="Case-study-images/CS(mongie).jpg" alt="Mongie cover" onerror="this.remove()">
+          </div>
+          <div class="card-head">
+            <h3 class="card-title">Mongie</h3>
+            <span class="card-cat">Runner-up · CISSA</span>
+          </div>
+          <div class="card-drop">
+            <p class="card-desc">A virtual pet that grows as kids take their breaks.</p>
+            <dl class="card-meta">
+              <div><dt>Role</dt><dd>Lead UI · Research</dd></div>
+              <div><dt>Team</dt><dd>CISSA</dd></div>
+              <div><dt>Timeframe</dt><dd>February 2024</dd></div>
+            </dl>
+            <span class="card-cta">View case study ↗</span>
+          </div>
+        </a>
+
+        <!-- Daisy -->
+        <a class="card pink" href="#">
+          <div class="card-frame">
+            <img src="Case-study-images/CS(Daisy).jpg" alt="Daisy cover" onerror="this.remove()">
+          </div>
+          <div class="card-head">
+            <h3 class="card-title">Daisy</h3>
+            <span class="card-cat">Capstone</span>
+          </div>
+          <div class="card-drop">
+            <p class="card-desc">Track your wishlist before it wrecks your budget.</p>
+            <dl class="card-meta">
+              <div><dt>Role</dt><dd>UI · UX · Branding</dd></div>
+              <div><dt>Focus</dt><dd>Fashion × Finance</dd></div>
+              <div><dt>Timeframe</dt><dd>November 2025</dd></div>
+            </dl>
+            <span class="card-cta">View case study ↗</span>
+          </div>
+        </a>
+
+        <!-- Playground (4th cell) -->
+        <a class="card-playground" href="#" id="playground">
+          <span>Design playground</span>
+          <span class="arr">↗</span>
+        </a>
       </div>
-    </section>
+    </main>
 
-    <!-- ============ SELECTED WORK ============ -->
-    <section class="work" id="work">
-      <div class="section-head" data-reveal>
-        <p class="eyebrow">SELECTED PROJECTS - field work </p>
-        <h2>My lessons along the way.</h2>
-        <p class="section-sub">
-          Every project below starts the same way: someone is missing, so something
-          else has to step in. Here's what that became, three different times.
-        </p>
-      </div>
-
-      <div class="card-grid">
-
-        <!-- ── CARD 01: Nai Nai ── -->
-        <article class="case-card" id="case-nainai" data-reveal>
-          <a href="nainai.html" class="case-card-link">
-            <div class="case-card-inner">
-
-              <div class="case-card-image">
-                <img src="Case-study-images/CS(nainai).jpg" alt="Nai Nai case study preview">
-              </div>
-
-              <div class="case-card-body">
-                <!-- always visible -->
-                <div class="case-head">
-                  <span class="case-no">No. 01</span>
-                  <span class="case-status status-winner">WINNER — CISSA</span>
-                </div>
-                <p class="case-class">Classification: Healthcare Companion</p>
-                <h3 class="case-title">Nainai <span class="case-title-sub">— Your Virtual Grandma</span></h3>
-                <p class="case-desc">
-                  Nearly a third of Australians live outside major cities, where healthcare
-                  access is thinner and the Traditional Chinese Medicine workforce is shrinking
-                  and ageing fast. Nai Nai is a concept for a warm, grandmotherly guide that turns
-                  a daily check-in into safe, community-vetted home remedies — built to close a
-                  trust gap, not just an information one.
-                </p>
-
-                <!-- revealed on hover -->
-                <div class="case-reveal">
-                  <div class="case-reveal-inner">
-                    <div class="case-meta">
-                      <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
-                      <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
-                      <div><span>Built for</span>CISSA Hackathon — Medical track</div>
-                    </div>
-                    <span class="case-link">Read the full case study →</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </a>
-        </article>
-
-        <!-- ── CARD 02: Mongie ── -->
-        <article class="case-card" id="case-mongie" data-reveal>
-          <div class="case-card-inner">
-
-            <div class="case-card-image">
-              <img src="Case-study-images/CS(mongie).jpg" alt="Mongie case study preview">
-            </div>
-
-            <div class="case-card-body">
-              <!-- always visible -->
-              <div class="case-head">
-                <span class="case-no">No. 02</span>
-                <span class="case-status status-winner">RUNNER UP — CISSA</span>
-              </div>
-              <p class="case-class">Classification: Wellness Companion</p>
-              <h3 class="case-title">Mongie <span class="case-title-sub">— Your Pet Pal</span></h3>
-              <p class="case-desc">
-                Built across a 4-day hackathon for working parents who can't always be watching.
-                Mongie turns a kid's water breaks, stretches, and small wins into a virtual pet
-                that grows happier alongside them — while parents get a quiet, real-time read
-                on how the day actually went.
-              </p>
-
-              <!-- revealed on hover -->
-              <div class="case-reveal">
-                <div class="case-reveal-inner">
-                  <div class="case-meta">
-                    <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
-                    <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
-                    <div><span>Built for</span>Student Hackathon — Medical track</div>
-                  </div>
-                  <a class="case-link" href="index.html" target="_blank" rel="noopener" data-cursor="hot">
-                    <!-- Read the full case study → --> Still in progress
-                  </a>
-                </div>
-              </div>
-            </div><!-- /.case-card-body -->
-
-          </div><!-- /.case-card-inner -->
-        </article>
-
-        <!-- ── CARD 03: Daisy ── -->
-        <article class="case-card" id="case-ekko" data-reveal>
-          <div class="case-card-inner">
-
-            <div class="case-card-image">
-              <img src="Case-study-images/CS(Daisy).jpg" alt="Daisy case study preview">
-            </div>
-
-            <div class="case-card-body">
-              <!-- always visible -->
-              <div class="case-head">
-                <span class="case-no">No. 03</span>
-                <!-- <span class="case-status status-progress">IN PROGRESS</span> -->
-              </div>
-              <p class="case-class">Classification: Financial Wishlist Tracker</p>
-              <h3 class="case-title">Daisy <span class="case-title-sub">— Your one stop to shopping responsibly</span></h3>
-              <p class="case-desc">
-                There's a constant tension between wanting to shop more sustainably and actually doing it — especially when
-                it's hard to keep track of clothing purchases and their impact on your finances. Daisy helps users keep track
-                of what items they have in their wishlist, their categories, and how these purchases can pile up and affect their finances.
-              </p>
-
-              <!-- revealed on hover -->
-              <div class="case-reveal">
-                <div class="case-reveal-inner">
-                  <div class="case-meta">
-                    <div><span>Role</span>UI Designer, UX Researcher, Branding Designer</div>
-                    <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
-                    <div><span>Built for</span>Capstone project</div>
-                  </div>
-                  <a class="case-link" href="index.html" target="_blank" rel="noopener" data-cursor="hot">
-<!-- Read the full case study → --> Still in progress                  </a>
-                </div>
-              </div>
-            </div><!-- /.case-card-body -->
-
-          </div><!-- /.case-card-inner -->
-        </article>
-
-      </div>
-    </section>
-
-    <!-- ============ ABOUT ============ -->
-    <section class="about" id="about">
-      <div class="about-grid">
-        <div class="about-text" data-reveal>
-          <p class="eyebrow">ABOUT</p>
-          <h2>Bringing perspective.</h2>
-          <p>
-            I'm born in the Netherlands and grew up mostly in Indonesia. Being around international communities
-            allowed me to become fluent in English and comfortable moving between Mandarin, Dutch, and Bahasa
-            Indonesia.
-          </p>
-          <p>
-            I'm studying at the University of Melbourne, pursuing a Bachelor in Design with a major in UI/UX Design and a interest in Graphic Design. 
-            In my free time, I've joined CISSA, Game Makers Club and the Indonesian Students Association—I've joined as a designer,
-            event organizer and have stepped up to become Secretary in CISSA, a role that I am currently in. 
-          </p>
-        </div>
-        <div class="about-data" data-reveal>
-          <p class="data-label">LANGUAGES</p>
-          <ul class="lang-list">
-            <li><span>English</span>Fluent</li>
-            <li><span>Bahasa</span>Semi-fluent</li>
-            <li><span>Dutch</span>Semi-fluent</li>
-            <li><span>Chinese</span>Semi-fluent</li>
-          </ul>
-          <p class="data-label">BASED</p>
-          <p class="data-value">Melbourne, AU<br>University of Melbourne</p>
-        </div>
-      </div>
-      <!--
-      <br>
-      <br>
-      <div class="contact-links">
-              <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Design Playground</a>
-      </div>
-    -->
-    </section>
-
-    <!-- ============ EXPERIENCE ============ -->
-    <section class="experience" id="experience">
-      <div class="section-head" data-reveal>
-        <p class="eyebrow">EXPERIENCE</p>
-        <h2>Where I spent my time.</h2>
-      </div>
-      <ul class="timeline">
-        <li data-reveal>
-          <span class="tl-date">2025</span>
-          <span class="tl-body"><strong>UX &amp; 3D Game Design Intern</strong><em>Vision Verse</em></span>
-        </li>
-        <li data-reveal>
-          <span class="tl-date">2025</span>
-          <span class="tl-body"><strong>Secretary</strong><em>Computing &amp; Information Systems Students Association</em></span>
-        </li>
-        <li data-reveal>
-          <span class="tl-date">2024–25</span>
-          <span class="tl-body"><strong>Design Officer</strong><em>Computing &amp; Information Systems Students Association</em></span>
-        </li>
-        <li data-reveal>
-          <span class="tl-date">2024–25</span>
-          <span class="tl-body"><strong>Design Officer</strong><em>Melbourne University Indonesian Students Association</em></span>
-        </li>
-      </ul>
-    </section>
-
-  </main>
+  </div>
+</div>
 
 
-  <!-- ============ CONTACT / FOOTER ============ -->
-
-  <footer class="contact micro-footer" id="contact">
-    <!-- content sits above the p5 canvas -->
-    <div class="micro-inner">
-      <h2 class="micro-title">Thank you for coming!</h2>
-      <p class="micro-sub">Let's connect — find me across the web.</p>
-      <div class="micro-actions">
-        <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Instagram</a>
-        <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener" data-cursor="cool">LinkedIn</a>
-      </div>
+<!-- ══ CONTACT / FOOTER ══ -->
+<footer class="contact micro-footer" id="contact">
+  <div class="micro-inner">
+    <h2 class="micro-title">Thank you for coming!</h2>
+    <p class="micro-sub">Let's connect — find me across the web.</p>
+    <div class="micro-actions">
+     <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/"><img src="Draggable-icon-logo/(n)instagram-logo.png" alt= "Nadia Instagram"></a>
+      <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/"><img src="Draggable-icon-logo/(n)linkedin.png" alt= "Nadia LinkedIn"></a>
     </div>
+  </div>
 
-    <!-- ============================================================
-     PASTE THIS INTO index.html
-     Replace the whole <div class="footer-pixel-art">…</div>
-     that sits inside <footer class="contact micro-footer" id="contact">
-     ============================================================ -->
+  <div class="footer-pixel-art" id="footer-pixel-art">
+    <!-- Background graphics by Tessie Gresley -->
+    <script>
+    (function () {
+      const starGridSize = 20, heartGridSize = 22;
 
-    <!-- p5 canvas mounts here (id is what cv.parent needs) -->
-    <div class="footer-pixel-art" id="footer-pixel-art">
-      <!-- Background graphics by Tessie Gresley -->
-      <script>
-      (function () {
-        const starGridSize = 20, heartGridSize = 22;
+      const starPattern = [
+        [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
+        [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
+        [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
+        [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
+        [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
+        [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
+        [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
+        [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
+        [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
+        [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
+        [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
+        [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
+      ];
 
-        const starPattern = [
-          [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
-          [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
-          [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
-          [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
-          [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
-          [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
-          [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
-          [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
-          [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
-          [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
-          [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
-          [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
-        ];
+      const heartPattern = [
+        [0,7,7,8,8,8,0,8,8,8,8,0],
+        [7,8,0,7,7,8,0,8,8,7,7,8],
+        [8,8,7,7,7,7,7,7,8,8,7,7],
+        [7,7,7,8,8,7,7,8,8,8,7,8],
+        [7,7,0,7,7,7,7,0,0,7,7,8],
+        [7,8,8,8,7,8,7,7,7,8,8,8],
+        [0,7,7,7,7,8,7,7,8,8,8,0],
+        [0,0,8,7,7,8,8,7,8,8,0,0],
+        [0,0,0,7,0,8,7,8,8,0,0,0],
+        [0,0,0,0,8,7,8,8,0,0,0,0],
+        [0,0,0,0,0,7,8,0,0,0,0,0],
+      ];
 
-        const heartPattern = [
-          [0,7,7,8,8,8,0,8,8,8,8,0],
-          [7,8,0,7,7,8,0,8,8,7,7,8],
-          [8,8,7,7,7,7,7,7,8,8,7,7],
-          [7,7,7,8,8,7,7,8,8,8,7,8],
-          [7,7,0,7,7,7,7,0,0,7,7,8],
-          [7,8,8,8,7,8,7,7,7,8,8,8],
-          [0,7,7,7,7,8,7,7,8,8,8,0],
-          [0,0,8,7,7,8,8,7,8,8,0,0],
-          [0,0,0,7,0,8,7,8,8,0,0,0],
-          [0,0,0,0,8,7,8,8,0,0,0,0],
-          [0,0,0,0,0,7,8,0,0,0,0,0],
-        ];
+      const sketch = (p) => {
+        let footerEl, layer;
+        let cells = [], starBounds = [], heartBounds = [];
+        let starOX, starOY, heartOX, heartOY;
+        let activeStarSize, activeHeartSize;
+        let heartHover = false;
 
-        const sketch = (p) => {
-          let footerEl, layer;
-          let cells = [], starBounds = [], heartBounds = [];
-          let starOX, starOY, heartOX, heartOY;
-          let activeStarSize, activeHeartSize;
-          let heartHover = false;
+        function buildCells() {
+          cells = []; starBounds = []; heartBounds = [];
 
-          function buildCells() {
-            cells = []; starBounds = []; heartBounds = [];
+          const narrow = p.width < 700;
+          const gs  = narrow ? 12 : starGridSize;
+          const hs  = narrow ? 13 : heartGridSize;
+          const pad = narrow ? 24 : 60;
 
-            const narrow = p.width < 700;              // phone-ish
-            const gs  = narrow ? 12 : starGridSize;    // shrink grids on small screens
-            const hs  = narrow ? 13 : heartGridSize;
-            const pad = narrow ? 24 : 60;              // smaller corner offset
+          activeStarSize = gs;
+          activeHeartSize = hs;
 
-            activeStarSize = gs;
-            activeHeartSize = hs;
+          heartOX = pad; heartOY = pad;
+          starOX = p.width  - starPattern[0].length * gs - pad;
+          starOY = p.height - starPattern.length    * gs - pad;
 
-            heartOX = pad; heartOY = pad;              // heart top-left
-            starOX = p.width  - starPattern[0].length * gs - pad;  // star bottom-right
-            starOY = p.height - starPattern.length    * gs - pad;
+          for (let y = 0; y < heartPattern.length; y++)
+            for (let x = 0; x < heartPattern[y].length; x++)
+              if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
 
-            // heart always shown
-            for (let y = 0; y < heartPattern.length; y++)
-              for (let x = 0; x < heartPattern[y].length; x++)
-                if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
-
-            // star only on wider screens (dropped on phones to avoid overlap)
-            if (!narrow) {
-              for (let y = 0; y < starPattern.length; y++)
-                for (let x = 0; x < starPattern[y].length; x++)
-                  if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
-            }
+          if (!narrow) {
+            for (let y = 0; y < starPattern.length; y++)
+              for (let x = 0; x < starPattern[y].length; x++)
+                if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
           }
+        }
 
-          function reveal() {
-            if (!cells.length) return;
-            const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
-            const size = c.src === 'star' ? activeStarSize : activeHeartSize;
-            const ox   = c.src === 'star' ? starOX : heartOX;
-            const oy   = c.src === 'star' ? starOY : heartOY;
-            const px = ox + c.x * size, py = oy + c.y * size;
-            layer.noStroke();
-
-            
-            if (c.type === 5 || c.type === 6) {
-              layer.fill(77, 240, 229); //box color
-              c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
-              starBounds.push({ x:px, y:py, size });
-            } else if (c.type === 7 || c.type === 8) {
-              layer.fill(255,105,180);
-              c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
-              heartBounds.push({ x:px, y:py, size });
-            }
+        function reveal() {
+          if (!cells.length) return;
+          const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
+          const size = c.src === 'star' ? activeStarSize : activeHeartSize;
+          const ox   = c.src === 'star' ? starOX : heartOX;
+          const oy   = c.src === 'star' ? starOY : heartOY;
+          const px = ox + c.x * size, py = oy + c.y * size;
+          layer.noStroke();
+          if (c.type === 5 || c.type === 6) {
+            layer.fill(77, 240, 229);
+            c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+            starBounds.push({ x:px, y:py, size });
+          } else if (c.type === 7 || c.type === 8) {
+            layer.fill(255,105,180);
+            c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+            heartBounds.push({ x:px, y:py, size });
           }
-          
-          p.setup = () => {
-            footerEl = document.getElementById('contact');
-            const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
-            cv.parent('footer-pixel-art');
-            layer = p.createGraphics(p.width, p.height);
-            buildCells();
-            for (let i = 0; i < 500; i++) reveal();
-          };
+        }
 
-          p.windowResized = () => {
-            p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
-            layer = p.createGraphics(p.width, p.height);
-            buildCells();
-            for (let i = 0; i < 500; i++) reveal();
-          };
-
-          p.draw = () => {
-            p.clear();
-            p.image(layer, 0, 0);
-
-            let starH = false;
-            for (const s of starBounds) {
-              const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
-              p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229)); //star hover color then fill
-              p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
-              if (on) starH = true;
-            }
-            heartHover = false;
-            for (const h of heartBounds) {
-              const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
-              p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180)); //heart hover then fill color
-              p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
-              if (on) heartHover = true;
-            }
-            document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
-          };
-
-          p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+        p.setup = () => {
+          footerEl = document.getElementById('contact');
+          const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+          cv.parent('footer-pixel-art');
+          layer = p.createGraphics(p.width, p.height);
+          buildCells();
+          for (let i = 0; i < 500; i++) reveal();
         };
 
-        window.addEventListener('load', () => new p5(sketch));
-      })();
-      </script>
-    </div>
-  </footer>
+        p.windowResized = () => {
+          p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+          layer = p.createGraphics(p.width, p.height);
+          buildCells();
+          for (let i = 0; i < 500; i++) reveal();
+        };
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
-  <script src="script.js"></script>
+        p.draw = () => {
+          p.clear();
+          p.image(layer, 0, 0);
+
+          let starH = false;
+          for (const s of starBounds) {
+            const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
+            p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229));
+            p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
+            if (on) starH = true;
+          }
+          heartHover = false;
+          for (const h of heartBounds) {
+            const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
+            p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180));
+            p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
+            if (on) heartHover = true;
+          }
+          document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
+        };
+
+        p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+      };
+
+      window.addEventListener('load', () => new p5(sketch));
+    })();
+    </script>
+  </div>
+</footer>
+
+
+<script>
+  /* ── pet: walks back & forth with a hop, blinks, eyes track cursor ── */
+  (function(){
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const pet   = document.getElementById('pet');
+    const inner = pet && pet.querySelector('.pet__inner');
+    const eyes  = document.getElementById('petEyes');
+    if(!pet || !inner || !eyes) return;
+
+    const EYE_MAX_X = 6.5, EYE_MAX_Y = 4.5;      // pupil drift range (display px)
+    const EYE_CX = 0.4575, EYE_TOP = 0.3525;     // pupil centre as a fraction of the box
+    const SPEED    = 26;    // px/sec — how fast it strolls
+    const BOB_RATE = 7.5;   // hop cadence
+    const BOB_AMP  = 2.4;   // hop height (px)
+
+    let mx = -9999, my = -9999;
+    let x = 0, dir = 1, phase = 0, bob = 0, maxX = 0;
+
+    // how far it can travel = box inner width minus the pet's own width
+    const box = pet.parentElement;
+    function measure(){
+      const cs = getComputedStyle(box);
+      const padL = parseFloat(cs.paddingLeft) || 0;
+      const padR = parseFloat(cs.paddingRight) || 0;
+      const email = box.querySelector('.rail-email');
+      const emailW = email ? email.offsetWidth : 0;
+      const gap = parseFloat(cs.columnGap || cs.gap) || 0;
+      // travel span = box inner width minus the pet AND the email pinned on the right
+      maxX = Math.max(0, box.clientWidth - padL - padR - pet.offsetWidth - emailW - gap);
+      if(x > maxX) x = maxX;
+    }
+    measure();
+    addEventListener('resize', measure, {passive:true});
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, {passive:true});
+
+    let last = performance.now();
+    function frame(now){
+      const dt = Math.min(0.05, (now - last)/1000); last = now;
+
+      if(!reduce){
+        // walk back and forth, flipping at each edge
+        x += SPEED * dir * dt;
+        if(x >= maxX){ x = maxX; dir = -1; }
+        else if(x <= 0){ x = 0; dir = 1; }
+        // little hop to mimic steps
+        phase += BOB_RATE * dt;
+        const target = -BOB_AMP * Math.abs(Math.sin(phase));
+        bob += (target - bob) * Math.min(1, dt*18);
+        pet.style.transform   = `translateX(${x.toFixed(2)}px)`;
+        inner.style.transform = `translateY(${bob.toFixed(2)}px) scaleX(${dir})`;
+      }
+
+      // eyes follow the cursor (flip x with facing direction)
+      if(mx > -9999){
+        const r = pet.getBoundingClientRect();
+        const cx = r.left + r.width * EYE_CX, cy = r.top + r.height * EYE_TOP;
+        const dx = mx - cx, dy = my - cy, len = Math.hypot(dx,dy) || 1;
+        const ox = Math.max(-EYE_MAX_X, Math.min(EYE_MAX_X, dx/len*EYE_MAX_X)) * dir;
+        const oy = Math.max(-EYE_MAX_Y, Math.min(EYE_MAX_Y, dy/len*EYE_MAX_Y));
+        eyes.style.transform = `translate(${ox.toFixed(2)}px, ${oy.toFixed(2)}px)`;
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    if(!reduce){
+      (function blink(){
+        setTimeout(() => {
+          pet.classList.add('is-blinking');
+          setTimeout(() => pet.classList.remove('is-blinking'), 150);
+          blink();
+        }, 2600 + Math.random()*4000);
+      })();
+    }
+  })();
+
+  /* ── copy-email card ── */
+  (function(){
+    const btn = document.getElementById('copyEmail');
+    const label = document.getElementById('emailLabel');
+    const sub = document.getElementById('emailSub');
+    const original = {l: label.textContent, s: sub.textContent};
+    btn.addEventListener('click', async () => {
+      try{
+        await navigator.clipboard.writeText(btn.dataset.email);
+        btn.classList.add('copied');
+        label.textContent = 'Copied ✓';
+        sub.textContent = btn.dataset.email;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          label.textContent = original.l; sub.textContent = original.s;
+        }, 1800);
+      }catch(e){ sub.textContent = btn.dataset.email; }
+    });
+  })();
+</script>
+
 </body>
 </html>

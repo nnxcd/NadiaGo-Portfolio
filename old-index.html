@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nadia Go — Portfolio</title>
+  <meta name="description" content="Nadia Go — multidisciplinary designer based in Melbourne, AU. Selected work: Nai Nai, Mongie, and Daisy.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:wght@400..700&family=Joan&family=Pixelify+Sans:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- ============ NAVBAR ============ -->
+  <header class="navbar" id="navbar">
+    <p class="navbar-label">Multidisciplinary Designer — based in Melbourne, AU</p>
+    <nav class="navbar-nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="#work">Projects</a>
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a class="navbar-email" href="mailto:nadiajingxiang@gmail.com" data-cursor="hot">nadiajingxiang@gmail.com</a>
+    </nav>
+  </header>
+
+  <main id="main">
+
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+
+      <!-- physics playground (relocated full-width band — same chips) -->
+      <div class="hero-physics-box" data-reveal>
+        <section class="physics-stage" aria-hidden="true">
+          <div class="chip chip-pill dark" data-shape="pill" draggable="false">
+            UNIMELB <span class="chip-dot"></span>
+          </div>
+          <div class="chip chip-pill outline" data-shape="pill" draggable="false">
+            UI/UX DESIGNER
+          </div>
+          <div class="chip chip-icon ai" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/illustrator-logo.webp" alt="">
+          </div>
+          <div class="chip chip-icon pr" data-shape="circle" draggable="false">Pr</div>
+          <div class="chip chip-icon ps" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/PS-logo.png" alt="">
+          </div>
+          <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/figma-logo.png" alt="">
+          </div>
+          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
+          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
+          <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b22" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b30" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b34" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+          <!-- second go -->
+           <div class="chip chip-pill dark" data-shape="pill" draggable="false">
+            UNIMELB <span class="chip-dot"></span>
+          </div>
+          <div class="chip chip-pill outline" data-shape="pill" draggable="false">
+            UI/UX DESIGNER
+          </div>
+          <div class="chip chip-icon ai" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/illustrator-logo.webp" alt="">
+          </div>
+          <div class="chip chip-icon pr" data-shape="circle" draggable="false">Pr</div>
+          <div class="chip chip-icon ps" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/PS-logo.png" alt="">
+          </div>
+          <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false">
+            <img src="Draggable-icon-logo/figma-logo.png" alt="">
+          </div>
+          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
+          <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+          <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
+          <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b22" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b30" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b34" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+          <div class="chip chip-blob b16" data-shape="circle" draggable="false"></div>
+        </section>
+      </div>
+
+      <!-- giant name -->
+      <h1 class="hero-name">Nadia Go</h1>
+
+      <!-- intro + about link -->
+      <div class="hero-intro" data-reveal>
+        <p class="hero-lead">
+          A Product Designer and User Researcher committed to designing for communities that are
+          often overlooked — combining empathy with critical thinking to develop creative solutions
+          that are genuinely shaped by the people they serve.
+        </p>
+       <!-- <a class="hero-about-link" href="#about" data-cursor="hot">About me <span>↗</span></a> -->
+      </div>
+    </section>
+
+    <!-- ============ SELECTED WORK ============ -->
+    <section class="work" id="work">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">SELECTED PROJECTS - field work </p>
+        <h2>My lessons along the way.</h2>
+        <p class="section-sub">
+          Every project below starts the same way: someone is missing, so something
+          else has to step in. Here's what that became, three different times.
+        </p>
+      </div>
+
+      <div class="card-grid">
+
+        <!-- ── CARD 01: Nai Nai ── -->
+        <article class="case-card" id="case-nainai" data-reveal>
+          <a href="nainai.html" class="case-card-link">
+            <div class="case-card-inner">
+
+              <div class="case-card-image">
+                <img src="Case-study-images/CS(nainai).jpg" alt="Nai Nai case study preview">
+              </div>
+
+              <div class="case-card-body">
+                <!-- always visible -->
+                <div class="case-head">
+                  <span class="case-no">No. 01</span>
+                  <span class="case-status status-winner">WINNER — CISSA</span>
+                </div>
+                <p class="case-class">Classification: Healthcare Companion</p>
+                <h3 class="case-title">Nainai <span class="case-title-sub">— Your Virtual Grandma</span></h3>
+                <p class="case-desc">
+                  Nearly a third of Australians live outside major cities, where healthcare
+                  access is thinner and the Traditional Chinese Medicine workforce is shrinking
+                  and ageing fast. Nai Nai is a concept for a warm, grandmotherly guide that turns
+                  a daily check-in into safe, community-vetted home remedies — built to close a
+                  trust gap, not just an information one.
+                </p>
+
+                <!-- revealed on hover -->
+                <div class="case-reveal">
+                  <div class="case-reveal-inner">
+                    <div class="case-meta">
+                      <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
+                      <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
+                      <div><span>Built for</span>CISSA Hackathon — Medical track</div>
+                    </div>
+                    <span class="case-link">Read the full case study →</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </a>
+        </article>
+
+        <!-- ── CARD 02: Mongie ── -->
+        <article class="case-card" id="case-mongie" data-reveal>
+          <div class="case-card-inner">
+
+            <div class="case-card-image">
+              <img src="Case-study-images/CS(mongie).jpg" alt="Mongie case study preview">
+            </div>
+
+            <div class="case-card-body">
+              <!-- always visible -->
+              <div class="case-head">
+                <span class="case-no">No. 02</span>
+                <span class="case-status status-winner">RUNNER UP — CISSA</span>
+              </div>
+              <p class="case-class">Classification: Wellness Companion</p>
+              <h3 class="case-title">Mongie <span class="case-title-sub">— Your Pet Pal</span></h3>
+              <p class="case-desc">
+                Built across a 4-day hackathon for working parents who can't always be watching.
+                Mongie turns a kid's water breaks, stretches, and small wins into a virtual pet
+                that grows happier alongside them — while parents get a quiet, real-time read
+                on how the day actually went.
+              </p>
+
+              <!-- revealed on hover -->
+              <div class="case-reveal">
+                <div class="case-reveal-inner">
+                  <div class="case-meta">
+                    <div><span>Role</span>Lead UI Designer, UX Researcher, Hackathon Presenter</div>
+                    <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
+                    <div><span>Built for</span>Student Hackathon — Medical track</div>
+                  </div>
+                  <a class="case-link" href="index.html" target="_blank" rel="noopener" data-cursor="hot">
+                    <!-- Read the full case study → --> Still in progress
+                  </a>
+                </div>
+              </div>
+            </div><!-- /.case-card-body -->
+
+          </div><!-- /.case-card-inner -->
+        </article>
+
+        <!-- ── CARD 03: Daisy ── -->
+        <article class="case-card" id="case-ekko" data-reveal>
+          <div class="case-card-inner">
+
+            <div class="case-card-image">
+              <img src="Case-study-images/CS(Daisy).jpg" alt="Daisy case study preview">
+            </div>
+
+            <div class="case-card-body">
+              <!-- always visible -->
+              <div class="case-head">
+                <span class="case-no">No. 03</span>
+                <!-- <span class="case-status status-progress">IN PROGRESS</span> -->
+              </div>
+              <p class="case-class">Classification: Financial Wishlist Tracker</p>
+              <h3 class="case-title">Daisy <span class="case-title-sub">— Your one stop to shopping responsibly</span></h3>
+              <p class="case-desc">
+                There's a constant tension between wanting to shop more sustainably and actually doing it — especially when
+                it's hard to keep track of clothing purchases and their impact on your finances. Daisy helps users keep track
+                of what items they have in their wishlist, their categories, and how these purchases can pile up and affect their finances.
+              </p>
+
+              <!-- revealed on hover -->
+              <div class="case-reveal">
+                <div class="case-reveal-inner">
+                  <div class="case-meta">
+                    <div><span>Role</span>UI Designer, UX Researcher, Branding Designer</div>
+                    <div><span>Tools</span>Illustrator, Photoshop, Figma</div>
+                    <div><span>Built for</span>Capstone project</div>
+                  </div>
+                  <a class="case-link" href="index.html" target="_blank" rel="noopener" data-cursor="hot">
+<!-- Read the full case study → --> Still in progress                  </a>
+                </div>
+              </div>
+            </div><!-- /.case-card-body -->
+
+          </div><!-- /.case-card-inner -->
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="about" id="about">
+      <div class="about-grid">
+        <div class="about-text" data-reveal>
+          <p class="eyebrow">ABOUT</p>
+          <h2>Bringing perspective.</h2>
+          <p>
+            I'm born in the Netherlands and grew up mostly in Indonesia. Being around international communities
+            allowed me to become fluent in English and comfortable moving between Mandarin, Dutch, and Bahasa
+            Indonesia.
+          </p>
+          <p>
+            I'm studying at the University of Melbourne, pursuing a Bachelor in Design with a major in UI/UX Design and a interest in Graphic Design. 
+            In my free time, I've joined CISSA, Game Makers Club and the Indonesian Students Association—I've joined as a designer,
+            event organizer and have stepped up to become Secretary in CISSA, a role that I am currently in. 
+          </p>
+        </div>
+        <div class="about-data" data-reveal>
+          <p class="data-label">LANGUAGES</p>
+          <ul class="lang-list">
+            <li><span>English</span>Fluent</li>
+            <li><span>Bahasa</span>Semi-fluent</li>
+            <li><span>Dutch</span>Semi-fluent</li>
+            <li><span>Chinese</span>Semi-fluent</li>
+          </ul>
+          <p class="data-label">BASED</p>
+          <p class="data-value">Melbourne, AU<br>University of Melbourne</p>
+        </div>
+      </div>
+      <!--
+      <br>
+      <br>
+      <div class="contact-links">
+              <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Design Playground</a>
+      </div>
+    -->
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section class="experience" id="experience">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">EXPERIENCE</p>
+        <h2>Where I spent my time.</h2>
+      </div>
+      <ul class="timeline">
+        <li data-reveal>
+          <span class="tl-date">2025</span>
+          <span class="tl-body"><strong>UX &amp; 3D Game Design Intern</strong><em>Vision Verse</em></span>
+        </li>
+        <li data-reveal>
+          <span class="tl-date">2025</span>
+          <span class="tl-body"><strong>Secretary</strong><em>Computing &amp; Information Systems Students Association</em></span>
+        </li>
+        <li data-reveal>
+          <span class="tl-date">2024–25</span>
+          <span class="tl-body"><strong>Design Officer</strong><em>Computing &amp; Information Systems Students Association</em></span>
+        </li>
+        <li data-reveal>
+          <span class="tl-date">2024–25</span>
+          <span class="tl-body"><strong>Design Officer</strong><em>Melbourne University Indonesian Students Association</em></span>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+
+  <!-- ============ CONTACT / FOOTER ============ -->
+
+  <footer class="contact micro-footer" id="contact">
+    <!-- content sits above the p5 canvas -->
+    <div class="micro-inner">
+      <h2 class="micro-title">Thank you for coming!</h2>
+      <p class="micro-sub">Let's connect — find me across the web.</p>
+      <div class="micro-actions">
+        <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener" data-cursor="cool">Instagram</a>
+        <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener" data-cursor="cool">LinkedIn</a>
+      </div>
+    </div>
+
+    <!-- ============================================================
+     PASTE THIS INTO index.html
+     Replace the whole <div class="footer-pixel-art">…</div>
+     that sits inside <footer class="contact micro-footer" id="contact">
+     ============================================================ -->
+
+    <!-- p5 canvas mounts here (id is what cv.parent needs) -->
+    <div class="footer-pixel-art" id="footer-pixel-art">
+      <!-- Background graphics by Tessie Gresley -->
+      <script>
+      (function () {
+        const starGridSize = 20, heartGridSize = 22;
+
+        const starPattern = [
+          [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
+          [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
+          [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
+          [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
+          [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
+          [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
+          [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
+          [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
+          [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
+          [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
+          [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
+          [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
+        ];
+
+        const heartPattern = [
+          [0,7,7,8,8,8,0,8,8,8,8,0],
+          [7,8,0,7,7,8,0,8,8,7,7,8],
+          [8,8,7,7,7,7,7,7,8,8,7,7],
+          [7,7,7,8,8,7,7,8,8,8,7,8],
+          [7,7,0,7,7,7,7,0,0,7,7,8],
+          [7,8,8,8,7,8,7,7,7,8,8,8],
+          [0,7,7,7,7,8,7,7,8,8,8,0],
+          [0,0,8,7,7,8,8,7,8,8,0,0],
+          [0,0,0,7,0,8,7,8,8,0,0,0],
+          [0,0,0,0,8,7,8,8,0,0,0,0],
+          [0,0,0,0,0,7,8,0,0,0,0,0],
+        ];
+
+        const sketch = (p) => {
+          let footerEl, layer;
+          let cells = [], starBounds = [], heartBounds = [];
+          let starOX, starOY, heartOX, heartOY;
+          let activeStarSize, activeHeartSize;
+          let heartHover = false;
+
+          function buildCells() {
+            cells = []; starBounds = []; heartBounds = [];
+
+            const narrow = p.width < 700;              // phone-ish
+            const gs  = narrow ? 12 : starGridSize;    // shrink grids on small screens
+            const hs  = narrow ? 13 : heartGridSize;
+            const pad = narrow ? 24 : 60;              // smaller corner offset
+
+            activeStarSize = gs;
+            activeHeartSize = hs;
+
+            heartOX = pad; heartOY = pad;              // heart top-left
+            starOX = p.width  - starPattern[0].length * gs - pad;  // star bottom-right
+            starOY = p.height - starPattern.length    * gs - pad;
+
+            // heart always shown
+            for (let y = 0; y < heartPattern.length; y++)
+              for (let x = 0; x < heartPattern[y].length; x++)
+                if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
+
+            // star only on wider screens (dropped on phones to avoid overlap)
+            if (!narrow) {
+              for (let y = 0; y < starPattern.length; y++)
+                for (let x = 0; x < starPattern[y].length; x++)
+                  if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
+            }
+          }
+
+          function reveal() {
+            if (!cells.length) return;
+            const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
+            const size = c.src === 'star' ? activeStarSize : activeHeartSize;
+            const ox   = c.src === 'star' ? starOX : heartOX;
+            const oy   = c.src === 'star' ? starOY : heartOY;
+            const px = ox + c.x * size, py = oy + c.y * size;
+            layer.noStroke();
+
+            
+            if (c.type === 5 || c.type === 6) {
+              layer.fill(77, 240, 229); //box color
+              c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+              starBounds.push({ x:px, y:py, size });
+            } else if (c.type === 7 || c.type === 8) {
+              layer.fill(255,105,180);
+              c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
+              heartBounds.push({ x:px, y:py, size });
+            }
+          }
+          
+          p.setup = () => {
+            footerEl = document.getElementById('contact');
+            const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+            cv.parent('footer-pixel-art');
+            layer = p.createGraphics(p.width, p.height);
+            buildCells();
+            for (let i = 0; i < 500; i++) reveal();
+          };
+
+          p.windowResized = () => {
+            p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
+            layer = p.createGraphics(p.width, p.height);
+            buildCells();
+            for (let i = 0; i < 500; i++) reveal();
+          };
+
+          p.draw = () => {
+            p.clear();
+            p.image(layer, 0, 0);
+
+            let starH = false;
+            for (const s of starBounds) {
+              const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
+              p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229)); //star hover color then fill
+              p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
+              if (on) starH = true;
+            }
+            heartHover = false;
+            for (const h of heartBounds) {
+              const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
+              p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180)); //heart hover then fill color
+              p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
+              if (on) heartHover = true;
+            }
+            document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
+          };
+
+          p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+        };
+
+        window.addEventListener('load', () => new p5(sketch));
+      })();
+      </script>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
