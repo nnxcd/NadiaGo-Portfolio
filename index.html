@@ -213,12 +213,13 @@
   /* ── CASE-STUDY CARD — framed cover + hover drawer (Megan-Yap style) ── */
   .card{
     position:relative; display:flex; flex-direction:column;
-    background:#0E0E0E;
+    background:#000000;
     border-radius:16px; padding:12px;
+    border: 1px solid var(--line);
     transition:border-color .3s ease, transform .3s ease;
   }
   .card:hover{
-    border-color:rgba(255,255,255,0.55);
+    border: 1px solid var(--line);
     transform:translateY(-3px);
   }
 
@@ -274,7 +275,7 @@
     display:inline-block; margin-top:14px;
     font-size:0.8rem; font-weight:600; color:#fff;
   }
-  .card:hover .card-cta{color:var(--cyan);}
+  .card:hover .card-cta{color:var(--red);}
 
   /* 4th cell — playground, kept minimal on the black */
   .card-playground{
@@ -337,7 +338,7 @@
   <!-- ══ TOP HEADER ══ -->
   <header class="topbar">
     <div class="topbar-name">
-      <h1 class="rail-name"><img src="Character-building/name logo(2).png"</h1>
+      <h1 class="rail-name"><a href="index.html"><img src="Character-building/name logo(2).png"></a></h1>
     </div>
     <div class="topbar-pet">
       <!-- the pet lives here -->
@@ -383,14 +384,12 @@
 
       <!-- ── EXPERIENCE ── -->
       <nav class="rail-exp">
-        <span class="rail-exp-title">Experience</span>
+        <span class="rail-exp-title">Volunteer & Experience</span>
         <ul>
-          <li><span class="yr">2026</span><span class="co">Notion</span><span class="rl">Design Engineering Intern</span></li>
-          <li><span class="yr">2025</span><span class="co">Bloomberg</span><span class="rl">Software Engineering Intern</span></li>
-          <li><span class="yr">2025</span><span class="co">1Password</span><span class="rl">Product Design Intern</span></li>
-          <li><span class="yr">2024</span><span class="co">Royal Bank of Canada</span><span class="rl">Software Engineering Intern</span></li>
-          <li><span class="yr">2023</span><span class="co">Onova</span><span class="rl">Product Design + Engineering Intern</span></li>
-        </ul>
+          <li><span class="yr">2026</span><span class="co">CISSA</span><span class="rl">Secretary</span></li>
+          <li><span class="yr">2025</span><span class="co">VisionVerse</span><span class="rl">UI Design Intern</span></li>
+          <li><span class="yr">2024</span><span class="co">CISSA</span><span class="rl">Publicity Officer</span></li>
+          
       </nav>
     </aside>
 
@@ -405,14 +404,14 @@
           </div>
           <div class="card-head">
             <h3 class="card-title">Nai Nai</h3>
-            <span class="card-cat">Winner · CISSA</span>
+            <span class="card-cat">Personal Project</span>
           </div>
           <div class="card-drop">
             <p class="card-desc">A virtual grandma for safe, community-vetted home remedies.</p>
             <dl class="card-meta">
               <div><dt>Role</dt><dd>Lead UI · Research</dd></div>
               <div><dt>Focus</dt><dd>Medical · TCM</dd></div>
-              <div><dt>Timeframe</dt><dd>September 2025</dd></div>
+              <div><dt>Timeframe</dt><dd>February 2026</dd></div>
             </dl>
             <span class="card-cta">View case study ↗</span>
           </div>
@@ -447,7 +446,7 @@
           </div>
           <div class="card-head">
             <h3 class="card-title">Wishlet</h3>
-            <span class="card-cat">Capstone</span>
+            <span class="card-cat">Personal Project</span>
           </div>
           <div class="card-drop">
             <p class="card-desc">Track your wishlist before it wrecks your budget.</p>
