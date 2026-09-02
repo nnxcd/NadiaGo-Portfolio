@@ -54,9 +54,13 @@
     margin:0; background:var(--bg); color:var(--ink);
     font-family:var(--sans); font-size:16px; line-height:1.55;
     -webkit-font-smoothing:antialiased;
+    cursor:url('Character-building/cursor.png'), auto;
   }
   ::selection{background:var(--red); color:var(--bg);}
-  a{color:inherit; text-decoration:none;}
+  a{
+    color:inherit; text-decoration:none;
+    cursor:url('Character-building/hover-cursor.png'), pointer;
+  }
   a:focus-visible,button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
   img{max-width:100%; display:block;}
 
@@ -183,7 +187,7 @@
   .rail-email{
     display:flex; align-items:center; gap:12px; width:100%;
     background:#fff; border:1px solid var(--ink); border-radius:12px;
-    padding:12px 14px; cursor:pointer;
+    padding:12px 14px; cursor:url('Character-building/hover-cursor.png'), pointer;
     font-family:var(--sans); font-size:0.9rem; color:var(--ink); text-align:left;
     transition:background .18s ease, transform .18s ease, border-color .18s ease;
   }
@@ -216,6 +220,7 @@
     background:#000000;
     border-radius:16px; padding:12px;
     border: 1px solid var(--line);
+    cursor:url('Character-building/hover-cursor.png'), pointer;
     transition:border-color .3s ease, transform .3s ease;
   }
   .card:hover{
@@ -284,6 +289,7 @@
   background:transparent;
   display:flex; align-items:flex-end; justify-content:space-between;
   padding:20px; color:rgba(12,12,12,0.72); font-weight:600;
+  cursor:url('Character-building/hover-cursor.png'), pointer;
   transition:border-color .25s ease, color .25s ease;
 }
   .card-playground .arr{transition:transform .2s ease;}
@@ -607,7 +613,9 @@
             p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
             if (on) heartHover = true;
           }
-          document.body.style.cursor = (starH || heartHover) ? 'pointer' : 'default';
+          document.body.style.cursor = (starH || heartHover)
+            ? 'pointer'
+            : "url('Character-building/cursor.png'), auto";
         };
 
         p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
