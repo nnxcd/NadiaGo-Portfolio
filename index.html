@@ -10,6 +10,7 @@
 <link rel="icon" type="image/png" href="Character-building/favicon(2).png" sizes="32x32">
 <!-- p5.js — powers the pixel-art footer canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
 <style>
   @font-face{
@@ -335,6 +336,48 @@
     .card,.pet__eyes,.pet__eyes img{transition:none;}
     .card:hover{transform:none;}
   }
+
+    /* ── DRAGGABLE FALLING ICONS (rail physics playground) ── */
+  .rail-physics{ margin:0 calc(var(--pad) * -1); margin-top:var(--section-gap); }
+  .rail-physics-title{
+    display:block; font-size:1rem; color:var(--faint); margin:0; padding:var(--pad);
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .hero-physics-box{ position:relative; height:100px; overflow:hidden; background:var(--bg); }
+  .physics-stage{ position:absolute; inset:0; overflow:hidden; }
+  .chip{
+    position:absolute; top:0; left:0;
+    display:flex; align-items:center; justify-content:center;
+    will-change:transform; user-select:none; -webkit-user-select:none;
+    font-family:var(--sans); font-weight:600; white-space:nowrap;
+  }
+  .physics-stage.physics-active .chip{ cursor:grab; }
+  .physics-stage.physics-active .chip:active{ cursor:grabbing; }
+  /* pills */
+  .chip-pill{ height:34px; padding:0 16px; border-radius:999px; font-size:0.78rem; letter-spacing:0.02em; gap:8px; }
+  .chip-pill.dark{ background:var(--ink); color:#fff; }
+  .chip-pill.outline{ background:#fff; color:var(--ink); border:1px solid var(--ink); }
+  .chip-dot{ width:7px; height:7px; border-radius:50%; background:var(--red); display:inline-block; }
+  /* brand icons */
+  .chip-icon{ width:44px; height:44px; border-radius:50%; font-size:0.85rem; font-weight:700; overflow:hidden; }
+  .chip-icon img{ width:64%; height:64%; object-fit:contain; }
+  .chip-icon.ai{ background:#330000; }
+  .chip-icon.pr{ background:#2a0634; color:#c17cf5; }
+  .chip-icon.ps{ background:#001d33; }
+  .chip-icon.figma-bare{ background:#fff; border:1px solid var(--line-soft); }
+  /* mini symbols */
+  .chip-mini{ width:26px; height:26px; border-radius:50%; background:#fff; border:1px solid var(--ink); font-size:0.85rem; color:var(--ink); }
+  /* blobs */
+  .chip-blob{ border-radius:50%; background:var(--sq-blue); }
+  .chip-blob.b18{ width:18px; height:18px; }
+  .chip-blob.b20{ width:20px; height:20px; }
+  .chip-blob.b24{ width:24px; height:24px; }
+  .chip-blob.b26{ width:26px; height:26px; background:var(--cyan); }
+  .chip-blob.b28{ width:28px; height:28px; }
+  .chip-blob.b32{ width:32px; height:32px; background:var(--cyan); }
+  .chip-blob.b36{ width:36px; height:36px; background:var(--red); }
+  .chip-blob.b40{ width:40px; height:40px; background:var(--sq-green); }
+
 </style>
 </head>
 <body>
@@ -383,10 +426,34 @@
         <span class="rail-menu-title">Explore</span>
         <ul>
           <li><a href="#work"><span class="num">01</span><span class="lbl">My Work</span><span class="arr">↗</span></a></li>
-          <li><a href="#"><span class="num">02</span><span class="lbl">About Me</span><span class="arr">↗</span></a></li>
+          <li><a href=""><span class="num">02</span><span class="lbl">About Me</span><span class="arr">↗</span></a></li><!-- still working -->
           <li><a href="#playground"><span class="num">03</span><span class="lbl">Design Playground</span><span class="arr">↗</span></a></li>
         </ul>
       </nav>
+      <!-- ── DRAGGABLE FALLING ICONS ── -->
+      <section class="rail-physics">
+       
+        <div class="hero-physics-box">
+          <div class="physics-stage" aria-hidden="true">
+            <div class="chip chip-pill dark" data-shape="pill" draggable="false">UNIMELB <span class="chip-dot"></span></div>
+            <div class="chip chip-pill outline" data-shape="pill" draggable="false">PRODUCT DESIGNER</div>
+            <div class="chip chip-icon ai" data-shape="circle" draggable="false"><img src="Draggable-icon-logo/illustrator-logo.webp" alt=""></div>
+            <div class="chip chip-icon pr" data-shape="circle" draggable="false">Pr</div>
+            <div class="chip chip-icon ps" data-shape="circle" draggable="false"><img src="Draggable-icon-logo/PS-logo.png" alt=""></div>
+            <div class="chip chip-icon figma-bare" data-shape="circle" draggable="false"><img src="Draggable-icon-logo/figma-logo.png" alt=""></div>
+            <div class="chip chip-mini asterisk" data-shape="circle" draggable="false">✳</div>
+            <div class="chip chip-mini arrow" data-shape="circle" draggable="false">←</div>
+            <div class="chip chip-blob b32" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b24" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b40" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b20" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b28" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b36" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b18" data-shape="circle" draggable="false"></div>
+            <div class="chip chip-blob b26" data-shape="circle" draggable="false"></div>
+          </div>
+        </div>
+      </section>
 
       <!-- ── EXPERIENCE ── -->
       <nav class="rail-exp">
@@ -446,9 +513,9 @@
         -->
 
         <!-- Daisy -->
-        <a class="card pink" href="#">
+        <a class="card pink" href="wishlet.html">
           <div class="card-frame">
-            <img src="Case-study-images/wishlet-preview.gif" alt="Daisy cover" onerror="this.remove()">
+            <img src="Case-study-images/wishlet-preview.gif" alt="Wishlet cover" onerror="this.remove()">
           </div>
           <div class="card-head">
             <h3 class="card-title">Wishlet</h3>
@@ -723,6 +790,82 @@
       }catch(e){ sub.textContent = btn.dataset.email; }
     });
   })();
+</script>
+
+<script>
+(function () {
+  var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var stage = document.querySelector('.physics-stage');
+  var physicsBox = document.querySelector('.hero-physics-box');
+
+  if (stage && physicsBox && !prefersReducedMotion && typeof Matter !== 'undefined') {
+    var chips = Array.prototype.slice.call(stage.querySelectorAll('.chip'));
+    if (!chips.length) return;
+
+    stage.classList.add('physics-active');
+    stage.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+    var Engine = Matter.Engine, World = Matter.World, Bodies = Matter.Bodies,
+        Body = Matter.Body, Mouse = Matter.Mouse, MouseConstraint = Matter.MouseConstraint;
+
+    var engine = Engine.create();
+    engine.gravity.y = 0.85;
+
+    var rect = physicsBox.getBoundingClientRect();
+    var W = rect.width || 280, H = rect.height || 300, wall = 60;
+
+    World.add(engine.world, [
+      Bodies.rectangle(W/2, H + wall/2, W*2, wall, { isStatic:true }),
+      Bodies.rectangle(W/2, -wall/2, W*2, wall, { isStatic:true }),
+      Bodies.rectangle(-wall/2, H/2, wall, H*2, { isStatic:true }),
+      Bodies.rectangle(W + wall/2, H/2, wall, H*2, { isStatic:true })
+    ]);
+
+    var tracked = chips.map(function (el, i) {
+      var w = el.offsetWidth || 40, h = el.offsetHeight || 40;
+      var startX = 40 + Math.random() * Math.max(W - 80, 40);
+      var startY = -h - i * 55;
+      var isCircle = el.getAttribute('data-shape') === 'circle';
+      var body = isCircle
+        ? Bodies.circle(startX, startY, w/2, { restitution:0.55, friction:0.35, frictionAir:0.02 })
+        : Bodies.rectangle(startX, startY, w, h, { chamfer:{radius:h/2}, restitution:0.4, friction:0.4, frictionAir:0.02 });
+      Body.setAngle(body, (Math.random() - 0.5) * 0.6);
+      World.add(engine.world, body);
+      return { el:el, body:body, w:w, h:h };
+    });
+
+    var mouse = Mouse.create(stage);
+    var mouseConstraint = MouseConstraint.create(engine, { mouse: mouse, constraint: { stiffness:0.2, angularStiffness:0 } });
+    World.add(engine.world, mouseConstraint);
+
+    ['mousewheel','DOMMouseScroll','touchstart','touchmove','touchend'].forEach(function (evt) {
+      if (mouse[evt]) mouse.element.removeEventListener(evt, mouse[evt]);
+    });
+    mouse.element.addEventListener('touchstart', mouse.mousedown, { passive:true });
+    mouse.element.addEventListener('touchmove', function (e) { if (mouseConstraint.body) mouse.mousemove(e); }, { passive:true });
+    mouse.element.addEventListener('touchend', function (e) { if (mouseConstraint.body) mouse.mouseup(e); }, { passive:true });
+
+    function clamp(v, lo, hi){ return Math.min(Math.max(v, lo), hi); }
+
+    (function loop(){
+      mouse.position.x = clamp(mouse.position.x, 0, W);
+      mouse.position.y = clamp(mouse.position.y, 0, H);
+      Engine.update(engine);
+      tracked.forEach(function (t) {
+        var pos = t.body.position, halfW = t.w/2, halfH = t.h/2;
+        var cx = clamp(pos.x, halfW, W - halfW);
+        var cy = clamp(pos.y, halfH, H - halfH);
+        if (cx !== pos.x || cy !== pos.y) {
+          var vel = t.body.velocity;
+          Body.setPosition(t.body, { x:cx, y:cy });
+          Body.setVelocity(t.body, { x: cx !== pos.x ? 0 : vel.x, y: cy !== pos.y ? 0 : vel.y });
+        }
+        t.el.style.transform = 'translate(' + (cx-halfW) + 'px,' + (cy-halfH) + 'px) rotate(' + t.body.angle + 'rad)';
+      });
+      window.requestAnimationFrame(loop);
+    })();
+  }
+})();
 </script>
 
 </body>
