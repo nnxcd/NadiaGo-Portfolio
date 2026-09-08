@@ -331,6 +331,14 @@
     .card-list{grid-template-columns:1fr 1fr;}
   }
   @media (max-width:560px){ .card-list{grid-template-columns:1fr;} }
+
+  /* ── PHONE (narrower than an iPad): hide the Explore menu,
+        leaving just the physics chips box and a single rule above it ── */
+  @media (max-width:767px){
+    .rail-menu{ display:none; }
+    .rail-physics{ margin-top:0; border-top:1px solid var(--line); }
+  }
+
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
     .card,.pet__eyes,.pet__eyes img{transition:none;}
