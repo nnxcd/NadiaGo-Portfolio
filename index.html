@@ -66,6 +66,8 @@
   img{max-width:100%; display:block;}
 
  .page{max-width:none; margin:0;}
+  .phone{display:none;}            /* phone-only layer, switched on below the iPad breakpoint */
+  body.ph-lock{overflow:hidden;}   /* freeze the page while a pop-up sheet is open */
 
   /* ── TOP HEADER: name box + pet box ─────────────── */
   .topbar{
@@ -332,11 +334,12 @@
   }
   @media (max-width:560px){ .card-list{grid-template-columns:1fr;} }
 
-  /* ── PHONE (narrower than an iPad): hide the Explore menu,
-        leaving just the physics chips box and a single rule above it ── */
+  /* ── PHONE (narrower than an iPad): hide the whole desktop layout
+        and switch on the dedicated .phone layer instead. Desktop is
+        left completely untouched above this breakpoint. ── */
   @media (max-width:767px){
-    .rail-menu{ display:none; }
-    .rail-physics{ margin-top:0; border-top:1px solid var(--line); }
+    .page{ display:none; }
+    .phone{ display:block; }
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -391,6 +394,221 @@
   .chip-blob.b32{ width:32px; height:32px; background:var(--cyan); }
   .chip-blob.b36{ width:36px; height:36px; background:var(--red); }
   .chip-blob.b40{ width:40px; height:40px; background:var(--sq-green); }
+
+  /* ══════════════════════════════════════════════════════════════
+     PHONE LAYER — only rendered ≤767px. Name-led hero, a clean
+     bordered work grid, and bottom-sheet pop-ups for everything else.
+     Inspired by Joshua Kaplan (big name + pills + numbered ledger)
+     and Soteria (hairline bordered grid, one red accent tile).
+     ══════════════════════════════════════════════════════════════ */
+  .phone{ background:var(--bg); color:var(--ink); min-height:100svh; }
+
+  /* ── HERO: just the name to start ── */
+  .ph-hero{
+    min-height:82svh;
+    display:flex; flex-direction:column;
+    padding:22px 20px 20px;
+    border-bottom:1px solid var(--line);
+  }
+  .ph-eyebrow{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:0.7rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--ink);
+  }
+  .ph-eyebrow .dot{ width:8px; height:8px; border-radius:50%; background:var(--red); }
+  .ph-hero-mid{ flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .ph-name{
+    font-family:var(--title-alt); font-weight:650; letter-spacing:-0.05em;
+    font-size:clamp(3.6rem,20vw,6rem); line-height:0.86; margin:0;
+  }
+  .ph-name img{ width:100%; max-width:300px; height:auto; display:block; }
+  .ph-name .amp{ color:var(--red); }
+  .ph-tagline{
+    margin:18px 0 0; max-width:22ch;
+    font-size:1.02rem; line-height:1.4; color:var(--muted);
+  }
+  .ph-tagline strong{ color:var(--ink); font-weight:650; }
+
+  /* pill row — About / Experience / Contact (Contact is the red accent) */
+  .ph-pills{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+  .ph-pill{
+    font-family:var(--sans); font-size:0.9rem; font-weight:600;
+    padding:10px 18px; border-radius:999px;
+    border:1px solid var(--ink); background:#fff; color:var(--ink);
+    cursor:pointer; -webkit-tap-highlight-color:transparent;
+    transition:transform .12s ease;
+  }
+  .ph-pill:active{ transform:scale(0.96); }
+  .ph-pill.solid{ background:var(--red); border-color:var(--red); color:#fff; }
+
+  .ph-scroll{
+    margin-top:20px; display:flex; align-items:center; gap:8px;
+    font-size:0.74rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--faint);
+  }
+  .ph-scroll .ln{ flex:1; height:1px; background:var(--line-soft); }
+
+  /* ── SELECTED WORK LABEL ── */
+  .ph-sec-label{
+    display:flex; align-items:baseline; justify-content:space-between;
+    padding:16px 20px;
+    font-size:0.72rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--faint);
+    border-bottom:1px solid var(--line);
+  }
+  .ph-sec-label b{ color:var(--ink); font-weight:700; }
+
+  /* ── WORK GRID: 2-col bordered cells, Soteria hairline frame ── */
+  .ph-grid{
+    display:grid; grid-template-columns:1fr 1fr;
+    border-bottom:1px solid var(--line);
+  }
+  .ph-card{
+    position:relative; text-align:left;
+    background:#fff; border:none; cursor:pointer;
+    border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:14px 14px 16px; min-height:172px;
+    display:flex; flex-direction:column; gap:12px;
+    -webkit-tap-highlight-color:transparent;
+    transition:background .15s ease;
+    font-family:var(--sans);
+  }
+  .ph-card:nth-child(2n){ border-right:none; }
+  .ph-card:active{ background:#faf7f2; }
+  .ph-thumb{
+    width:100%; aspect-ratio:1/1; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    font-family:var(--title-alt); font-weight:650; font-size:1.6rem; color:#fff;
+  }
+  .ph-thumb.green{ background:var(--sq-green); }
+  .ph-thumb.pink{ background:var(--sq-pink); color:var(--ink); }
+  .ph-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .ph-card-t{ font-family:var(--title-alt); font-weight:650; font-size:1.12rem; letter-spacing:-0.02em; line-height:1; margin:0; }
+  .ph-card-c{ font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin-top:5px; }
+  .ph-card .corner{ position:absolute; top:12px; right:12px; font-size:0.9rem; color:var(--ink); }
+
+  /* the one red accent tile (playground) — echoes Soteria's single red cell */
+  .ph-card.accent{ background:var(--red); color:#fff; justify-content:space-between; }
+  .ph-card.accent:active{ background:#d63403; }
+  .ph-card.accent .ph-card-t{ color:#fff; }
+  .ph-card.accent .ph-card-c{ color:rgba(255,255,255,0.8); }
+  .ph-card.accent .corner{ color:#fff; }
+  .ph-card.accent .play-mark{
+    font-family:var(--title-alt); font-weight:650; font-size:2.4rem; line-height:1;
+    margin-top:6px;
+  }
+
+  /* ── BOTTOM-SHEET POP-UPS ── */
+  .ph-sheet-wrap{
+    position:fixed; inset:0; z-index:120;
+    display:none; align-items:flex-end; justify-content:center;
+  }
+  .ph-sheet-wrap.open{ display:flex; }
+  .ph-backdrop{
+    position:absolute; inset:0; background:rgba(17,17,17,0.42);
+    opacity:0; transition:opacity .25s ease;
+  }
+  .ph-sheet-wrap.open .ph-backdrop{ opacity:1; }
+  .ph-sheet{
+    position:relative; z-index:1;
+    width:100%; max-height:88svh; overflow-y:auto;
+    background:var(--bg); color:var(--ink);
+    border-top-left-radius:22px; border-top-right-radius:22px;
+    border-top:1px solid var(--line);
+    padding:10px 22px 30px;
+    transform:translateY(100%); transition:transform .32s cubic-bezier(.2,.85,.25,1);
+    -webkit-overflow-scrolling:touch;
+  }
+  .ph-sheet-wrap.open .ph-sheet{ transform:translateY(0); }
+  .ph-handle{ width:40px; height:4px; border-radius:999px; background:#d9d5cc; margin:0 auto 4px; }
+  .ph-sheet-top{
+    position:sticky; top:0; background:var(--bg); z-index:2;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 0 12px; margin-bottom:6px; border-bottom:1px solid var(--line);
+  }
+  .ph-sheet-title{ font-family:var(--title-alt); font-weight:650; letter-spacing:-0.02em; font-size:1.5rem; margin:0; }
+  .ph-sheet-x{
+    width:34px; height:34px; flex:none; border-radius:50%;
+    border:1px solid var(--ink); background:#fff; color:var(--ink);
+    font-size:1rem; line-height:1; cursor:pointer; -webkit-tap-highlight-color:transparent;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ph-sheet-x:active{ background:var(--ink); color:#fff; }
+  .ph-sheet-body{ padding-top:16px; }
+  .ph-sheet-body p{ font-size:1rem; line-height:1.5; color:var(--muted); margin:0 0 14px; }
+  .ph-sheet-body p strong{ color:var(--ink); font-weight:650; }
+
+  /* tag pills inside a sheet */
+  .ph-tags{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px; }
+  .ph-tags span{
+    font-size:0.78rem; font-weight:600; padding:6px 13px; border-radius:999px;
+    background:var(--ink); color:#fff;
+  }
+  .ph-tags span.red{ background:var(--red); }
+  .ph-tags span.hollow{ background:#fff; color:var(--ink); border:1px solid var(--ink); }
+
+  /* project sheet thumb */
+  .ph-sheet-thumb{
+    width:100%; aspect-ratio:16/10; border-radius:14px; margin:0 0 18px;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    font-family:var(--title-alt); font-weight:650; font-size:2.4rem; color:#fff;
+  }
+  .ph-sheet-thumb.green{ background:var(--sq-green); }
+  .ph-sheet-thumb.pink{ background:var(--sq-pink); color:var(--ink); }
+  .ph-sheet-thumb img{ width:100%; height:100%; object-fit:cover; }
+
+  /* meta ledger (Kaplan style: label | value rows) */
+  .ph-meta{ border-top:1px solid var(--line); margin:4px 0 20px; }
+  .ph-meta .row{
+    display:grid; grid-template-columns:5.5em 1fr; gap:12px;
+    padding:11px 0; border-bottom:1px solid var(--line-soft);
+  }
+  .ph-meta dt{ font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin:0; align-self:center; }
+  .ph-meta dd{ margin:0; font-size:0.95rem; font-weight:600; color:var(--ink); line-height:1.3; }
+
+  /* experience ledger: year · company · role (Kaplan numbered list feel) */
+  .ph-ledger{ margin:2px 0 6px; }
+  .ph-ledger .item{
+    display:grid; grid-template-columns:3.2em 1fr auto; gap:12px; align-items:baseline;
+    padding:14px 0; border-bottom:1px solid var(--line-soft);
+  }
+  .ph-ledger .yr{ font-variant-numeric:tabular-nums; color:var(--faint); font-size:0.85rem; }
+  .ph-ledger .co{ font-family:var(--title-alt); font-weight:650; font-size:1.05rem; letter-spacing:-0.01em; }
+  .ph-ledger .rl{ font-size:0.82rem; color:var(--muted); text-align:right; }
+
+  /* primary button inside sheets */
+  .ph-btn{
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; margin-top:6px;
+    background:var(--ink); color:#fff; border:none; border-radius:14px;
+    padding:16px 20px; font-family:var(--sans); font-size:1rem; font-weight:650;
+    cursor:pointer; -webkit-tap-highlight-color:transparent; text-decoration:none;
+  }
+  .ph-btn:active{ transform:scale(0.98); }
+  .ph-btn.red{ background:var(--red); }
+
+  /* copy-email row */
+  .ph-copy{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    width:100%; margin:0 0 12px;
+    background:#fff; border:1px solid var(--ink); border-radius:14px;
+    padding:15px 18px; font-family:var(--sans); font-size:0.95rem; color:var(--ink);
+    cursor:pointer; -webkit-tap-highlight-color:transparent; text-align:left;
+  }
+  .ph-copy b{ font-weight:650; display:block; }
+  .ph-copy small{ color:var(--muted); font-size:0.78rem; }
+  .ph-copy .tick{ font-size:1.1rem; }
+  .ph-copy.copied{ background:var(--green-dark); border-color:var(--green-dark); color:#fff; }
+  .ph-copy.copied b, .ph-copy.copied small{ color:#fff; }
+
+  /* stacked social links */
+  .ph-links{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
+  .ph-links a{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 2px; border-bottom:1px solid var(--line-soft);
+    font-size:1.05rem; font-weight:600; color:var(--ink);
+  }
+  .ph-links a .arr{ color:var(--faint); }
 
 </style>
 </head>
@@ -559,6 +777,201 @@
 </div>
 
 
+<!-- ══ PHONE LAYER (≤767px only) ══ -->
+<div class="phone">
+
+  <!-- HERO: just the name -->
+  <section class="ph-hero">
+    <div class="ph-eyebrow">
+      <span>Product Designer</span>
+      <span class="dot" aria-hidden="true"></span>
+    </div>
+
+    <div class="ph-hero-mid">
+      <h1 class="ph-name"><img src="Character-building/name logo(2).png" alt="Nadia Go"></h1>
+      <p class="ph-tagline">Product designer who <strong>finds the holes</strong> others miss — based in Melbourne, AU.</p>
+
+      <div class="ph-pills">
+        <button class="ph-pill" data-open="pop-about">About</button>
+        <button class="ph-pill" data-open="pop-experience">Experience</button>
+        <button class="ph-pill solid" data-open="pop-contact">Contact</button>
+      </div>
+    </div>
+
+    <div class="ph-scroll">
+      <span class="ln" aria-hidden="true"></span>
+      <span>Selected work below ↓</span>
+    </div>
+  </section>
+
+  <!-- SELECTED WORK -->
+  <div class="ph-sec-label"><b>Selected Work</b><span>01</span></div>
+
+  <div class="ph-grid">
+    <button class="ph-card" data-open="pop-nainai">
+      <span class="corner">↗</span>
+      <span class="ph-thumb green"><img src="Case-study-images/nainai-preview.gif" alt="Nai Nai preview" onerror="this.remove()"></span>
+      <span>
+        <span class="ph-card-t">Nai Nai</span>
+        <span class="ph-card-c">Personal Project</span>
+      </span>
+    </button>
+
+    <button class="ph-card" data-open="pop-wishlet">
+      <span class="corner">↗</span>
+      <span class="ph-thumb pink"><img src="Case-study-images/wishlet-preview.gif" alt="Wishlet preview" onerror="this.remove()"></span>
+      <span>
+        <span class="ph-card-t">Wishlet</span>
+        <span class="ph-card-c">Personal Project</span>
+      </span>
+    </button>
+
+    <button class="ph-card accent" data-open="pop-playground">
+      <span class="corner">↗</span>
+      <span>
+        <span class="ph-card-t">Design Playground</span>
+        <span class="ph-card-c">Experiments</span>
+      </span>
+      <span class="play-mark">✳</span>
+    </button>
+  </div>
+
+  <!-- ════ POP-UP SHEETS ════ -->
+
+  <!-- About -->
+  <div class="ph-sheet-wrap" id="pop-about">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="About">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">About</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <div class="ph-tags">
+          <span>Product Designer</span>
+          <span class="red">Melbourne, AU</span>
+        </div>
+        <p>Studied at the <strong>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
+        <p>Focused on <strong>finding the holes</strong> that other people can't identify first, and conducting user research to create an end-product that <strong>satisfies</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Experience -->
+  <div class="ph-sheet-wrap" id="pop-experience">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Experience">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">Experience</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <div class="ph-ledger">
+          <div class="item"><span class="yr">2026</span><span class="co">CISSA</span><span class="rl">Secretary</span></div>
+          <div class="item"><span class="yr">2025</span><span class="co">VisionVerse</span><span class="rl">UI Design Intern</span></div>
+          <div class="item"><span class="yr">2024</span><span class="co">CISSA</span><span class="rl">Publicity Officer</span></div>
+          <div class="item"><span class="yr">2024</span><span class="co">PPIA</span><span class="rl">Design Officer</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="ph-sheet-wrap" id="pop-contact">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Contact">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">Contact</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <button class="ph-copy" id="phCopy" data-email="nadiajingxiang@gmail.com">
+          <span>
+            <b id="phCopyLabel">Copy my email</b>
+            <small id="phCopySub">nadiajingxiang@gmail.com</small>
+          </span>
+          <span class="tick">📨</span>
+        </button>
+        <div class="ph-links">
+          <a href="https://www.instagram.com/nadialexandraa/"><span>Instagram</span><span class="arr">↗</span></a>
+          <a href="https://www.linkedin.com/in/nadia-alexandra-/"><span>LinkedIn</span><span class="arr">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nai Nai -->
+  <div class="ph-sheet-wrap" id="pop-nainai">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Nai Nai">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">Nai Nai</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <div class="ph-sheet-thumb green"><img src="Case-study-images/nainai-preview.gif" alt="Nai Nai preview" onerror="this.remove()"></div>
+        <div class="ph-tags">
+          <span class="hollow">Personal Project</span>
+        </div>
+        <p>A virtual grandma for safe, community-vetted home remedies.</p>
+        <dl class="ph-meta">
+          <div class="row"><dt>Role</dt><dd>Lead UI · Research</dd></div>
+          <div class="row"><dt>Focus</dt><dd>Medical · TCM</dd></div>
+          <div class="row"><dt>Timeframe</dt><dd>February 2026</dd></div>
+        </dl>
+        <a class="ph-btn" href="Nainai.html"><span>View case study</span><span>↗</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wishlet -->
+  <div class="ph-sheet-wrap" id="pop-wishlet">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Wishlet">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">Wishlet</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <div class="ph-sheet-thumb pink"><img src="Case-study-images/wishlet-preview.gif" alt="Wishlet preview" onerror="this.remove()"></div>
+        <div class="ph-tags">
+          <span class="hollow">Personal Project</span>
+        </div>
+        <p>Track your wishlist before it wrecks your budget.</p>
+        <dl class="ph-meta">
+          <div class="row"><dt>Role</dt><dd>UI · UX · Branding</dd></div>
+          <div class="row"><dt>Focus</dt><dd>Fashion × Finance</dd></div>
+          <div class="row"><dt>Timeframe</dt><dd>November 2025</dd></div>
+        </dl>
+        <a class="ph-btn red" href="wishlet.html"><span>View case study</span><span>↗</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Playground -->
+  <div class="ph-sheet-wrap" id="pop-playground">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Design Playground">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">Design Playground</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <p>A corner for typographic experiments, motion tests and half-finished ideas.</p>
+        <p><strong>Coming soon</strong> — best viewed on desktop, where you can drag the falling chips around.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
 <!-- ══ CONTACT / FOOTER ══ -->
 <footer class="contact micro-footer" id="contact">
   <div class="micro-inner">
@@ -713,6 +1126,8 @@
 <script>
   /* ── pet: walks back & forth with a hop, blinks, eyes track cursor ── */
   (function(){
+    // phone layer replaces the desktop header entirely — skip the pet there
+    if (window.matchMedia && window.matchMedia('(max-width:767px)').matches) return;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     const pet   = document.getElementById('pet');
     const inner = pet && pet.querySelector('.pet__inner');
@@ -805,10 +1220,58 @@
       }catch(e){ sub.textContent = btn.dataset.email; }
     });
   })();
+
+  /* ── phone: bottom-sheet pop-ups ── */
+  (function(){
+    let openEl = null;
+    function open(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      openEl = el;
+      el.classList.add('open');
+      document.body.classList.add('ph-lock');
+    }
+    function close(){
+      if(!openEl) return;
+      openEl.classList.remove('open');
+      openEl = null;
+      document.body.classList.remove('ph-lock');
+    }
+    document.addEventListener('click', function(e){
+      const opener = e.target.closest('[data-open]');
+      if(opener){ open(opener.getAttribute('data-open')); return; }
+      if(e.target.closest('[data-close]')){ close(); }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') close();
+    });
+  })();
+
+  /* ── phone: copy-email button ── */
+  (function(){
+    const btn = document.getElementById('phCopy');
+    if(!btn) return;
+    const label = document.getElementById('phCopyLabel');
+    const sub   = document.getElementById('phCopySub');
+    const orig  = {l: label.textContent, s: sub.textContent};
+    btn.addEventListener('click', async function(){
+      try{
+        await navigator.clipboard.writeText(btn.dataset.email);
+        btn.classList.add('copied');
+        label.textContent = 'Copied ✓';
+        sub.textContent = btn.dataset.email;
+        setTimeout(function(){
+          btn.classList.remove('copied');
+          label.textContent = orig.l; sub.textContent = orig.s;
+        }, 1800);
+      }catch(e){ sub.textContent = btn.dataset.email; }
+    });
+  })();
 </script>
 
 <script>
 (function () {
+  if (window.matchMedia && window.matchMedia('(max-width:767px)').matches) return;
   var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var stage = document.querySelector('.physics-stage');
   var physicsBox = document.querySelector('.hero-physics-box');
