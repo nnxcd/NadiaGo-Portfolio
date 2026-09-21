@@ -3,15 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nadia Go — Product & Multidisciplinary Designer</title>
+<title>Nadia Go — Your Product Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="Character-building/favicon.png" sizes="32x32">
+<link rel="icon" type="image/png" href="Character-building/favicon(2).png" sizes="32x32">
 <!-- p5.js — powers the pixel-art footer canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
 <style>
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:450;
+    src:url('Fonts/NeueHaasGrotDisp-45Light-Trial.otf') format('opentype');
+  }
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:550;
+    src:url('Fonts/NeueHaasGrotDisp-55Roman-Trial.otf') format('opentype');
+  }
+  @font-face{
+    font-family:'HaasGrotDisp'; font-style:normal; font-weight:650;
+    src:url('Fonts/NeueHaasGrotDisp-65Medium-Trial.otf') format('opentype');
+  }
 .gallery {
   column-count: 5;
   column-gap: 1rem;
@@ -26,6 +39,48 @@
   display: block;
   cursor: pointer;
 }
+
+h1 {
+    font-family: 'HaasGrotDisp', sans-serif;
+    font-weight: 650;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 10px 20px;
+  border: 1px solid #111;
+  border-radius: 999px;
+  color: #111;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: url('Character-building/hover-cursor.png'), pointer;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.button:hover {
+  background: #111;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.button:focus-visible {
+  outline: 2px solid #18C6E7;
+  outline-offset: 3px;
+}
+
 </style>
 </head>
 <body>
@@ -34,6 +89,8 @@
 <h1> Things in the wild
     <br> that caught my eye.
 </h1>
+
+<a href="index.html" class="button">Home</a>
 
 
 <!-- HTML -->
