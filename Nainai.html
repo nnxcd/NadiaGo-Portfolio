@@ -590,25 +590,6 @@
             </div>
           </div>
 
-          <figure class="fig nn-carousel" id="nnCarousel">
-            <div class="nn-frame">
-              <div class="nn-slide on">
-                <img src="Case-study-images/nainai-community.jpg" alt="Community forum screen in the Nai Nai app">
-              </div>
-              <div class="nn-slide">
-                <video src="Case-study-images/nainai-cyvideo.mp4"
-                      poster="Case-study-images/nainai-community.jpg"
-                      muted loop playsinline controls></video>
-              </div>
-              <button class="nn-arrow prev" aria-label="Previous">‹</button>
-              <button class="nn-arrow next" aria-label="Next">›</button>
-            </div>
-            <div class="nn-dots">
-              <button class="nn-dot on" aria-label="Show image"></button>
-              <button class="nn-dot" aria-label="Show video"></button>
-            </div>
-            <figcaption>Community forum & Ask Nai Nai chatbot.</figcaption>
-          </figure>
         </div>
 
       </section>
@@ -637,12 +618,34 @@
             </div>
           </div>
 
-          <figure class="fig">
-            <div class="fig-media">
-              <img src="Case-study-images/nainai-cyvideo.mp4" alt="Community forum and Ask Nai Nai chatbot screen" onerror="this.closest('.fig').style.display='none'">
+          <figure class="fig nn-carousel" id="nnFeaturesCarousel">
+            <div class="nn-frame">
+              <div class="nn-slide on">
+                <img src="Case-study-images/nainai-community.jpg" alt="Community forum screen in the Nai Nai app">
+              </div>
+              <div class="nn-slide">
+                <video src="Case-study-images/nainai-cyvideo.mp4"
+                       poster="Case-study-images/nainai-community.jpg"
+                       muted loop playsinline controls></video>
+              </div>
+              <div class="nn-slide">
+                <img src="Case-study-images/(NN)TCM-Insights.jpg" alt="TCM Insights screen in the Nai Nai app">
+              </div>
+              <div class="nn-slide">
+                <img src="Case-study-images/CS(Nainai)-2.jpg"
+                     alt="Nai Nai app feature screen">
+              </div>
+              
+              <button class="nn-arrow prev" aria-label="Previous">‹</button>
+              <button class="nn-arrow next" aria-label="Next">›</button>
             </div>
-            <img src="Case-study-images/nainai-community.jpg" alt="Community forum and Ask Nai Nai chatbot screen" onerror="this.closest('.fig').style.display='none'">
-            <figcaption>Community forum & Ask Nai Nai chatbot.</figcaption>
+            <div class="nn-dots">
+              <button class="nn-dot on" aria-label="Show community image"></button>
+              <button class="nn-dot" aria-label="Show chatbot video"></button>
+              <button class="nn-dot" aria-label="Show TCM Insights image"></button>
+              <button class="nn-dot" aria-label="Show feature image"></button>
+            </div>
+            <figcaption>Community, Ask Nai Nai, and TCM Insights screens.</figcaption>
           </figure>
         </div>
       </section>
@@ -718,20 +721,24 @@
 
   <script>
 (function(){
-  const root = document.getElementById('nnCarousel');
-  const slides = [...root.querySelectorAll('.nn-slide')];
-  const dots = [...root.querySelectorAll('.nn-dot')];
-  let i = 0;
-  function go(n){
-    i = (n + slides.length) % slides.length;
-    slides.forEach((s, x) => s.classList.toggle('on', x === i));
-    dots.forEach((d, x) => d.classList.toggle('on', x === i));
-    root.querySelectorAll('video').forEach(v => v.pause());
-    slides[i].querySelector('video')?.play().catch(() => {});
-  }
-  root.querySelector('.prev').onclick = () => go(i - 1);
-  root.querySelector('.next').onclick = () => go(i + 1);
-  dots.forEach((d, x) => d.onclick = () => go(x));
+  document.querySelectorAll('.nn-carousel').forEach(root => {
+    const slides = [...root.querySelectorAll('.nn-slide')];
+    const dots = [...root.querySelectorAll('.nn-dot')];
+    let i = slides.findIndex(slide => slide.classList.contains('on'));
+    if(i < 0) i = 0;
+
+    function go(n){
+      i = (n + slides.length) % slides.length;
+      slides.forEach((slide, x) => slide.classList.toggle('on', x === i));
+      dots.forEach((dot, x) => dot.classList.toggle('on', x === i));
+      root.querySelectorAll('video').forEach(video => video.pause());
+      slides[i].querySelector('video')?.play().catch(() => {});
+    }
+
+    root.querySelector('.prev').onclick = () => go(i - 1);
+    root.querySelector('.next').onclick = () => go(i + 1);
+    dots.forEach((dot, x) => dot.onclick = () => go(x));
+  });
 })();
 </script>
 
