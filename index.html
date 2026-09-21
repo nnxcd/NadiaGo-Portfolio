@@ -549,13 +549,13 @@
 
   /* project sheet thumb */
   .ph-sheet-thumb{
-    width:100%; aspect-ratio:16/10; border-radius:14px; margin:0 0 18px;
-    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    width:100%; border-radius:14px; margin:0 0 18px;
+    display:block; overflow:hidden;
     font-family:var(--title-alt); font-weight:650; font-size:2.4rem; color:#fff;
   }
   .ph-sheet-thumb.green{ background:var(--sq-green); }
   .ph-sheet-thumb.pink{ background:var(--sq-pink); color:var(--ink); }
-  .ph-sheet-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .ph-sheet-thumb img{ width:100%; height:auto; object-fit:contain; }
 
   /* meta ledger (Kaplan style: label | value rows) */
   .ph-meta{ border-top:1px solid var(--line); margin:4px 0 20px; }
@@ -766,9 +766,9 @@
         </a>
 
         <!-- Figma Make -->
-        <a class="card pink" href=>
+        <a class="card pink" href="Carpark.html">
           <div class="card-frame">
-            <img src="Case-study-images/make-preview.gif" alt="Wishlet cover" onerror="this.remove()">
+            <img src="Case-study-images/make-preview.gif" alt="Carpark Finder cover" onerror="this.remove()">
           </div>
           <div class="card-head">
             <h3 class="card-title">Carpark Finder</h3>
@@ -844,6 +844,15 @@
       <span>
         <span class="ph-card-t">Wishlet</span>
         <span class="ph-card-c">Personal Project</span>
+      </span>
+    </button>
+
+    <button class="ph-card" data-open="pop-carpark">
+      <span class="corner">↗</span>
+      <span class="ph-thumb pink"><img src="Case-study-images/make-preview.gif" alt="Carpark Finder preview" onerror="this.remove()"></span>
+      <span>
+        <span class="ph-card-t">Carpark Finder</span>
+        <span class="ph-card-c">Figma Make-a-thon</span>
       </span>
     </button>
 
@@ -970,6 +979,31 @@
           <div class="row"><dt>Timeframe</dt><dd>November 2025</dd></div>
         </dl>
         <a class="ph-btn red" href="wishlet.html"><span>View case study</span><span>↗</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carpark Finder -->
+  <div class="ph-sheet-wrap" id="pop-carpark">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Carpark Finder">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">Carpark Finder</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <div class="ph-sheet-thumb pink"><img src="Case-study-images/make-preview.gif" alt="Carpark Finder preview" onerror="this.remove()"></div>
+        <div class="ph-tags">
+          <span class="hollow">Figma Make-a-thon</span>
+        </div>
+        <p>Find a parking spot before you lose your mind.</p>
+        <dl class="ph-meta">
+          <div class="row"><dt>Role</dt><dd>UI Design · UX Research</dd></div>
+          <div class="row"><dt>Focus</dt><dd>Improving life in Melbourne</dd></div>
+          <div class="row"><dt>Timeframe</dt><dd>August 2026</dd></div>
+        </dl>
+        <a class="ph-btn red" href="Carpark.html"><span>View project</span><span>↗</span></a>
       </div>
     </div>
   </div>
