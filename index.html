@@ -236,10 +236,21 @@
     position:relative; aspect-ratio:4/3; overflow:hidden;
     border-radius:10px;
   }
-  .card.green .card-frame{background:var(--sq-green);}
-  .card.blue  .card-frame{background:var(--sq-blue);}
-  .card.pink  .card-frame{background:var(--sq-pink);}
+  .card.green  .card-frame{background:var(--sq-green);}
+  .card.blue   .card-frame{background:var(--sq-blue);}
+  .card.pink   .card-frame{background:var(--sq-pink);}
+  .card.orange .card-frame{background:var(--red);}
   .card-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+
+  /* live preview: the playground page rendered at desktop size, then scaled to fit the frame */
+  .card-frame--live{background:#fff;}
+  .card-frame--live iframe{
+    position:absolute; top:0; left:0;
+    width:1440px; height:1080px;      /* 4:3, matches the frame */
+    border:0; background:#fff;
+    transform-origin:0 0;
+    pointer-events:none;              /* clicks go to the card link, not the preview */
+  }
 
   /* title + category, always visible on the surrounding square */
   .card-head{
@@ -284,20 +295,6 @@
     font-size:0.8rem; font-weight:600; color:#fff;
   }
   .card:hover .card-cta{color:var(--red);}
-
-  /* 4th cell — playground, kept minimal on the black */
-  .card-playground{
-  align-self:stretch; min-height:260px; border-radius:16px;
-  border:1px dashed rgba(0,0,0,0.28);          /* dark, so it shows on white */
-  background:transparent;
-  display:flex; align-items:flex-end; justify-content:space-between;
-  padding:20px; color:rgba(12,12,12,0.72); font-weight:600;
-  cursor:url('Character-building/hover-cursor.png'), pointer;
-  transition:border-color .25s ease, color .25s ease;
-}
-  .card-playground .arr{transition:transform .2s ease;}
-  .card-playground:hover{border-color:var(--red); color:var(--red);}
-  .card-playground:hover .arr{transform:translate(4px,-4px);}
 
   /* ── FOOTER (unchanged pixel-art) ───────────────── */
   .micro-footer{
@@ -695,7 +692,7 @@
           <li><span class="yr">2025</span><span class="co">VisionVerse</span><span class="rl">UI Design Intern</span></li>
           <li><span class="yr">2024</span><span class="co">CISSA</span><span class="rl">Publicity Officer</span></li>
           <li><span class="yr">2024</span><span class="co">PPIA</span><span class="rl">Design Officer</span></li>
-          
+        </ul>
       </nav>
     </aside>
 
@@ -784,12 +781,26 @@
             <span class="card-cta">View case study ↗</span>
           </div>
         </a>
-        
 
-        <!-- Playground (4th cell) -->
-        <a class="card-playground" href="designplayground.html" id="playground">
-          <span>Design playground</span>
-          <span class="arr">↗</span>
+        <!-- Design Playground — live preview of the playground page -->
+        <a class="card orange" href="designplayground.html" id="playground">
+          <div class="card-frame card-frame--live">
+            <iframe src="designplayground.html" title="Design playground preview"
+                    loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
+          </div>
+          <div class="card-head">
+            <h3 class="card-title">Design Playground</h3>
+            <span class="card-cat">Experiments</span>
+          </div>
+          <div class="card-drop">
+            <p class="card-desc">Social posts I've designed, plus things in the wild that caught my eye.</p>
+            <dl class="card-meta">
+              <div><dt>Role</dt><dd>Graphic Design</dd></div>
+              <div><dt>Focus</dt><dd>Social · Visual</dd></div>
+              <div><dt>Timeframe</dt><dd>Ongoing</dd></div>
+            </dl>
+            <span class="card-cta">Explore playground ↗</span>
+          </div>
         </a>
       </div>
     </main>
@@ -1138,6 +1149,19 @@
 
 
 <script>
+  /* ── live preview: scale the playground iframe to fit its card frame ── */
+  (function(){
+    const PREVIEW_W = 1440;   // width the playground page is rendered at inside the preview
+    document.querySelectorAll('.card-frame--live').forEach(function(frame){
+      const iframe = frame.querySelector('iframe');
+      if(!iframe) return;
+      const fit = () => { iframe.style.transform = 'scale(' + (frame.clientWidth / PREVIEW_W) + ')'; };
+      fit();
+      if('ResizeObserver' in window) new ResizeObserver(fit).observe(frame);
+      else addEventListener('resize', fit, {passive:true});
+    });
+  })();
+
   /* ── pet: walks back & forth with a hop, blinks, eyes track cursor ── */
   (function(){
     // phone layer replaces the desktop header entirely — skip the pet there
