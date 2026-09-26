@@ -25,28 +25,99 @@
     font-family:'HaasGrotDisp'; font-style:normal; font-weight:650;
     src:url('Fonts/NeueHaasGrotDisp-65Medium-Trial.otf') format('opentype');
   }
-.gallery {
-  column-count: 5;
-  column-gap: 1rem;
+
+body {
+  margin: 0;
+  padding: 0 1.5rem 4rem;
 }
-.gallery > * {
-  width: 100%;
-  margin-bottom: 1rem;
-  break-inside: avoid;
+
+/* ---------- Photo gallery: scattered mind-map layout ---------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 2rem;
+  row-gap: 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: start;
+}
+.gallery-item {
+  /* width, alignment and vertical offset are set per photo by the script */
+  width: 70%;
 }
 .gallery img {
   width: 100%;
   display: block;
   cursor: pointer;
+  transition: transform .25s ease;
 }
+.gallery img:hover { transform: scale(1.04); }
+@media (max-width: 1100px) { .gallery { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 800px)  { .gallery { grid-template-columns: repeat(3, 1fr); column-gap: 1rem; row-gap: 2rem; } }
+@media (max-width: 520px)  { .gallery { grid-template-columns: repeat(2, 1fr); } }
 
 h1 {
     font-family: 'HaasGrotDisp', sans-serif;
-    font-weight: 550;
+    font-weight: 650;
     font-size: 2.5rem;
     text-align: center;
     margin-bottom: 5rem;
     margin-top: 5rem;
+}
+
+/* ---------- Instagram designs: even grid ---------- */
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.ig-tile {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  background: #f4f4f4;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .25s ease;
+}
+.ig-tile:hover { transform: scale(1.02); }
+.ig-tile:focus-visible { outline: 2px solid #18C6E7; outline-offset: 4px; }
+.ig-tile iframe {
+  position: absolute;
+  left: 0;
+  width: 400px;           /* rendered at a fixed size, then scaled to the tile */
+  height: 1400px;
+  border: 0;
+  transform-origin: 0 0;
+  pointer-events: none;   /* clicks go to the tile, not Instagram */
+}
+.ig-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@media (max-width: 800px) { .ig-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; } }
+
+/* Lightbox for a full Instagram post */
+#ig-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+}
+#ig-lightbox iframe {
+  width: min(420px, 92vw);
+  height: min(760px, 90vh);
+  border: 0;
+  background: #fff;
 }
 
 .button {
@@ -63,6 +134,7 @@ h1 {
   border: 1px solid #111;
   border-radius: 999px;
   color: #111;
+  background: #fff;
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
@@ -82,33 +154,27 @@ h1 {
   outline-offset: 3px;
 }
 
-    
 </style>
 </head>
 <body>
 
-
 <a href="index.html" class="button">Home</a>
 
-<!-- introduction -->
-<h1> My projects and experiments
+<!-- ================= Instagram designs ================= -->
+<h1> Designs I made
+    <br> for the feed.
 </h1>
 
+<div class="ig-grid" id="ig-grid"></div>
 
+<div id="ig-lightbox" onclick="this.style.display='none'; this.querySelector('iframe').src='';">
+  <iframe title="Instagram post" src=""></iframe>
+</div>
 
+<!-- ================= Photo gallery ================= -->
 <h1> Things in the wild
     <br> that caught my eye.
 </h1>
-
-
-<div class="my-work">
-  <div class="my-work-item">
-  <img src="Gallery-builder/MY_WORK/W5_IM.png" alt="p5js sketch work">
-  </div>
-  <div class="my-work-item">
-    <img src="Gallery-builder/MY_WORK/W1_IM.png" alt="overall page for creative coding">
-  </div>
-</div>
 
 <div class="gallery">
   <div class="gallery-item">
@@ -176,7 +242,86 @@ h1 {
 </div>
 
 <script>
-// Lightbox Script
+// ---------- Instagram posts ----------
+// type:  "p" for posts, "reel" for reels
+// code:  the part of the link after /p/ or /reel/
+// img:   optional — path to your own exported image, used instead of the embed
+const igPosts = [
+  { type: "p",    code: "DDGZ6rMTgc-", title: "Kakak Sobat Summer Recruitment" },
+  { type: "p",    code: "DKGx1AKPHKM", title: "Celebrating Cultural Diversity at CIS" },
+  { type: "p",    code: "DJv0xxpvVMR", title: "Codebrew Hackathon 2025 Wrap-up" },
+  { type: "reel", code: "DIkdmRpS3Mk", title: "Codebrew Opening Ceremony Details" },
+  { type: "reel", code: "DH40CdNPbk1", title: "Intro to Cloud Computing Workshop" },
+  { type: "p",    code: "DGSLt-CvbbP", title: "Summerfest & Science Club Expos" },
+  { type: "p",    code: "DMRExmKzOg8", title: "Sobat Winter 2025" },
+  { type: "p",    code: "DJF-muGT150", title: "Tempo Doeloe 2025" },
+  { type: "p",    code: "DGCf7jWSRq5", title: "Summerfest 2025 Booth" }
+];
+
+// Height of Instagram's header bar (handle + avatar) inside the embed.
+// If a sliver of the header still shows, raise this; if the top of the image is cut, lower it.
+const IG_HEADER = 55;
+const IG_BASE_WIDTH = 400;
+
+const igGrid = document.getElementById('ig-grid');
+const tiles  = [];
+
+igPosts.forEach(post => {
+  const tile = document.createElement('button');
+  tile.className = 'ig-tile';
+  tile.setAttribute('aria-label', post.title);
+
+  if (post.img) {
+    const img = document.createElement('img');
+    img.src = post.img;
+    img.alt = post.title;
+    tile.appendChild(img);
+  } else {
+    const frame = document.createElement('iframe');
+    frame.src = `https://www.instagram.com/${post.type}/${post.code}/embed/`;
+    frame.title = post.title;
+    frame.loading = 'lazy';
+    frame.tabIndex = -1;
+    frame.setAttribute('scrolling', 'no');
+    tile.appendChild(frame);
+  }
+
+  tile.addEventListener('click', () => {
+    const box = document.getElementById('ig-lightbox');
+    box.querySelector('iframe').src = `https://www.instagram.com/${post.type}/${post.code}/embed/`;
+    box.style.display = 'flex';
+  });
+
+  igGrid.appendChild(tile);
+  tiles.push(tile);
+});
+
+// Scale each embed so only the image fills the tile (header and likes are cropped off)
+function fitEmbeds() {
+  tiles.forEach(tile => {
+    const frame = tile.querySelector('iframe');
+    if (!frame) return;
+    const s = tile.clientWidth / IG_BASE_WIDTH;
+    frame.style.transform = `scale(${s})`;
+    frame.style.top = (-IG_HEADER * s) + 'px';
+  });
+}
+new ResizeObserver(fitEmbeds).observe(igGrid);
+
+// ---------- Scatter the photo gallery ----------
+// Each photo gets its own size, alignment and vertical offset.
+// Change SEED to shuffle into a different arrangement.
+const SEED = 7;
+let seed = SEED;
+const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+document.querySelectorAll('.gallery-item').forEach(item => {
+  item.style.width = (55 + rand() * 40) + '%';                      // 55–95% of its column
+  item.style.justifySelf = ['start', 'center', 'end'][Math.floor(rand() * 3)];
+  item.style.marginTop = Math.round(rand() * 90) + 'px';            // 0–90px drop
+});
+
+// ---------- Lightbox for the photo gallery ----------
 const items = document.querySelectorAll('.gallery img');
 items.forEach(img => {
   img.onclick = () => {
