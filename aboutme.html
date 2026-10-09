@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nadia Go — Product & Multidisciplinary Designer</title>
+<title>Nadia Go — Your Product Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -40,9 +40,10 @@
     --green-dark:#1C6B41;     /* readable "copied" state */
     --sq-blue:#D6E0E7;
     --sq-pink:#EFA9DA;
-    --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
-    --title:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
-    --title-alt:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
+    --placeholder:#D9D9D9;
+    --sans:'Hanken Grotesk','Inter',system-ui,-apple-system,sans-serif;
+    --title:'HaasGrotDisp','Inter Display','Inter',system-ui,-apple-system,sans-serif;
+    --title-alt:'HaasGrotDisp','Inter Display','Inter',system-ui,-apple-system,sans-serif;
     --pad:clamp(12px,1.4vw,18px);
     --section-gap:22px;
     --footer-h:clamp(520px,68vh,720px);
@@ -65,6 +66,8 @@
   img{max-width:100%; display:block;}
 
  .page{max-width:none; margin:0;}
+  .phone{display:none;}            /* phone-only layer, switched on below the iPad breakpoint */
+  body.ph-lock{overflow:hidden;}   /* freeze the page while a pop-up sheet is open */
 
   /* ── TOP HEADER: name box + pet box ─────────────── */
   .topbar{
@@ -112,68 +115,28 @@
   /* ── STICKY BIO RAIL ────────────────────────────── */
   .rail{
     position:sticky; top:0; align-self:start;
-    min-height:calc(100vh - 0px);
     padding:var(--pad);
-    border-right:1px solid var(--line);
     background:var(--bg);
-    display:flex; flex-direction:column; gap:var(--section-gap);
+    display:flex; flex-direction:column; gap:28px;
   }
 
-  .rail-tags{display:flex; gap:10px; flex-wrap:wrap;}
-  .rail-tags span{
-    font-size:0.82rem; font-weight:500;
-    padding:7px 15px; border-radius:999px;
-    background:var(--ink); color:#fff;
-  }
-  .rail-tags span:nth-child(2){background:var(--red); color:#fff;}   /* "Product Designer" */
+  .rail-tags{display:flex; gap:6px; flex-wrap:wrap; font-size:0.75rem; color:var(--faint); margin-bottom:-14px;}
+  .rail-tags span + span::before{content:"·"; margin-right:6px;}
 
-  .rail-bio{color:var(--muted); font-size:1rem; max-width:45ch; margin:0;}
+  .rail-bio{color:var(--muted); font-size:0.98rem; max-width:45ch; margin:0 0 -14px;}
   .rail-bio strong{color:var(--ink); font-weight:inherit;}   /* emphasized phrases */
 
-  /* ── EXPLORE MENU — full-bleed rows, edge-to-edge rules ── */
-  .rail-menu{margin:0 calc(var(--pad) * -1);}   /* break out of the rail padding */
-  .rail-menu-title{
-    display:block; font-size:1rem; color:var(--faint);
-    margin:0; padding:0 var(--pad) 10px; padding: var(--pad); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-  }
-  .rail-menu ul{list-style:none; margin:0; padding:0;}
-  .rail-menu li{border-bottom:1px solid var(--line);}
+  /* ── EXPLORE MENU — plain floating list (matches case-study pages) ── */
+  .rail-menu-title{display:block; font-size:0.75rem; color:var(--faint); margin:0 0 8px;}
+  .rail-menu ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
   .rail-menu a{
-    display:flex; align-items:center; gap:18px;
-    padding:13px var(--pad); color:var(--ink); font-size:1.05rem;
-    transition:padding-left .18s ease, color .18s ease;
+    display:flex; align-items:center; gap:14px;
+    padding:5px 0; color:var(--ink); font-size:1rem;
+    transition:padding-left .18s ease, opacity .18s ease;
   }
-  .rail-menu a .num{color:var(--ink); font-variant-numeric:tabular-nums; min-width:1.6em;}
-  .rail-menu a .lbl{flex:1;}
-  .rail-menu a .arr{color:var(--ink); transition:transform .18s ease;}
-  .rail-menu a:hover{padding-left:calc(var(--pad) + 6px); color:#000;}
-  .rail-menu a:hover .arr{transform:translate(3px,-3px);}
+  .rail-menu a .num{color:var(--faint); font-variant-numeric:tabular-nums; min-width:1.6em; font-size:0.85rem;}
+  .rail-menu a:hover{padding-left:5px; opacity:.65;}
 
-  /* ── EXPERIENCE LIST — three-column ledger (year · company · role) ── */
-  .rail-exp{margin:0 calc(var(--pad) * -1); margin-top:var(--section-gap);}
-  .rail-exp-title{
-    display:block; font-size:1rem; color:var(--faint);
-    margin:0; padding:var(--pad);
-    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-  }
-  .rail-exp ul{list-style:none; margin:0; padding:6px 0;}
-  .rail-exp li{
-    display:grid;
-    grid-template-columns:2.9em minmax(0,1fr) minmax(0,1.15fr);
-    column-gap:14px; align-items:baseline;
-    padding:9px var(--pad);
-  }
-  .rail-exp .yr{
-    font-variant-numeric:tabular-nums; color:var(--faint);
-    font-size:0.92rem; line-height:1.3;
-  }
-  .rail-exp .co{
-    font-family:var(--title-alt); font-weight:650; letter-spacing:-0.01em;
-    font-size:0.98rem; color:var(--ink); line-height:1.3;
-  }
-  .rail-exp .rl{
-    font-size:0.9rem; color:#8496a8; line-height:1.3;
-  }
 
   /* ── EXTERNAL LINKS — plain stacked ─────────────── */
   .rail-links{display:flex; flex-direction:column; gap:10px;}
@@ -201,100 +164,13 @@
   .rail-email.copied .txt b{color:#fff;}
   .rail-email.copied .txt small{color:rgba(255,255,255,0.88);}
 
-  /* ── PROJECT FEED (black gallery) ───────────────── */
+  /* ── MAIN AREA ───────────────── */
   .feed{
-    background:var(--feed-bg);
-    padding:var(--pad);
+    background:var(--bg);
+    padding:clamp(18px,2vw,28px) clamp(18px,3vw,44px) clamp(40px,5vw,64px);
+    border-left:1px solid var(--line);
+    min-height:70vh;
   }
-  .card-list{
-    display:grid; grid-template-columns:1fr; gap:16px;
-    align-items:start;            /* let a hovered card grow without stretching its row-mate */
-  }
-  @media (min-width:1050px){
-    .card-list{grid-template-columns:1fr 1fr;}
-  }
-
-  /* ── CASE-STUDY CARD — framed cover + hover drawer (Megan-Yap style) ── */
-  .card{
-    position:relative; display:flex; flex-direction:column;
-    background:#000000;
-    border-radius:16px; padding:12px;
-    border: 1px solid var(--line);
-    cursor:url('Character-building/hover-cursor.png'), pointer;
-    transition:border-color .3s ease, transform .3s ease;
-  }
-  .card:hover{
-    border: 1px solid var(--line);
-    transform:translateY(-3px);
-  }
-
-  /* the cover, contained inside its rounded frame */
-  .card-frame{
-    position:relative; aspect-ratio:4/3; overflow:hidden;
-    border-radius:10px;
-  }
-  .card.green .card-frame{background:var(--sq-green);}
-  .card.blue  .card-frame{background:var(--sq-blue);}
-  .card.pink  .card-frame{background:var(--sq-pink);}
-  .card-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
-
-  /* title + category, always visible on the surrounding square */
-  .card-head{
-    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
-    padding:12px 4px 0;
-  }
-  .card-title{
-    font-family:var(--title-alt); font-weight:550; letter-spacing:-0.03em;
-    font-size:clamp(1.3rem,1.8vw,1.75rem); line-height:1; margin:0; color:#fff;
-  }
-  .card-cat{
-    font-size:0.62rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
-    color:rgba(255,255,255,0.5); white-space:nowrap;
-  }
-
-  /* the drawer that drops down on hover */
-  .card-drop{
-    max-height:0; opacity:0; overflow:hidden;
-    padding:0 4px;
-    transition:max-height .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, margin-top .4s ease;
-  }
-  .card:hover .card-drop{max-height:260px; opacity:1; margin-top:12px;}
-  .card-desc{
-    font-size:0.95rem; line-height:1.4; margin:0 0 14px;
-    color:rgba(255,255,255,0.72);
-  }
-  .card-meta{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
-    border-top:1px solid rgba(255,255,255,0.12); padding-top:12px;
-  }
-  .card-meta > div{display:flex; flex-direction:column; gap:4px; min-width:0;}
-  .card-meta dt{
-    font-size:0.58rem; letter-spacing:0.1em; text-transform:uppercase;
-    color:rgba(255,255,255,0.45); margin:0;
-  }
-  .card-meta dd{
-    font-size:0.82rem; font-weight:600; line-height:1.2; margin:0;
-    color:rgba(255,255,255,0.92);
-  }
-  .card-cta{
-    display:inline-block; margin-top:14px;
-    font-size:0.8rem; font-weight:600; color:#fff;
-  }
-  .card:hover .card-cta{color:var(--red);}
-
-  /* 4th cell — playground, kept minimal on the black */
-  .card-playground{
-  align-self:stretch; min-height:260px; border-radius:16px;
-  border:1px dashed rgba(0,0,0,0.28);          /* dark, so it shows on white */
-  background:transparent;
-  display:flex; align-items:flex-end; justify-content:space-between;
-  padding:20px; color:rgba(12,12,12,0.72); font-weight:600;
-  cursor:url('Character-building/hover-cursor.png'), pointer;
-  transition:border-color .25s ease, color .25s ease;
-}
-  .card-playground .arr{transition:transform .2s ease;}
-  .card-playground:hover{border-color:var(--red); color:var(--red);}
-  .card-playground:hover .arr{transform:translate(4px,-4px);}
 
   /* ── FOOTER (unchanged pixel-art) ───────────────── */
   .micro-footer{
@@ -326,15 +202,224 @@
     .topbar-name{border-right:none; border-bottom:1px solid var(--line);}
     .topbar-pet{flex-wrap:wrap;}
     .shell{grid-template-columns:1fr;}
-    .rail{position:static; min-height:auto; border-right:none; border-bottom:1px solid var(--line);}
-    .card-list{grid-template-columns:1fr 1fr;}
+    .rail{position:static; border-bottom:1px solid var(--line);}
+    .feed{border-left:none;}
   }
-  @media (max-width:560px){ .card-list{grid-template-columns:1fr;} }
+
+  /* ── PHONE (narrower than an iPad): hide the whole desktop layout
+        and switch on the dedicated .phone layer instead. Desktop is
+        left completely untouched above this breakpoint. ── */
+  @media (max-width:767px){
+    .page{ display:none; }
+    .phone{ display:block; }
+  }
+
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
-    .card,.pet__eyes,.pet__eyes img{transition:none;}
-    .card:hover{transform:none;}
+    .pet__eyes,.pet__eyes img{transition:none;}
   }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     PHONE LAYER — only rendered ≤767px. Name-led hero, a clean
+     bordered work grid, and bottom-sheet pop-ups for everything else.
+     Inspired by Joshua Kaplan (big name + pills + numbered ledger)
+     and Soteria (hairline bordered grid, one red accent tile).
+     ══════════════════════════════════════════════════════════════ */
+  .phone{ background:var(--bg); color:var(--ink); min-height:100svh; }
+
+  /* ── HERO: just the name to start ── */
+  .ph-hero{
+    min-height:66svh;
+    display:flex; flex-direction:column;
+    padding:5px 20px 20px;
+    border-bottom:1px solid var(--line);
+  }
+  .ph-eyebrow{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:0.7rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--ink);
+  }
+  .ph-eyebrow .dot{ width:8px; height:8px; border-radius:50%; background:var(--red); }
+  .ph-hero-mid{ flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .ph-name{
+    font-family:var(--title-alt); font-weight:650; letter-spacing:-0.05em;
+    font-size:clamp(3.6rem,20vw,6rem); line-height:0.86; margin:0;
+  }
+  .ph-name img{ width:100%; max-width:300px; height:auto; display:block; }
+  .ph-name .amp{ color:var(--red); }
+  .ph-tagline{
+    margin:18px 0 0; max-width:22ch;
+    font-size:1.02rem; line-height:1.4; color:var(--muted);
+  }
+  .ph-tagline strong{ color:var(--ink); font-weight:650; }
+
+  /* pill row — About / Contact (Contact is the red accent) */
+  .ph-pills{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+  .ph-pill{
+    font-family:var(--sans); font-size:0.9rem; font-weight:600;
+    padding:10px 18px; border-radius:999px;
+    border:1px solid var(--ink); background:#fff; color:var(--ink);
+    cursor:pointer; -webkit-tap-highlight-color:transparent;
+    transition:transform .12s ease;
+  }
+  .ph-pill:active{ transform:scale(0.96); }
+  .ph-pill.solid{ background:var(--red); border-color:var(--red); color:#fff; }
+
+
+  /* ── WORK GRID: 2-col bordered cells, Soteria hairline frame ── */
+  .ph-grid{
+    display:grid; grid-template-columns:1fr 1fr;
+    border-bottom:1px solid var(--line);
+  }
+  .ph-card{
+    position:relative; text-align:left;
+    background:#fff; border:none; cursor:pointer;
+    border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:14px 14px 16px; min-height:172px;
+    display:flex; flex-direction:column; gap:12px;
+    -webkit-tap-highlight-color:transparent;
+    transition:background .15s ease;
+    font-family:var(--sans);
+  }
+  .ph-card:nth-child(2n){ border-right:none; }
+  .ph-card:active{ background:#faf7f2; }
+  .ph-thumb{
+    width:100%; aspect-ratio:1/1; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    font-family:var(--title-alt); font-weight:650; font-size:1.6rem; color:#fff;
+  }
+  .ph-thumb.green{ background:var(--sq-green); }
+  .ph-thumb.pink{ background:var(--sq-pink); color:var(--ink); }
+  .ph-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .ph-card-t, .ph-card-c{ display:block; }
+  .ph-card-t{ font-family:var(--title-alt); font-weight:650; font-size:1.12rem; letter-spacing:-0.02em; line-height:1; margin:0; }
+  .ph-card-c{ font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin-top:5px; }
+  .ph-card .corner{ position:absolute; top:12px; right:12px; font-size:0.9rem; color:var(--ink); }
+
+  /* the one red accent tile (playground) — echoes Soteria's single red cell */
+  .ph-card.accent{ background:var(--red); color:#fff; justify-content:space-between; }
+  .ph-card.accent:active{ background:#d63403; }
+  .ph-card.accent .ph-card-t{ color:#fff; }
+  .ph-card.accent .ph-card-c{ color:rgba(255,255,255,0.8); }
+  .ph-card.accent .corner{ color:#fff; }
+  .ph-card.accent .play-mark{
+    font-family:var(--title-alt); font-weight:650; font-size:2.4rem; line-height:1;
+    margin-top:6px;
+  }
+
+  /* ── BOTTOM-SHEET POP-UPS ── */
+  .ph-sheet-wrap{
+    position:fixed; inset:0; z-index:120;
+    display:none; align-items:flex-end; justify-content:center;
+  }
+  .ph-sheet-wrap.open{ display:flex; }
+  .ph-backdrop{
+    position:absolute; inset:0; background:rgba(17,17,17,0.42);
+    opacity:0; transition:opacity .25s ease;
+  }
+  .ph-sheet-wrap.open .ph-backdrop{ opacity:1; }
+  .ph-sheet{
+    position:relative; z-index:1;
+    width:100%; max-height:88svh; overflow-y:auto;
+    background:var(--bg); color:var(--ink);
+    border-top-left-radius:22px; border-top-right-radius:22px;
+    border-top:1px solid var(--line);
+    padding:10px 22px 30px;
+    transform:translateY(100%); transition:transform .32s cubic-bezier(.2,.85,.25,1);
+    -webkit-overflow-scrolling:touch;
+  }
+  .ph-sheet-wrap.open .ph-sheet{ transform:translateY(0); }
+  .ph-handle{ width:40px; height:4px; border-radius:999px; background:#d9d5cc; margin:0 auto 4px; }
+  .ph-sheet-top{
+    position:sticky; top:0; background:var(--bg); z-index:2;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 0 12px; margin-bottom:6px; border-bottom:1px solid var(--line);
+  }
+  .ph-sheet-title{ font-family:var(--title-alt); font-weight:650; letter-spacing:-0.02em; font-size:1.5rem; margin:0; }
+  .ph-sheet-x{
+    width:34px; height:34px; flex:none; border-radius:50%;
+    border:1px solid var(--ink); background:#fff; color:var(--ink);
+    font-size:1rem; line-height:1; cursor:pointer; -webkit-tap-highlight-color:transparent;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ph-sheet-x:active{ background:var(--ink); color:#fff; }
+  .ph-sheet-body{ padding-top:16px; }
+  .ph-sheet-body p{ font-size:1rem; line-height:1.5; color:var(--muted); margin:0 0 14px; }
+  .ph-sheet-body p strong{ color:var(--ink); font-weight:650; }
+
+  /* tag pills inside a sheet */
+  .ph-tags{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px; }
+  .ph-tags span{
+    font-size:0.78rem; font-weight:600; padding:6px 13px; border-radius:999px;
+    background:var(--ink); color:#fff;
+  }
+  .ph-tags span.red{ background:var(--red); }
+  .ph-tags span.hollow{ background:#fff; color:var(--ink); border:1px solid var(--ink); }
+
+  /* project sheet thumb */
+  .ph-sheet-thumb{
+    width:100%; border-radius:14px; margin:0 0 18px;
+    display:block; overflow:hidden;
+    font-family:var(--title-alt); font-weight:650; font-size:2.4rem; color:#fff;
+  }
+  .ph-sheet-thumb.green{ background:var(--sq-green); }
+  .ph-sheet-thumb.pink{ background:var(--sq-pink); color:var(--ink); }
+  .ph-sheet-thumb img{ width:100%; height:auto; object-fit:contain; }
+
+  /* meta ledger (Kaplan style: label | value rows) */
+  .ph-meta{ border-top:1px solid var(--line); margin:4px 0 20px; }
+  .ph-meta .row{
+    display:grid; grid-template-columns:5.5em 1fr; gap:12px;
+    padding:11px 0; border-bottom:1px solid var(--line-soft);
+  }
+  .ph-meta dt{ font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin:0; align-self:center; }
+  .ph-meta dd{ margin:0; font-size:0.95rem; font-weight:600; color:var(--ink); line-height:1.3; }
+
+  /* experience ledger: year · company · role (Kaplan numbered list feel) */
+  .ph-ledger{ margin:2px 0 6px; }
+  .ph-ledger .item{
+    display:grid; grid-template-columns:3.2em 1fr auto; gap:12px; align-items:baseline;
+    padding:14px 0; border-bottom:1px solid var(--line-soft);
+  }
+  .ph-ledger .yr{ font-variant-numeric:tabular-nums; color:var(--faint); font-size:0.85rem; }
+  .ph-ledger .co{ font-family:var(--title-alt); font-weight:650; font-size:1.05rem; letter-spacing:-0.01em; }
+  .ph-ledger .rl{ font-size:0.82rem; color:var(--muted); text-align:right; }
+
+  /* primary button inside sheets */
+  .ph-btn{
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; margin-top:6px;
+    background:var(--ink); color:#fff; border:none; border-radius:14px;
+    padding:16px 20px; font-family:var(--sans); font-size:1rem; font-weight:650;
+    cursor:pointer; -webkit-tap-highlight-color:transparent; text-decoration:none;
+  }
+  .ph-btn:active{ transform:scale(0.98); }
+  .ph-btn.red{ background:var(--red); }
+
+  /* copy-email row */
+  .ph-copy{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    width:100%; margin:0 0 12px;
+    background:#fff; border:1px solid var(--ink); border-radius:14px;
+    padding:15px 18px; font-family:var(--sans); font-size:0.95rem; color:var(--ink);
+    cursor:pointer; -webkit-tap-highlight-color:transparent; text-align:left;
+  }
+  .ph-copy b{ font-weight:650; display:block; }
+  .ph-copy small{ color:var(--muted); font-size:0.78rem; }
+  .ph-copy .tick{ font-size:1.1rem; }
+  .ph-copy.copied{ background:var(--green-dark); border-color:var(--green-dark); color:#fff; }
+  .ph-copy.copied b, .ph-copy.copied small{ color:#fff; }
+
+  /* stacked social links */
+  .ph-links{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
+  .ph-links a{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 2px; border-bottom:1px solid var(--line-soft);
+    font-size:1.05rem; font-weight:600; color:var(--ink);
+  }
+  .ph-links a .arr{ color:var(--faint); }
+
 </style>
 </head>
 <body>
@@ -344,7 +429,7 @@
   <!-- ══ TOP HEADER ══ -->
   <header class="topbar">
     <div class="topbar-name">
-      <h1 class="rail-name"><a href="index.html"><img src="Character-building/name logo(2).png"></a></h1>
+      <h1 class="rail-name"><a href="index.html"><img src="Character-building/name logo(2).png" alt="Nadia Go"></a></h1>
     </div>
     <div class="topbar-pet">
       <!-- the pet lives here -->
@@ -368,6 +453,7 @@
 
   <!-- ══ BODY ══ -->
   <div class="shell">
+    
 
     <!-- ── STICKY BIO RAIL ── -->
     <aside class="rail">
@@ -382,26 +468,98 @@
       <nav class="rail-menu">
         <span class="rail-menu-title">Explore</span>
         <ul>
-          <li><a href="index.html"><span class="num">01</span><span class="lbl">My Work</span><span class="arr">↗</span></a></li>
-          <li><a href="aboutme.html"><span class="num">02</span><span class="lbl">About Me</span><span class="arr">↗</span></a></li>
-          <li><a href="#playground"><span class="num">03</span><span class="lbl">Design Playground</span><span class="arr">↗</span></a></li>
+          <li><a href="#work"><span class="num">01</span><span class="lbl">Work</span></a></li>
+          <li><a href="aboutme.html"><span class="num">02</span><span class="lbl">About Me</span></a></li>
+          <li><a href="designplayground.html"><span class="num">03</span><span class="lbl">Fun</span></a></li>
         </ul>
       </nav>
-
-      <!-- ── EXPERIENCE ── -->
-      <nav class="rail-exp">
-        <span class="rail-exp-title">Volunteer & Experience</span>
-        <ul>
-          <li><span class="yr">2026</span><span class="co">CISSA</span><span class="rl">Secretary</span></li>
-          <li><span class="yr">2025</span><span class="co">VisionVerse</span><span class="rl">UI Design Intern</span></li>
-          <li><span class="yr">2024</span><span class="co">CISSA</span><span class="rl">Publicity Officer</span></li>
-          
-      </nav>
     </aside>
+
+    <!-- ── MAIN AREA (empty, ready for your own layout) ── -->
+    <main class="feed" id="work">
+    <div class="intro-about">
+      Work in progress.
+
+    </main>
 
   </div>
 </div>
 
+
+<!-- ══ PHONE LAYER (≤767px only) ══ -->
+<div class="phone">
+
+  <!-- HERO: just the name -->
+  <section class="ph-hero">
+    <div class="ph-eyebrow">
+      <span>Product Designer</span>
+      <span class="dot" aria-hidden="true"></span>
+    </div>
+
+    <div class="ph-hero-mid">
+      <h1 class="ph-name"><img src="Character-building/name logo(2).png" alt="Nadia Go"></h1>
+      <p class="ph-tagline">Product designer who <strong>finds the holes</strong> others miss — based in Melbourne, AU.</p>
+
+      <div class="ph-pills">
+        <button class="ph-pill" data-open="pop-about">About</button>
+        <button class="ph-pill solid" data-open="pop-contact">Contact</button>
+      </div>
+    </div>
+
+  </section>
+
+
+  
+
+  <!-- About -->
+  <div class="ph-sheet-wrap" id="pop-about">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="About">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">About</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <div class="ph-tags">
+          <span>Product Designer</span>
+          <span class="red">Melbourne, AU</span>
+        </div>
+        <p>Studied at the <strong>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
+        <p>Focused on <strong>finding the holes</strong> that other people can't identify first, and conducting user research to create an end-product that <strong>satisfies</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+<!-- Contact -->
+  <div class="ph-sheet-wrap" id="pop-contact">
+    <div class="ph-backdrop" data-close></div>
+    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Contact">
+      <div class="ph-handle"></div>
+      <div class="ph-sheet-top">
+        <h2 class="ph-sheet-title">Contact</h2>
+        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="ph-sheet-body">
+        <button class="ph-copy" id="phCopy" data-email="nadiajingxiang@gmail.com">
+          <span>
+            <b id="phCopyLabel">Copy my email</b>
+            <small id="phCopySub">nadiajingxiang@gmail.com</small>
+          </span>
+          <span class="tick">📨</span>
+        </button>
+        <div class="ph-links">
+          <a href="https://www.instagram.com/nadialexandraa/"><span>Instagram</span><span class="arr">↗</span></a>
+          <a href="https://www.linkedin.com/in/nadia-alexandra-/"><span>LinkedIn</span><span class="arr">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+</div><!-- /.phone -->
 
 <!-- ══ CONTACT / FOOTER ══ -->
 <footer class="contact micro-footer" id="contact">
@@ -414,7 +572,7 @@
     </div>
   </div>
 
-  <div class="footer-pixel-art" id="footer-pixel-art">
+   <div class="footer-pixel-art" id="footer-pixel-art">
     <!-- Background graphics by Tessie Gresley -->
     <script>
     (function () {
@@ -557,6 +715,8 @@
 <script>
   /* ── pet: walks back & forth with a hop, blinks, eyes track cursor ── */
   (function(){
+    // phone layer replaces the desktop header entirely — skip the pet there
+    if (window.matchMedia && window.matchMedia('(max-width:767px)').matches) return;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     const pet   = document.getElementById('pet');
     const inner = pet && pet.querySelector('.pet__inner');
@@ -649,7 +809,55 @@
       }catch(e){ sub.textContent = btn.dataset.email; }
     });
   })();
+
+  /* ── phone: bottom-sheet pop-ups ── */
+  (function(){
+    let openEl = null;
+    function open(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      openEl = el;
+      el.classList.add('open');
+      document.body.classList.add('ph-lock');
+    }
+    function close(){
+      if(!openEl) return;
+      openEl.classList.remove('open');
+      openEl = null;
+      document.body.classList.remove('ph-lock');
+    }
+    document.addEventListener('click', function(e){
+      const opener = e.target.closest('[data-open]');
+      if(opener){ open(opener.getAttribute('data-open')); return; }
+      if(e.target.closest('[data-close]')){ close(); }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') close();
+    });
+  })();
+
+  /* ── phone: copy-email button ── */
+  (function(){
+    const btn = document.getElementById('phCopy');
+    if(!btn) return;
+    const label = document.getElementById('phCopyLabel');
+    const sub   = document.getElementById('phCopySub');
+    const orig  = {l: label.textContent, s: sub.textContent};
+    btn.addEventListener('click', async function(){
+      try{
+        await navigator.clipboard.writeText(btn.dataset.email);
+        btn.classList.add('copied');
+        label.textContent = 'Copied ✓';
+        sub.textContent = btn.dataset.email;
+        setTimeout(function(){
+          btn.classList.remove('copied');
+          label.textContent = orig.l; sub.textContent = orig.s;
+        }, 1800);
+      }catch(e){ sub.textContent = btn.dataset.email; }
+    });
+  })();
 </script>
+
 
 </body>
 </html>
