@@ -3,55 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Case study: Wishlet, a playful wishlist-and-budgeting app that puts a pause between wanting and buying, helping young adults curb impulse spending.">
-<title>Wishlet — A wishlist that helps you spend less — Nadia Go</title>
+<meta name="description" content="Case study: Wishlet, a playful wishlist-and-budgeting app that puts a pause between wanting and buying.">
+<title>Wishlet — Nadia Go</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="Character-building/looking-glass.png" sizes="32x32">
-<!-- p5.js — powers the pixel-art footer canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 
 <style>
-  @font-face{
-    font-family:'HaasGrotDisp'; font-style:normal; font-weight:450;
-    src:url('Fonts/NeueHaasGrotDisp-45Light-Trial.otf') format('opentype');
-  }
-  @font-face{
-    font-family:'HaasGrotDisp'; font-style:normal; font-weight:550;
-    src:url('Fonts/NeueHaasGrotDisp-55Roman-Trial.otf') format('opentype');
-  }
-  @font-face{
-    font-family:'HaasGrotDisp'; font-style:normal; font-weight:650;
-    src:url('Fonts/NeueHaasGrotDisp-65Medium-Trial.otf') format('opentype');
-  }
+  @font-face{ font-family:'HaasGrotDisp'; font-weight:450; src:url('Fonts/NeueHaasGrotDisp-45Light-Trial.otf') format('opentype'); }
+  @font-face{ font-family:'HaasGrotDisp'; font-weight:550; src:url('Fonts/NeueHaasGrotDisp-55Roman-Trial.otf') format('opentype'); }
+  @font-face{ font-family:'HaasGrotDisp'; font-weight:650; src:url('Fonts/NeueHaasGrotDisp-65Medium-Trial.otf') format('opentype'); }
   :root{
     --bg:#FFFFFF;
-    --feed-bg:#FFFF;
     --ink:#111111;
     --muted:#6C6A62;
     --faint:#98968C;
     --line:#111111;
     --line-soft:#E4E1D8;
     --cyan:#18C6E7;
-    --cyan-lighter:#5ddef8;
     --red:#f53c04;
-    --sq-green:#3E8E5F;
     --green-dark:#1C6B41;
-    --sq-blue:#D6E0E7;
-    --sq-pink:#EFA9DA;
-    /* Wishlet accent */
-    --wl-intro:#EEEEEE;
-    --wl-cream:#F5F1E8;
     --wl-warm:#BC5090;
-    --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
-    --title:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
-    --title-alt:'HaasGrotDisp',system-ui,-apple-system,sans-serif;
+    --placeholder:#D9D9D9;
+    --sans:'Hanken Grotesk','Inter',system-ui,-apple-system,sans-serif;
+    --title:'HaasGrotDisp','Inter Display','Inter',system-ui,-apple-system,sans-serif;
     --pad:clamp(12px,1.4vw,18px);
-    --section-gap:22px;
     --footer-h:clamp(520px,68vh,720px);
-    --cols:minmax(240px,0.6fr) 1.7fr;   /* shared grid: rail | content */
-    --maxw:1100px;                       /* readable measure for case-study prose */
+    --cols:minmax(240px,0.6fr) 1.7fr;
+    --measure:860px;                 /* content column width */
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -62,369 +43,147 @@
     cursor:url('Character-building/cursor.png'), auto;
   }
   ::selection{background:var(--red); color:var(--bg);}
-  a{
-    color:inherit; text-decoration:none;
-    cursor:url('Character-building/hover-cursor.png'), pointer;
-  }
+  a{color:inherit; text-decoration:none; cursor:url('Character-building/hover-cursor.png'), pointer;}
   a:focus-visible,button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
-  img{max-width:100%; display:block;}
+  img,video{max-width:100%; display:block;}
 
-  .page{max-width:none; margin:0;}
-
-  /* ── TOP HEADER: name box + pet box ─────────────── */
-  .topbar{
-    display:grid; grid-template-columns:var(--cols);
-    border-bottom:1px solid var(--line);
-  }
+  /* ── TOP HEADER ─────────────── */
+  .topbar{display:grid; grid-template-columns:var(--cols); border-bottom:1px solid var(--line);}
   .topbar-name{
-    padding:var(--pad);
-    padding-right:calc(var(--pad) + 28px);
+    padding:var(--pad); padding-right:calc(var(--pad) + 28px);
     border-right:1px solid var(--line);
-    display:flex; align-items:center;
-    overflow:hidden;
+    display:flex; align-items:center; overflow:hidden;
   }
   .rail-name{
-    font-family:var(--title-alt); font-weight:550;
-    letter-spacing:-0.06em;
-    font-size:clamp(2.6rem,7.4vw,6rem);
-    line-height:0.82; margin:0; white-space:nowrap;
+    font-family:var(--title); font-weight:550; letter-spacing:-0.06em;
+    font-size:clamp(2.6rem,7.4vw,6rem); line-height:0.82; margin:0; white-space:nowrap;
   }
   .rail-name a{display:inline-block;}
-  .topbar-pet{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:16px;
-    padding:var(--pad);
-  }
+  .topbar-pet{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:var(--pad);}
   .topbar-pet .rail-email{width:max-content;}
 
-  /* the pet, sitting in its box */
   .pet{width:clamp(48px,4vw,64px); aspect-ratio:1; position:relative; flex:none;}
   .pet__inner{position:relative; width:100%; height:100%; transform-origin:center bottom;}
   .pet__body{position:absolute; inset:0; width:100%; height:100%;}
   .pet__eyes{position:absolute; inset:0; transition:transform .08s linear; will-change:transform;}
-  .pet__eyes img{
-    width:100%; height:100%; display:block;
-    transform-origin:45.75% 35.25%;
-    transition:transform .09s ease;
-  }
+  .pet__eyes img{width:100%; height:100%; display:block; transform-origin:45.75% 35.25%; transition:transform .09s ease;}
   .pet.is-blinking .pet__eyes img{transform:scaleY(.08);}
   .pet img{-webkit-user-drag:none; user-select:none;}
 
-  /* ── BODY GRID: rail | content ──────────────────── */
-  .shell{display:grid; grid-template-columns:var(--cols);}
-
-  /* ── STICKY RAIL ───────────────────────────────── */
-  .rail{
-    position:sticky; top:0; align-self:start;
-    min-height:calc(100vh - 0px);
-    padding:var(--pad);
-    border-right:1px solid var(--line);
-    background:var(--bg);
-    display:flex; flex-direction:column; gap:var(--section-gap);
-  }
-
-  /* in-page section nav */
-  .rail-menu{margin:0 calc(var(--pad) * -1);}
-  .rail-menu-title{
-    display:block; font-size:1rem; color:var(--faint);
-    margin:0; padding:var(--pad); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-  }
-  .rail-menu ul{list-style:none; margin:0; padding:0;}
-  .rail-menu li{border-bottom:1px solid var(--line);}
-  .rail-menu a{
-    display:flex; align-items:center; gap:18px;
-    padding:13px var(--pad); color:var(--ink); font-size:1.02rem;
-    transition:padding-left .18s ease, color .18s ease;
-  }
-  .rail-menu a .num{color:var(--ink); font-variant-numeric:tabular-nums; min-width:1.6em;}
-  .rail-menu a .lbl{flex:1;}
-  .rail-menu a .arr{color:var(--ink); transition:transform .18s ease;}
-  .rail-menu a:hover{padding-left:calc(var(--pad) + 6px); color:#000;}
-  .rail-menu a:hover .arr{transform:translate(3px,-3px);}
-
-  .rail-links{display:flex; flex-direction:column; gap:10px;}
-  .rail-links a{
-    font-size:1.05rem; width:max-content;
-    transition:padding-left .18s ease, opacity .18s ease;
-  }
-  .rail-links a:hover{padding-left:5px; opacity:.65;}
-
-  /* ── COPY-EMAIL CARD ────────────────────────────── */
   .rail-email{
-    display:flex; align-items:center; gap:12px; width:100%;
+    display:flex; align-items:center; gap:12px;
     background:#fff; border:1px solid var(--ink); border-radius:12px;
     padding:12px 14px; cursor:pointer;
     font-family:var(--sans); font-size:0.9rem; color:var(--ink); text-align:left;
-    transition:background .18s ease, transform .18s ease, border-color .18s ease;
+    transition:transform .18s ease;
   }
-  .rail-email:hover{color:var(--ink); background:var(--bg); transform:translateY(-1px);}
+  .rail-email:hover{transform:translateY(-1px);}
   .rail-email .ico{font-size:1.15rem; line-height:1;}
   .rail-email .txt{display:flex; flex-direction:column; line-height:1.25;}
   .rail-email .txt b{font-weight:650;}
   .rail-email .txt small{color:var(--muted); font-size:0.76rem;}
   .rail-email.copied{background:var(--green-dark); border-color:var(--green-dark); color:#fff;}
-  .rail-email.copied .txt b{color:#fff;}
   .rail-email.copied .txt small{color:rgba(255,255,255,0.88);}
 
-  /* ── CASE STUDY CONTENT COLUMN ──────────────────── */
-  .study{padding:0;}
+  /* ── BODY GRID ──────────────────────────────────── */
+  .shell{display:grid; grid-template-columns:var(--cols);}
 
-  /* 1 · COVER */
-  .study-hero{
-    position:relative; padding:clamp(14px,1.6vw,22px) var(--pad) clamp(24px,3.5vw,44px);
-    border-bottom:1px solid var(--line);
-    background:var(--wl-intro);
+  /* rail: back link + project facts, sticky */
+  .rail{
+    position:sticky; top:0; align-self:start;
+    padding:var(--pad);
+    display:flex; flex-direction:column; gap:22px;
   }
-  .study-hero .wrap{max-width:var(--maxw); margin:0 auto;}
-  .study-title{
-    font-family:var(--title); font-weight:650; letter-spacing:-0.03em;
-    font-size:clamp(2.1rem,4.6vw,4rem); line-height:1.02; margin:0 0 20px; color:var(--ink);
-    max-width:20ch;
-  }
-  .study-lede{
-    font-size:clamp(1.05rem,1.4vw,1.3rem); line-height:1.5; color:var(--muted);
-    max-width:60ch; margin:0;
-  }
-  .study-lede strong{color:var(--ink); font-weight:600;}
+  .back{font-size:1.05rem; width:max-content; transition:padding-left .18s ease, opacity .18s ease;}
+  .back:hover{padding-left:5px; opacity:.65;}
 
-  .study-banner{
-    max-width:var(--maxw); margin:clamp(24px,3vw,40px) auto 0;
-    border-radius:16px; overflow:hidden; aspect-ratio:16/9; background:#e8e2d6;
+  /* in-page section nav */
+  .rail-menu{margin:0;}
+  .rail-menu-title{display:block; font-size:0.75rem; color:var(--faint); margin:0 0 8px;}
+  .rail-menu ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
+  .rail-menu a{
+    display:flex; align-items:center; gap:14px;
+    padding:5px 0; color:var(--ink); font-size:1rem;
+    transition:padding-left .18s ease, opacity .18s ease;
   }
-  .study-banner img{width:100%; height:100%; object-fit:cover;}
+  .rail-menu a .num{color:var(--faint); font-variant-numeric:tabular-nums; min-width:1.6em; font-size:0.85rem;}
+  .rail-menu a:hover{padding-left:5px; opacity:.65;}
 
-  /* 2 · METADATA */
-  .hero-meta{
-    display:flex; flex-wrap:wrap; gap:0;
-    max-width:var(--maxw); margin:clamp(24px,3vw,36px) auto 0;
-    border-top:1px solid rgba(17,17,17,0.18);
+  /* project facts — one row under the banner */
+  .facts{
+    margin:28px 0 0; display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
   }
-  .hero-meta > div{
-    flex:1 1 150px; min-width:130px;
-    padding:18px 22px 4px 0;
-    display:flex; flex-direction:column; gap:5px;
-  }
-  .hero-meta > div + div{padding-left:22px; border-left:1px solid rgba(17,17,17,0.18);}
-  .hero-meta dt{
-    font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--wl-warm); margin:0;
-  }
-  .hero-meta dd{margin:0; font-size:0.98rem; font-weight:600; color:var(--ink); line-height:1.3;}
+  .facts dt{font-size:0.75rem; color:var(--faint); margin:0 0 6px;}
+  .facts dd{margin:0; font-size:0.95rem; line-height:1.45;}
 
-  /* TL;DR — the top of the pyramid: answer first, then 3 supporting points */
-  .tldr{
-    max-width:var(--maxw); margin:clamp(24px,3vw,36px) auto 0;
-    background:#fff; border:1px solid var(--line); border-radius:20px;
-    padding:clamp(22px,3vw,36px);
-  }
-  .tldr-label{
-    font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
-    color:var(--wl-warm); margin:0 0 12px;
-  }
-  .tldr-answer{
-    font-family:var(--title); font-weight:550; letter-spacing:-0.01em;
-    font-size:clamp(1.2rem,2vw,1.6rem); line-height:1.3; margin:0 0 22px; max-width:40ch;
-  }
-  .tldr-points{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:0; padding:0; list-style:none;}
-  .tldr-points li{
-    border-top:1px solid var(--line-soft); padding-top:14px;
-    font-size:0.96rem; line-height:1.45; color:var(--muted);
-  }
-  .tldr-points b{display:block; color:var(--ink); font-weight:650; margin-bottom:4px;}
-  .tldr-points a{display:inline-block; margin-top:8px; font-size:0.86rem; color:var(--wl-warm); font-weight:600;}
+  section[id], .study{scroll-margin-top:20px;}
 
-  /* generic section */
-  .sec{
-    padding:clamp(40px,6vw,88px) var(--pad);
-    border-bottom:1px solid var(--line-soft);
-  }
-  .sec .wrap{max-width:var(--maxw); margin:0 auto;}
-  .sec-kicker{
-    font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
-    color:var(--red); margin:0 0 14px;
-  }
-  .sec-h{
-    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
-    font-size:clamp(1.7rem,3vw,2.7rem); line-height:1.08; margin:0 0 22px; color:var(--ink);
-    max-width:22ch;
-  }
-  .sec p{font-size:1.06rem; line-height:1.6; color:#2b2a27; max-width:64ch; margin:0 0 18px;}
-  .sec p strong{font-weight:600; color:var(--ink);}
-  .sec p:last-child{margin-bottom:0;}
-  .sub-h{
-    font-family:var(--title-alt); font-weight:650; font-size:1.25rem; letter-spacing:-0.01em;
-    margin:40px 0 0; color:var(--ink);
+  /* ── CONTENT ───────────────────────────────────── */
+  .study{padding:clamp(18px,2vw,28px) clamp(18px,3vw,44px) 0; border-left:1px solid var(--line);}
+  .study > *{max-width:var(--measure);}
+
+  .eyebrow, .label{font-size:0.75rem; color:var(--faint); margin:0 0 6px;}
+  .title{
+    font-family:var(--title); font-weight:450; letter-spacing:-0.03em;
+    font-size:clamp(2.2rem,3.6vw,3.2rem); line-height:1; margin:0 0 24px;
   }
 
-  /* big stat pair */
-  .stats{
-    display:grid; grid-template-columns:1fr 1fr; gap:16px;
-    margin:34px 0 0;
+  .media{
+    margin:0; background:var(--placeholder); border-radius:4px; overflow:hidden;
+    aspect-ratio:16/8;
   }
-  .stats.three{grid-template-columns:repeat(3,1fr);}
-  .stat{
-    border:1px solid var(--line); border-radius:16px; padding:24px;
-    display:flex; flex-direction:column; gap:8px; background:#fff;
-  }
-  .stat b{
-    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
-    font-size:clamp(2rem,4vw,3.2rem); line-height:1; color:var(--wl-warm);
-  }
-  .stat span{font-size:0.98rem; color:var(--muted); line-height:1.4;}
+  .media.tall{aspect-ratio:16/10;}
+  .media img,.media video{width:100%; height:100%; object-fit:cover;}
 
-  .duo, .trio{display:grid; gap:16px; margin:30px 0 0;}
-  .duo{grid-template-columns:1fr 1fr;}
-  .trio{grid-template-columns:repeat(3,1fr);}
-  .mini{
-    border:1px solid var(--line-soft); border-radius:16px; padding:24px;
-    background:#fff; display:flex; flex-direction:column; gap:10px;
+  .block{padding:clamp(56px,7vw,96px) 0 0;}
+  .statement{
+    font-family:var(--title); font-weight:450; letter-spacing:-0.025em;
+    font-size:clamp(1.6rem,2.6vw,2.3rem); line-height:1.12; margin:0 0 16px; max-width:24ch;
   }
-  .mini h4{
-    font-family:var(--title-alt); font-weight:650; font-size:1.15rem; letter-spacing:-0.01em;
-    margin:0; color:var(--ink);
-  }
-  .mini p{font-size:0.98rem; line-height:1.5; color:var(--muted); margin:0; max-width:none;}
-
-  /* HMW band */
-  .band{
-    background:var(--ink); color:#fff; border-radius:20px;
-    padding:clamp(28px,4vw,52px); margin:34px 0 0;
-  }
-  .band .q{
-    font-family:var(--title); font-weight:550; letter-spacing:-0.01em;
-    font-size:clamp(1.3rem,2.4vw,2rem); line-height:1.28; margin:0; color:#fff;
-    max-width:34ch;
-  }
-  .band .q em{color:var(--sq-pink); font-style:normal;}
-
-  /* media figure */
-  .fig{margin:30px 0 0;}
-  .fig-media{
-    border-radius:16px; overflow:hidden; background:#eee; border:1px solid var(--line-soft);
-    aspect-ratio:16/10;
-  }
-  .fig-media img, .fig-media video{width:100%; height:100%; object-fit:cover; display:block;}
-  .fig figcaption{
-    font-size:0.86rem; color:var(--faint); margin:12px 2px 0; font-style:italic;
+  .statement.wide{max-width:none;}
+  .body{font-size:1.05rem; line-height:1.6; color:var(--muted); margin:0 0 28px; max-width:58ch;}
+  .body strong{color:var(--ink); font-weight:550;}
+  .question{
+    font-family:var(--title); font-weight:450; letter-spacing:-0.02em;
+    font-size:clamp(1.25rem,1.9vw,1.6rem); line-height:1.25; margin:28px 0 0; max-width:34ch;
+    padding-left:18px; border-left:2px solid var(--wl-warm);
   }
 
-  /* media carousel */
-  .wl-carousel{margin:30px 0 0;}
-  .wl-frame{
-    position:relative; aspect-ratio:16/10; overflow:hidden;
-    border-radius:16px; border:1px solid var(--line-soft); background:var(--wl-cream);
-  }
-  .wl-slide{position:absolute; inset:0; display:none;}
-  .wl-slide.on{display:block;}
-  .wl-slide img, .wl-slide video{width:100%; height:100%; object-fit:cover; display:block;}
-  .wl-slide--empty::after{
-    content:'Add your screenshot here'; position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center; text-align:center; padding:0 16px;
-    color:var(--faint); font-size:0.95rem; font-style:italic;
-  }
-  .wl-arrow{
-    position:absolute; top:50%; transform:translateY(-50%); z-index:2;
-    width:40px; height:40px; border-radius:50%;
-    background:#fff; border:1px solid var(--line); color:var(--ink);
-    font-size:1.35rem; line-height:1; cursor:pointer;
-  }
-  .wl-arrow:hover{background:var(--wl-intro);}
-  .wl-arrow.prev{left:14px;} .wl-arrow.next{right:14px;}
-  .wl-dots{display:flex; gap:8px; justify-content:center; margin-top:14px;}
-  .wl-dot{width:9px; height:9px; border:none; border-radius:50%; background:var(--line-soft); cursor:pointer;}
-  .wl-dot.on{background:var(--wl-warm);}
+  /* one big stat, inline with the problem */
+  .stat{display:flex; align-items:baseline; gap:18px; border-top:1px solid var(--line-soft); padding-top:18px; margin-top:8px;}
+  .stat b{font-family:var(--title); font-weight:450; font-size:clamp(2.6rem,4vw,3.6rem); letter-spacing:-0.04em; line-height:1;}
+  .stat span{font-size:0.95rem; color:var(--muted); max-width:40ch;}
 
-  /* feature list (final artifacts summary) */
-  .features{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:30px 0 0;}
-  .feat{
-    border:1px solid var(--line); border-radius:16px; padding:24px; background:#fff;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .feat .n{
-    font-family:var(--title); font-weight:650; font-size:0.9rem; color:var(--wl-warm);
-    font-variant-numeric:tabular-nums;
-  }
-  .feat h4{
-    font-family:var(--title-alt); font-weight:650; font-size:1.15rem; margin:0; color:var(--ink); letter-spacing:-0.01em;
-  }
-  .feat p{font-size:0.96rem; line-height:1.5; color:var(--muted); margin:0; max-width:none;}
+  /* solution features: small heading + one line + image */
+  .feature{margin-top:44px;}
+  .feature h3{font-family:var(--title); font-weight:550; font-size:1.25rem; letter-spacing:-0.015em; margin:0 0 4px;}
+  .feature p{margin:0 0 18px; color:var(--muted); font-size:1rem;}
 
-  /* KEY DESIGN MOMENTS — each moment: decision first, then why, then proof */
-  .moments{display:flex; flex-direction:column; gap:22px; margin:34px 0 0;}
-  .moment{
-    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.25fr); gap:clamp(18px,3vw,36px);
-    border:1px solid var(--line); border-radius:20px; padding:clamp(22px,3vw,34px); background:#fff;
+  .pull{
+    font-family:var(--title); font-weight:450; font-style:normal; letter-spacing:-0.02em;
+    font-size:clamp(1.25rem,1.9vw,1.6rem); line-height:1.3; margin:28px 0 0; color:var(--ink);
   }
-  .moment-tag{
-    font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
-    color:var(--wl-warm); margin:0 0 10px;
-  }
-  .moment h4{
-    font-family:var(--title); font-weight:650; letter-spacing:-0.015em;
-    font-size:clamp(1.3rem,2.2vw,1.75rem); line-height:1.15; margin:0 0 14px; color:var(--ink);
-  }
-  .moment .mine{
-    display:inline-block; font-size:0.72rem; font-weight:600; color:#fff; background:var(--ink);
-    padding:4px 10px; border-radius:999px;
-  }
-  .moment dl{margin:0; display:flex; flex-direction:column; gap:14px;}
-  .moment dt{
-    font-size:0.66rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--faint);
-  }
-  .moment dd{margin:4px 0 0; font-size:0.98rem; line-height:1.5; color:#2b2a27;}
+  .pull::before{content:"“"; color:var(--wl-warm);} .pull::after{content:"”"; color:var(--wl-warm);}
 
-  /* concept-word card (Daisy moment) */
-  .char-word{
-    background:var(--wl-cream); border-radius:16px; padding:20px;
-    display:flex; flex-direction:column; gap:6px; margin-top:16px;
-  }
-  .char-word .word{
-    font-family:var(--title); font-weight:650; font-size:1.6rem; line-height:1; color:var(--wl-warm);
-  }
-  .char-word .pin{font-size:0.92rem; color:var(--muted);}
-
-  /* "what we heard" quote chips */
-  .voices{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:20px 0 0;}
-  .voice{
-    border:1px dashed rgba(0,0,0,0.28); border-radius:14px; padding:20px 22px;
-    font-size:1.05rem; color:#2b2a27; line-height:1.4; background:#fff;
-  }
-  .voice::before{content:"“"; color:var(--wl-warm); font-weight:700;}
-  .voice::after{content:"”"; color:var(--wl-warm); font-weight:700;}
-  .voice.warn{border-color:var(--red);}
-
-  /* project pager */
   .pager{
-    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
-    padding:clamp(28px,4vw,48px) var(--pad);
-    max-width:var(--maxw); margin:0 auto;
+    display:flex; justify-content:space-between; gap:16px;
+    margin-top:clamp(64px,8vw,110px); padding:22px 0 30px; border-top:1px solid var(--line);
+    font-size:1rem;
   }
-  .pager a{
-    display:inline-flex; align-items:center; gap:10px; font-weight:600; font-size:1.05rem;
-    padding:12px 20px; border:1px solid var(--line); border-radius:999px;
-    transition:background .18s ease, color .18s ease, transform .18s ease;
-  }
-  .pager a:hover{background:var(--ink); color:#fff; transform:translateY(-2px);}
+  .pager a:hover{opacity:.6;}
 
   /* ── FOOTER (unchanged pixel-art) ───────────────── */
   .micro-footer{
-    position:relative; min-height:var(--footer-h);
-    background:var(--feed-bg); color:#fff;
+    position:relative; min-height:var(--footer-h); background:#fff;
     display:flex; align-items:center; justify-content:center;
-    overflow:hidden; padding:var(--pad);
-    border-top: 1px solid var(--line);
+    overflow:hidden; padding:var(--pad); border-top:1px solid var(--line);
   }
   .micro-inner{position:relative; z-index:2; text-align:center; max-width:44ch;}
-  .micro-title{
-    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
-    font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:var(--ink);
-  }
-  .micro-sub{color:rgba(68, 68, 68, 1); font-size:1.05rem; margin:0 0 26px;}
+  .micro-title{font-family:var(--title); font-weight:650; letter-spacing:-0.02em; font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:var(--ink);}
+  .micro-sub{color:#444; font-size:1.05rem; margin:0 0 26px;}
   .micro-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
-  .micro-btn{
-    display:inline-flex; align-items:center; padding:8px 24px;
-    transition:background .2s ease, border-color .2s ease, transform .2s ease;
-  }
-  .micro-btn:hover{background:rgba(255,255,255,0.12); transform:translateY(-2px);}
+  .micro-btn{display:inline-flex; align-items:center; padding:8px 24px; transition:transform .2s ease;}
+  .micro-btn:hover{transform:translateY(-2px);}
   #footer-pixel-art{position:absolute; inset:0; z-index:1;}
   #footer-pixel-art canvas{display:block;}
 
@@ -434,15 +193,10 @@
     .topbar-name{border-right:none; border-bottom:1px solid var(--line);}
     .topbar-pet{flex-wrap:wrap;}
     .shell{grid-template-columns:1fr;}
-    .rail{position:static; min-height:auto; border-right:none; border-bottom:1px solid var(--line);}
+    .rail{position:static; border-bottom:1px solid var(--line); gap:20px;}
     .rail-menu{display:none;}
-    .moment{grid-template-columns:1fr;}
-  }
-  @media (max-width:720px){
-    .stats,.stats.three,.duo,.trio,.features,.voices,.tldr-points{grid-template-columns:1fr;}
-    .hero-meta > div{flex:1 1 100%; padding:16px 0 4px; border-top:1px solid rgba(17,17,17,0.12);}
-    .hero-meta > div + div{padding-left:0; border-left:none;}
-    .hero-meta{border-top:none;}
+    .study{border-left:none;}
+    .facts{grid-template-columns:1fr 1fr; gap:20px;}
   }
   @media (max-width:700px){
     .micro-footer{align-items:flex-start; padding-top:clamp(200px,32vh,260px);}
@@ -455,306 +209,116 @@
 </head>
 <body>
 
-<div class="page">
-
-  <!-- ══ TOP HEADER ══ -->
-  <header class="topbar" id="top">
-    <div class="topbar-name">
-      <h1 class="rail-name"><a href="index.html"><img src="Character-building/name logo(2).png" alt="Nadia Go"></a></h1>
-    </div>
-    <div class="topbar-pet">
-      <div class="pet" id="pet" aria-hidden="true">
-        <div class="pet__inner">
-          <img class="pet__body" alt="" src="Character-building/whole.png">
-          <div class="pet__eyes" id="petEyes"><img alt="" src="Character-building/eyes.png"></div>
-        </div>
-      </div>
-
-      <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
-        <span class="ico">📨</span>
-        <span class="txt">
-          <b id="emailLabel">Copy my email</b>
-          <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
-        </span>
-      </button>
-    </div>
-  </header>
-
-  <!-- ══ BODY ══ -->
-  <div class="shell">
-
-    <!-- ── STICKY RAIL ── -->
-    <aside class="rail">
-      <nav class="rail-links">
-        <a href="index.html#work">← Back to all work</a>
-      </nav>
-      <nav class="rail-menu">
-        <span class="rail-menu-title">On this page</span>
-        <ul>
-          <li><a href="#overview"><span class="num">00</span><span class="lbl">The Short Version</span><span class="arr">↗</span></a></li>
-          <li><a href="#context"><span class="num">01</span><span class="lbl">Context</span><span class="arr">↗</span></a></li>
-          <li><a href="#final"><span class="num">02</span><span class="lbl">Final Design</span><span class="arr">↗</span></a></li>
-          <li><a href="#moments"><span class="num">03</span><span class="lbl">Key Design Moments</span><span class="arr">↗</span></a></li>
-          <li><a href="#impact"><span class="num">04</span><span class="lbl">Impact</span><span class="arr">↗</span></a></li>
-          <li><a href="#reflection"><span class="num">05</span><span class="lbl">Reflection</span><span class="arr">↗</span></a></li>
-        </ul>
-      </nav>
-    </aside>
-
-    <!-- ── CASE STUDY CONTENT ── -->
-    <main class="study">
-
-      <!-- ① PROJECT COVER + ② METADATA + TOP OF THE PYRAMID -->
-      <section class="study-hero" id="overview">
-        <div class="wrap">
-          <h2 class="study-title">Wishlet: a wishlist that helps young adults spend less by making them pause first</h2>
-          <p class="study-lede">A playful wishlist-and-budgeting app that replaces the shopping cart with a list you revisit. I led the <strong>Personal Wishlist</strong> experience.</p>
-        </div>
-
-        <figure class="study-banner">
-          <img src="Case-study-images/wishlet-collections.jpg" alt="Wishlet Collections screen with colour-coded wishlists and the Daisy mascot" onerror="this.closest('.study-banner').style.display='none'">
-        </figure>
-
-        <dl class="hero-meta">
-          <div><dt>Role</dt><dd>UX Research · UI Design</dd></div>
-          <div><dt>My focus</dt><dd>Personal Wishlist</dd></div>
-          <div><dt>Team</dt><dd>6 designers</dd></div>
-          <div><dt>Tools</dt><dd>Figma · Illustrator</dd></div>
-          <div><dt>Outcome</dt><dd>Hi-fi prototype, tested with 12 users</dd></div>
-        </dl>
-
-        <div class="tldr">
-          <p class="tldr-label">The short version</p>
-          <p class="tldr-answer">Adding one deliberate pause before checkout, and making that pause fun, got young people to rethink purchases in an app they described as relaxing rather than stressful.</p>
-          <ul class="tldr-points">
-            <li><b>The problem</b>Checkout is frictionless, so impulse and purchase have become one gesture.<a href="#context">See context ↓</a></li>
-            <li><b>The answer</b>Save it, sit with it, decide together: swipe reviews, visual budgets and friends' votes.<a href="#moments">See design moments ↓</a></li>
-            <li><b>The proof</b>Testers grasped it instantly and found it useful, though playful visuals sometimes hid what was tappable. <br> <a href="#impact">See impact ↓</a></li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ③ PROJECT CONTEXT -->
-      <section class="sec" id="context">
-        <div class="wrap">
-          <p class="sec-kicker">01 — Context</p>
-          <h3 class="sec-h">Shopping lost its natural pause, and young adults' finances are paying for it</h3>
-          <p>Young adults live inside a constant stream of trends, influencer picks and targeted ads, and checkout has never been easier: one tap, buy-now-pay-later, infinite scroll. Every convenience removed a checkpoint, so spending became emotional and in-the-moment.</p>
-
-          <div class="stats">
-            <div class="stat"><b>2×</b><span>With a trolley instead of a basket, shoppers buy more than double (Larsen et al., 2020).</span></div>
-            <div class="stat"><b>1937</b><span>The year the shopping cart was invented, quietly removing the last limit on how much you carry (Grandclement, 2009).</span></div>
-          </div>
-
-          <div class="duo">
-            <div class="mini">
-              <h4>Nothing makes you wait</h4>
-              <p>One-tap checkout and endless recommendations mean there is no moment between seeing something and owning it.</p>
-            </div>
-            <div class="mini">
-              <h4>Nowhere to see it all</h4>
-              <p>Wants are scattered across tabs, screenshots and store wishlists. People give up and buy whatever they remember on payday, while serious finance apps feel too intimidating to open.</p>
-            </div>
-          </div>
-
-          <div class="band">
-            <p class="q">How might we put a <em>pause</em> between seeing something and buying it, <em>without killing the fun</em> of shopping?</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ④ FINAL ARTIFACTS -->
-      <section class="sec" id="final">
-        <div class="wrap">
-          <p class="sec-kicker">02 — Final Design</p>
-          <h3 class="sec-h">Three features that each do one job in the pause before buying</h3>
-          <p>Items go into a wishlist instead of a cart. From there, Wishlet helps you re-evaluate, see the cost, and get a second opinion, all held together by Daisy the mascot and a colour- and shape-coded category system.</p>
-
-          <div class="features">
-            <div class="feat">
-              <span class="n">01 · Re-evaluate</span>
-              <h4>Swipe to decide</h4>
-              <p>Keep, remove or skip each saved item in a quick swipe review.</p>
-            </div>
-            <div class="feat">
-              <span class="n">02 · Visualise</span>
-              <h4>Financial Breakdown</h4>
-              <p>Your budget as a basket of shapes, with predicted-savings and spending charts.</p>
-            </div>
-            <div class="feat">
-              <span class="n">03 · Ask</span>
-              <h4>Community + Lend</h4>
-              <p>Friends vote on your wishlist, or lend you something they already own.</p>
-            </div>
-          </div>
-
-          <figure class="fig wl-carousel" id="wlFeaturesCarousel">
-            <div class="wl-frame">
-              <div class="wl-slide on">
-                <img src="Case-study-images/Wishlet(homepage).jpg" alt="Personal Wishlist screen with colour- and shape-coded collections and per-item countdowns">
-              </div>
-              <div class="wl-slide">
-                <img src="Case-study-images/Wishlet(PersonalWishlet).jpg" alt="Financial Breakdown screen: a shopping basket of coloured shapes and a predicted-savings ring"
-                     onerror="this.style.display='none'; this.parentElement.classList.add('wl-slide--empty');">
-              </div>
-              <div class="wl-slide">
-                <img src="Case-study-images/Wishlet(Community).jpg" alt="Community screen with friends' wishlists to vote on"
-                     onerror="this.style.display='none'; this.parentElement.classList.add('wl-slide--empty');">
-              </div>
-
-              <button class="wl-arrow prev" aria-label="Previous">‹</button>
-              <button class="wl-arrow next" aria-label="Next">›</button>
-            </div>
-            <div class="wl-dots">
-              <button class="wl-dot on" aria-label="Show slide 1"></button>
-              <button class="wl-dot" aria-label="Show slide 2"></button>
-              <button class="wl-dot" aria-label="Show slide 3"></button>
-            </div>
-            <figcaption>Personal Wishlist, Financial Breakdown and Community. Browse with the arrows.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <!-- ⑤ KEY DESIGN MOMENTS -->
-      <section class="sec" id="moments">
-        <div class="wrap">
-          <p class="sec-kicker">03 — Key Design Moments</p>
-          <h3 class="sec-h">Four decisions that made the pause feel like play, not punishment</h3>
-          <p>Each moment below leads with the decision, then the problem it solved and what showed it worked.</p>
-
-          <div class="moments">
-
-            <article class="moment">
-              <div>
-                <p class="moment-tag">Moment 01</p>
-                <h4>Saved items expire on a countdown you set</h4>
-                <span class="mine">My work</span>
-              </div>
-              <dl>
-                <div><dt>The problem</dt><dd>Wishlists grow until they're impossible to navigate, so people abandon them.</dd></div>
-                <div><dt>The decision</dt><dd>Colour- and shape-coded collections, plus a KonMari-inspired timer on each item. When it runs out, you're asked: does this still spark joy?</dd></div>
-                <div><dt>Why it works</dt><dd>The list stays short on its own, and the wait itself does the deciding.</dd></div>
-              </dl>
-            </article>
-
-            <article class="moment">
-              <div>
-                <p class="moment-tag">Moment 02</p>
-                <h4>Borrow the dating-app swipe for reviewing a wishlist</h4>
-              </div>
-              <dl>
-                <div><dt>The problem</dt><dd>Re-evaluating a full wishlist felt like a chore nobody would do.</dd></div>
-                <div><dt>The decision</dt><dd>Right to keep, left to remove, skip if unsure. A two-minute game instead of a task.</dd></div>
-                <div><dt>The proof</dt><dd>Testers recognised the pattern immediately. One called it "Tinder for shopping."</dd></div>
-              </dl>
-            </article>
-
-            <article class="moment">
-              <div>
-                <p class="moment-tag">Moment 03</p>
-                <h4>A mascot who struggles to carry your basket</h4>
-                <div class="char-word">
-                  <span class="word">Only buy what you can carry.</span>
-                  <span class="pin">The old rule the shopping cart quietly erased.</span>
-                </div>
-              </div>
-              <dl>
-                <div><dt>The problem</dt><dd>Finance apps feel serious and judgemental, so young people avoid them.</dd></div>
-                <div><dt>The decision</dt><dd>Daisy the dog holds your basket and visibly strains as it fills. The budget appears as a basket of shapes, sized by share of spending.</dd></div>
-                <div><dt>The proof</dt><dd>Testers said the app felt relaxing compared with other finance tools, and that Daisy made them happy.</dd></div>
-              </dl>
-            </article>
-
-            <article class="moment">
-              <div>
-                <p class="moment-tag">Moment 04</p>
-                <h4>Turn social pressure into a second opinion</h4>
-              </div>
-              <dl>
-                <div><dt>The problem</dt><dd>Friends and influencers usually push people to buy more.</dd></div>
-                <div><dt>The decision</dt><dd>Share a wishlist for friends to vote keep or drop, and let friends lend items they already own.</dd></div>
-                <div><dt>Why it works</dt><dd>The same social pull that drives impulse buying now slows it down, and lending lets you try before you buy.</dd></div>
-              </dl>
-            </article>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- ⑥ IMPACT -->
-      <section class="sec" id="impact">
-        <div class="wrap">
-          <p class="sec-kicker">04 — Impact</p>
-          <h3 class="sec-h">Users understood it instantly and found it calming, but charm sometimes hid clarity</h3>
-          <p>We each began with our own concept (SchedBuy, SLOW, Penny Pets, Scafi, Thread and BAG IT!) and merged the strongest parts into one app. We then tested the prototype through think-aloud interviews built around real task scenarios.</p>
-
-          <div class="stats three">
-            <div class="stat"><b>12</b><span>think-aloud user interviews across the team.</span></div>
-            <div class="stat"><b>6 → 1</b><span>individual concepts merged into one sharper product direction.</span></div>
-            <div class="stat"><b>2</b><span>key tensions found to resolve in the next iteration.</span></div>
-          </div>
-
-          <h4 class="sub-h">What worked</h4>
-          <div class="voices">
-            <div class="voice">It felt relaxing to use compared to other financial apps.</div>
-            <div class="voice">The dog mascot made me happy every time it showed up.</div>
-            <div class="voice">Oh — it's basically Tinder for shopping. I got it instantly.</div>
-          </div>
-
-          <h4 class="sub-h">What needs work</h4>
-          <div class="voices">
-            <div class="voice warn">I'd worry the browse page just makes me shop more.</div>
-          </div>
-          <div class="duo">
-            <div class="mini">
-              <h4>Browse works against the goal</h4>
-              <p>The Discover page could nudge people to shop more, contradicting the whole point of the app.</p>
-            </div>
-            <div class="mini">
-              <h4>Playful visuals hid affordances</h4>
-              <p>Testers sometimes read interactive elements as decoration and missed that they were tappable.</p>
-            </div>
-          </div>
-
-          <figure class="fig">
-            <div class="fig-media">
-              <img src="Case-study-images/wishlet-community.png" alt="Community screen showing friends and a row of wishlists to review" onerror="this.closest('.fig').style.display='none'">
-            </div>
-            <figcaption>The Community page: friends' wishlists queued up to review.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <!-- ⑦ REFLECTIONS -->
-      <section class="sec" id="reflection">
-        <div class="wrap">
-          <p class="sec-kicker">05 — Reflection</p>
-          <h3 class="sec-h">What I learned</h3>
-          <div class="trio">
-            <div class="mini">
-              <h4>Friction can be the feature.</h4>
-              <p>Good UX usually removes steps. Here the value came from adding one. Designing for hesitation was the whole brief.</p>
-            </div>
-            <div class="mini">
-              <h4>Playful can cost clarity.</h4>
-              <p>The low-stress aesthetic drew people in but hid what was interactive. Charm and legibility have to be designed together.</p>
-            </div>
-            <div class="mini">
-              <h4>Next: fix the contradiction.</h4>
-              <p>Wishlet is a tested concept, not a built product. I'd rethink the browse page and re-test with people managing real budgets.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PAGER -->
-      <nav class="pager">
-        <a href="index.html#work">← Back to all work</a>
-        <a href="index.html#work">Next project →</a>
-      </nav>
-
-    </main>
+<header class="topbar" id="top">
+  <div class="topbar-name">
+    <h1 class="rail-name"><a href="index.html"><img src="Character-building/name logo(2).png" alt="Nadia Go"></a></h1>
   </div>
+  <div class="topbar-pet">
+    <div class="pet" id="pet" aria-hidden="true">
+      <div class="pet__inner">
+        <img class="pet__body" alt="" src="Character-building/whole.png">
+        <div class="pet__eyes" id="petEyes"><img alt="" src="Character-building/eyes.png"></div>
+      </div>
+    </div>
+    <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
+      <span class="ico">📨</span>
+      <span class="txt">
+        <b id="emailLabel">Copy my email</b>
+        <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
+      </span>
+    </button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- ── RAIL: back link + section menu ── -->
+  <aside class="rail">
+    <a class="back" href="index.html#work">← Back to all work</a>
+    <nav class="rail-menu">
+      <span class="rail-menu-title">On this page</span>
+      <ul>
+        <li><a href="#overview"><span class="num">00</span><span class="lbl">Overview</span></a></li>
+        <li><a href="#challenge"><span class="num">01</span><span class="lbl">Challenge</span></a></li>
+        <li><a href="#problem"><span class="num">02</span><span class="lbl">Problem</span></a></li>
+        <li><a href="#solution"><span class="num">03</span><span class="lbl">Solution</span></a></li>
+        <li><a href="#outcome"><span class="num">04</span><span class="lbl">Outcome</span></a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- ── CASE STUDY ── -->
+  <main class="study" id="overview">
+
+    <p class="eyebrow">Personal Concept · 2025</p>
+    <h2 class="title">Wishlet</h2>
+    <figure class="media">
+      <img src="Case-study-images/wishlet-preview.gif" alt="Wishlet collections screen with colour-coded wishlists and Daisy the mascot" onerror="this.remove()">
+    </figure>
+
+    <dl class="facts">
+      <div><dt>Role</dt><dd>UX Research<br>UI Design</dd></div>
+      <div><dt>Timeline</dt><dd>November 2025</dd></div>
+      <div><dt>Team</dt><dd>6 designers<br>I led the Personal Wishlist</dd></div>
+      <div><dt>Tools</dt><dd>Figma<br>Illustrator</dd></div>
+    </dl>
+
+    <!-- CHALLENGE -->
+    <section class="block" id="challenge">
+      <p class="label">Challenge</p>
+      <h3 class="statement wide">Young adults experiencing a gap in financial literacy</h3>
+      <p class="body">Trends, influencer picks and one-tap checkout make spending emotional and instant, while serious finance apps feel too intimidating to open.</p>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="block" id="problem">
+      <p class="label">Problem</p>
+      <h3 class="statement">Shopping lost its natural pause.</h3>
+      <p class="body">Every convenience removed a checkpoint. There's no longer a moment between seeing something and owning it.</p>
+      <div class="stat">
+        <b>2×</b>
+        <span>Shoppers with a trolley instead of a basket buy more than double (Larsen et al., 2020).</span>
+      </div>
+      <p class="question">How might we put a pause between seeing and buying, without killing the fun of shopping?</p>
+    </section>
+
+    <!-- SOLUTION -->
+    <section class="block" id="solution">
+      <p class="label">Solution</p>
+      <h3 class="statement">A wishlist instead of a cart.</h3>
+      <p class="body">Items wait in a list you revisit. Wishlet then helps you rethink, see the cost and get a second opinion.</p>
+
+      <div class="feature">
+        <h3>Swipe to decide</h3>
+        <p>Keep, remove or skip each saved item, like a dating app for your wishlist.</p>
+        <figure class="media tall"><img src="Case-study-images/Wishlet(homepage).jpg" alt="Personal Wishlist screen with colour- and shape-coded collections" onerror="this.remove()"></figure>
+      </div>
+      <div class="feature">
+        <h3>Your budget as a basket</h3>
+        <p>Daisy the dog struggles to carry it as it fills, so you only buy what you can carry.</p>
+        <figure class="media tall"><img src="Case-study-images/Wishlet(PersonalWishlet).jpg" alt="Financial Breakdown screen with a basket of coloured shapes" onerror="this.remove()"></figure>
+      </div>
+      <div class="feature">
+        <h3>Ask your friends</h3>
+        <p>Friends vote keep or drop on your list, or lend you something they already own.</p>
+        <figure class="media tall"><img src="Case-study-images/Wishlet(Community).jpg" alt="Community screen with friends' wishlists to vote on" onerror="this.remove()"></figure>
+      </div>
+    </section>
+
+    <!-- OUTCOME -->
+    <section class="block" id="outcome">
+      <p class="label">Outcome</p>
+      <h3 class="statement">Tested with 12 users, who found it calming, not stressful.</h3>
+      <p class="body">Testers grasped the concept instantly. Next, I'd fix two things: the browse page could nudge people to shop more, and playful visuals sometimes hid what was tappable.</p>
+      <p class="pull">Oh, it's basically Tinder for shopping. I got it instantly.</p>
+    </section>
+
+    <nav class="pager">
+      <a href="index.html#work">← All work</a>
+      <a href="Nainai.html">Next: Nai Nai →</a>
+    </nav>
+
+  </main>
 </div>
 
 
@@ -774,7 +338,6 @@
     <script>
     (function () {
       const starGridSize = 20, heartGridSize = 22;
-
       const starPattern = [
         [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
@@ -793,7 +356,6 @@
         [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
         [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
       ];
-
       const heartPattern = [
         [0,7,7,8,8,8,0,8,8,8,8,0],
         [7,8,0,7,7,8,0,8,8,7,7,8],
@@ -807,40 +369,31 @@
         [0,0,0,0,8,7,8,8,0,0,0,0],
         [0,0,0,0,0,7,8,0,0,0,0,0],
       ];
-
       const sketch = (p) => {
         let footerEl, layer;
         let cells = [], starBounds = [], heartBounds = [];
         let starOX, starOY, heartOX, heartOY;
         let activeStarSize, activeHeartSize;
         let heartHover = false;
-
         function buildCells() {
           cells = []; starBounds = []; heartBounds = [];
-
           const narrow = p.width < 700;
           const gs  = narrow ? 12 : starGridSize;
           const hs  = narrow ? 13 : heartGridSize;
           const pad = narrow ? 24 : 60;
-
-          activeStarSize = gs;
-          activeHeartSize = hs;
-
+          activeStarSize = gs; activeHeartSize = hs;
           heartOX = pad; heartOY = pad;
           starOX = p.width  - starPattern[0].length * gs - pad;
           starOY = p.height - starPattern.length    * gs - pad;
-
           for (let y = 0; y < heartPattern.length; y++)
             for (let x = 0; x < heartPattern[y].length; x++)
               if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
-
           if (!narrow) {
             for (let y = 0; y < starPattern.length; y++)
               for (let x = 0; x < starPattern[y].length; x++)
                 if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
           }
         }
-
         function reveal() {
           if (!cells.length) return;
           const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
@@ -859,7 +412,6 @@
             heartBounds.push({ x:px, y:py, size });
           }
         }
-
         p.setup = () => {
           footerEl = document.getElementById('contact');
           const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
@@ -868,18 +420,15 @@
           buildCells();
           for (let i = 0; i < 500; i++) reveal();
         };
-
         p.windowResized = () => {
           p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
           layer = p.createGraphics(p.width, p.height);
           buildCells();
           for (let i = 0; i < 500; i++) reveal();
         };
-
         p.draw = () => {
           p.clear();
           p.image(layer, 0, 0);
-
           let starH = false;
           for (const s of starBounds) {
             const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
@@ -898,40 +447,13 @@
             ? 'pointer'
             : "url('Character-building/cursor.png'), auto";
         };
-
         p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
       };
-
       window.addEventListener('load', () => new p5(sketch));
     })();
     </script>
   </div>
 </footer>
-
-
-<script>
-/* ── features carousel: arrows + dots ── */
-(function(){
-  document.querySelectorAll('.wl-carousel').forEach(root => {
-    const slides = [...root.querySelectorAll('.wl-slide')];
-    const dots = [...root.querySelectorAll('.wl-dot')];
-    let i = slides.findIndex(slide => slide.classList.contains('on'));
-    if(i < 0) i = 0;
-
-    function go(n){
-      i = (n + slides.length) % slides.length;
-      slides.forEach((slide, x) => slide.classList.toggle('on', x === i));
-      dots.forEach((dot, x) => dot.classList.toggle('on', x === i));
-      root.querySelectorAll('video').forEach(video => video.pause());
-      slides[i].querySelector('video')?.play().catch(() => {});
-    }
-
-    root.querySelector('.prev').onclick = () => go(i - 1);
-    root.querySelector('.next').onclick = () => go(i + 1);
-    dots.forEach((dot, x) => dot.onclick = () => go(x));
-  });
-})();
-</script>
 
 
 <script>
@@ -942,16 +464,11 @@
     const inner = pet && pet.querySelector('.pet__inner');
     const eyes  = document.getElementById('petEyes');
     if(!pet || !inner || !eyes) return;
-
     const EYE_MAX_X = 6.5, EYE_MAX_Y = 4.5;
     const EYE_CX = 0.4575, EYE_TOP = 0.3525;
-    const SPEED    = 26;
-    const BOB_RATE = 7.5;
-    const BOB_AMP  = 2.4;
-
+    const SPEED = 26, BOB_RATE = 7.5, BOB_AMP = 2.4;
     let mx = -9999, my = -9999;
     let x = 0, dir = 1, phase = 0, bob = 0, maxX = 0;
-
     const box = pet.parentElement;
     function measure(){
       const cs = getComputedStyle(box);
@@ -966,11 +483,9 @@
     measure();
     addEventListener('resize', measure, {passive:true});
     addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, {passive:true});
-
     let last = performance.now();
     function frame(now){
       const dt = Math.min(0.05, (now - last)/1000); last = now;
-
       if(!reduce){
         x += SPEED * dir * dt;
         if(x >= maxX){ x = maxX; dir = -1; }
@@ -981,7 +496,6 @@
         pet.style.transform   = `translateX(${x.toFixed(2)}px)`;
         inner.style.transform = `translateY(${bob.toFixed(2)}px) scaleX(${dir})`;
       }
-
       if(mx > -9999){
         const r = pet.getBoundingClientRect();
         const cx = r.left + r.width * EYE_CX, cy = r.top + r.height * EYE_TOP;
@@ -993,7 +507,6 @@
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
-
     if(!reduce){
       (function blink(){
         setTimeout(() => {
