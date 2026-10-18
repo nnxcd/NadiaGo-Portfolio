@@ -31,6 +31,49 @@ body {
   padding: 0 1.5rem 4rem;
 }
 
+/* ---------- Website previews: full gallery width, desktop ratio ---------- */
+.site-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 1200px;      /* same width as the Instagram grid */
+  margin: 0 auto;
+}
+.site-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;  /* matches SITE_WIDTH / SITE_HEIGHT in the script */
+  overflow: hidden;
+  background: #f4f4f4;
+  border: 1px solid #111;
+}
+.site-frame iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1440px;          /* rendered at a desktop size, then scaled to fit */
+  height: 900px;
+  border: 0;
+  transform-origin: 0 0;
+}
+.site-open {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  padding: 6px 14px;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .18s ease, color .18s ease;
+}
+.site-open:hover { background: #111; color: #fff; }
+
 /* ---------- Photo gallery: scattered mind-map layout ---------- */
 .gallery {
   display: grid;
@@ -160,6 +203,13 @@ h1 {
 
 <a href="index.html" class="button">Home</a>
 
+<!-- ================= Website previews ================= -->
+<h1> Things I built
+    <br> for the browser.
+</h1>
+
+<div class="site-stack" id="site-stack"></div>
+
 <!-- ================= Instagram designs ================= -->
 <h1> Designs I made
     <br> for the feed.
@@ -242,6 +292,51 @@ h1 {
 </div>
 
 <script>
+// ---------- Website previews ----------
+// Each site is rendered at a desktop size (SITE_WIDTH x SITE_HEIGHT)
+// and scaled down to fill the full width of the gallery.
+const sites = [
+  { url: "https://nnxcd.github.io/-INTMEDIA-Project-A-B/fig-tree.html", title: "Fig Tree" },
+  { url: "https://nnxcd.github.io/-INTMEDIA-Project-A-B/room.html",     title: "Room" },
+  
+];
+
+const SITE_WIDTH  = 1440;
+const SITE_HEIGHT = 900;   // keep in sync with .site-frame aspect-ratio (16/10)
+
+const siteStack  = document.getElementById('site-stack');
+const siteFrames = [];
+
+sites.forEach(site => {
+  const wrap = document.createElement('div');
+  wrap.className = 'site-frame';
+
+  const frame = document.createElement('iframe');
+  frame.src = site.url;
+  frame.title = site.title;
+  frame.loading = 'lazy';
+  wrap.appendChild(frame);
+
+  const open = document.createElement('a');
+  open.className = 'site-open';
+  open.href = site.url;
+  open.target = '_blank';
+  open.rel = 'noopener';
+  open.textContent = 'Open ↗';
+  wrap.appendChild(open);
+
+  siteStack.appendChild(wrap);
+  siteFrames.push(wrap);
+});
+
+function fitSites() {
+  siteFrames.forEach(wrap => {
+    const s = wrap.clientWidth / SITE_WIDTH;
+    wrap.querySelector('iframe').style.transform = `scale(${s})`;
+  });
+}
+new ResizeObserver(fitSites).observe(siteStack);
+
 // ---------- Instagram posts ----------
 // type:  "p" for posts, "reel" for reels
 // code:  the part of the link after /p/ or /reel/
