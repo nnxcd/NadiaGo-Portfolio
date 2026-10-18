@@ -133,6 +133,8 @@
     margin:0; background:var(--placeholder); border-radius:4px; overflow:hidden;
     aspect-ratio:16/8;
   }
+  .media.short{aspect-ratio:auto;}
+  .media.short img{height:auto;}
   .media.tall{aspect-ratio:16/10;}
   .media img,.media video{width:100%; height:100%; object-fit:cover;}
 
@@ -288,11 +290,13 @@
       <p class="label">Solution</p>
       <h3 class="statement">A wishlist instead of a cart.</h3>
       <p class="body">Items wait in a list you revisit. Wishlet then helps you rethink, see the cost and get a second opinion.</p>
+      <figure class="media short"><img src="Case-study-images/WISHLET-USERFLOW.png" onerror="this.remove()"></figure>
 
       <div class="feature">
         <h3>Swipe to decide</h3>
         <p>Keep, remove or skip each saved item, like a dating app for your wishlist.</p>
-        <figure class="media tall"><img src="Case-study-images/Wishlet(PersonalWishlet).jpg" alt="Personal Wishlist screen with colour- and shape-coded collections" onerror="this.remove()"></figure>
+      <!--   <figure class="media tall"><img src="Case-study-images/Wishlet(PersonalWishlet).jpg" alt="Personal Wishlist screen with colour- and shape-coded collections" onerror="this.remove()"></figure> -->
+        <figure class="media tall"><video autoplay loop muted playsinline preload="metadata" aria-label="Wishlet swiping interaction demo"><source src="Case-study-images/WISHLET-SWIPING.mp4" type="video/mp4"></video></figure>
       </div>
       <div class="feature">
         <h3>Your budget as a visual</h3>
@@ -302,7 +306,8 @@
       <div class="feature">
         <h3>Ask your friends</h3>
         <p>Friends vote keep or drop on your list, or lend you something they already own.</p>
-        <figure class="media tall"><img src="Case-study-images/Wishlet(Community).jpg" alt="Community screen with friends' wishlists to vote on" onerror="this.remove()"></figure>
+      <!-- <figure class="media tall"><img src="Case-study-images/Wishlet(Community).jpg" alt="Community screen with friends' wishlists to vote on" onerror="this.remove()"></figure> -->  
+         <figure class="media tall"><video autoplay loop muted playsinline preload="metadata" aria-label="Wishlet swiping interaction demo"><source src="Case-study-images/WISHLET-COMMUNITY-ANIMATION.mp4" type="video/mp4"></video></figure>
       </div>
     </section>
 
