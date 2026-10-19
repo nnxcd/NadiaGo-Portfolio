@@ -915,22 +915,26 @@ body.custom-cursor-active button { cursor: none; }
   margin-bottom: 32px;
 }
 .micro-actions {
-  display: inline-flex;
+  display: flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
 .micro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-text);
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 14px 28px;
-  border-radius: 12px;
-  background: #111317;
-  color: #fff;
-  transition: transform 0.2s ease, background 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 650;
+  padding: 10px 22px;
+  border: 1px solid var(--display-ink);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--display-ink);
+  transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
 }
-.micro-btn:hover { background: var(--red); transform: translateY(-2px); }
+.micro-btn:hover { background: var(--surface); transform: translateY(-1px); }
 
 /* =========================================================
    RESPONSIVE

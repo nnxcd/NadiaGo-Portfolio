@@ -192,8 +192,14 @@
   .micro-title{font-family:var(--title); font-weight:650; letter-spacing:-0.02em; font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:var(--ink);}
   .micro-sub{color:#444; font-size:1.05rem; margin:0 0 26px;}
   .micro-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
-  .micro-btn{display:inline-flex; align-items:center; padding:8px 24px; transition:transform .2s ease;}
-  .micro-btn:hover{transform:translateY(-2px);}
+  .micro-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#fff; border:1px solid var(--ink); border-radius:999px;
+    padding:10px 22px;
+    font-family:var(--sans); font-size:0.9rem; font-weight:650; color:var(--ink);
+    transition:background .18s ease, transform .18s ease, border-color .18s ease;
+  }
+  .micro-btn:hover{background:var(--bg); transform:translateY(-1px);}
   #footer-pixel-art{position:absolute; inset:0; z-index:1;}
   #footer-pixel-art canvas{display:block;}
 
@@ -339,8 +345,8 @@
     <h2 class="micro-title">Thank you for coming!</h2>
     <p class="micro-sub">Let's connect!</p>
     <div class="micro-actions">
-      <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/"><img src="Draggable-icon-logo/(n)instagram-logo.png" alt="Nadia Instagram"></a>
-      <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/"><img src="Draggable-icon-logo/(n)linkedin.png" alt="Nadia LinkedIn"></a>
+      <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/">Instagram</a>
+      <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/">LinkedIn</a>
     </div>
   </div>
 

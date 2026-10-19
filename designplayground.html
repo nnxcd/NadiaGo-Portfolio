@@ -28,8 +28,34 @@
 
 body {
   margin: 0;
-  padding: 0 1.5rem 4rem;
+  padding: 0 1.5rem;
 }
+
+ :root{
+    --bg:#FFFFFF;             /* page + rail background (white) */
+    --feed-bg:#FFFF;        /* black gallery area */
+    --ink:#111111;
+    --muted:#6C6A62;
+    --faint:#98968C; 
+    --line:#111111;           /* header grid lines (matches screenshot's crisp black rules) */
+    --line-soft:#E4E1D8;
+    --cyan:#18C6E7; /* copy-email pill */
+    --cyan-lighter:#5ddef8;
+    --red:#f53c04;
+    /* case-study square fills */
+    --sq-green:#3E8E5F;
+    --green-dark:#1C6B41;     /* readable "copied" state */
+    --sq-blue:#D6E0E7;
+    --sq-pink:#EFA9DA;
+    --placeholder:#D9D9D9;
+    --sans:'Google Sans',system-ui,-apple-system,sans-serif;
+    --title:'HaasGrotDisp','Inter Display','Inter',system-ui,-apple-system,sans-serif;
+    --title-alt:'HaasGrotDisp','Inter Display','Inter',system-ui,-apple-system,sans-serif;
+    --pad:clamp(12px,1.4vw,18px);
+    --section-gap:22px;
+    --footer-h:clamp(520px,68vh,720px);
+    --cols:minmax(240px,0.6fr) 1.7fr;   /* shared grid: rail | feed (lower the rail's fraction to make it skinnier) */
+  }
 
 /* ---------- Website previews: full gallery width, desktop ratio ---------- */
 .site-stack {
@@ -197,6 +223,95 @@ h1 {
   outline-offset: 3px;
 }
 
+/* ---------- Contact footer ---------- */
+.micro-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(420px, 68vh, 300px);
+  margin: 0 -1.5rem;
+  padding: clamp(48px, 8vw, 100px) 1.5rem;
+  overflow: hidden;
+  border-top: 1px solid #111;
+  background: #fff;
+  color: #111;
+  font-family: var(--title);
+}
+.micro-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 44ch;
+  text-align: center;
+}
+.micro-title {
+  margin: 0 0 12px;
+  color: #111;
+  font-family: 'HaasGrotDisp', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.micro-sub {
+  margin: 0 0 26px;
+  color: #444;
+  font-size: 1.05rem;
+}
+.micro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.micro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background .18s ease, transform .18s ease, border-color .18s ease;
+}
+.micro-btn:hover {
+  background: #f4f4f4;
+  transform: translateY(-1px);
+}
+.micro-btn:focus-visible {
+  outline: 2px solid #18C6E7;
+  outline-offset: 3px;
+}
+.footer-pixel-art {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.footer-pixel-art canvas {
+  display: block;
+}
+@media (max-width: 520px) {
+  .micro-footer {
+    min-height: 420px;
+    padding: 56px 1rem;
+  }
+  .micro-sub {
+    margin-bottom: 22px;
+  }
+  .micro-actions {
+    gap: 10px;
+  }
+  .micro-btn {
+    min-height: 44px;
+    padding: 10px 18px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -290,6 +405,18 @@ h1 {
 <div id="lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999; justify-content:center; align-items:center;" onclick="this.style.display='none'">
   <img id="lightbox-img" src="" style="max-width:90%; max-height:90%; border:3px solid white;">
 </div>
+
+<footer class="micro-footer" id="contact">
+  <div class="micro-inner">
+    <h2 class="micro-title">Thank you for coming!</h2>
+    <p class="micro-sub">Let's connect!</p>
+    <div class="micro-actions">
+      <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/">Instagram</a>
+      <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-pixel-art" id="footer-pixel-art" aria-hidden="true"></div>
+</footer>
 
 <script>
 // ---------- Website previews ----------
@@ -424,6 +551,124 @@ items.forEach(img => {
     document.getElementById('lightbox').style.display = 'flex';
   }
 });
+</script>
+
+<script>
+(function () {
+  const starPattern = [
+    [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
+    [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
+    [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
+    [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
+    [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
+    [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
+    [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
+    [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
+    [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
+    [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
+    [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
+    [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
+  ];
+  const heartPattern = [
+    [0,7,7,8,8,8,0,8,8,8,8,0],
+    [7,8,0,7,7,8,0,8,8,7,7,8],
+    [8,8,7,7,7,7,7,7,8,8,7,7],
+    [7,7,7,8,8,7,7,8,8,8,7,8],
+    [7,7,0,7,7,7,7,0,0,7,7,8],
+    [7,8,8,8,7,8,7,7,7,8,8,8],
+    [0,7,7,7,7,8,7,7,8,8,8,0],
+    [0,0,8,7,7,8,8,7,8,8,0,0],
+    [0,0,0,7,0,8,7,8,8,0,0,0],
+    [0,0,0,0,8,7,8,8,0,0,0,0],
+    [0,0,0,0,0,7,8,0,0,0,0,0],
+  ];
+  const sketch = p => {
+    let footer, layer;
+    let cells = [], starBounds = [], heartBounds = [];
+    let starOX, starOY, heartOX, heartOY, starSize, heartSize;
+
+    function buildCells() {
+      cells = [];
+      starBounds = [];
+      heartBounds = [];
+      const narrow = p.width < 700;
+      starSize = narrow ? 12 : 20;
+      heartSize = narrow ? 13 : 22;
+      const pad = narrow ? 24 : 60;
+      heartOX = pad;
+      heartOY = pad;
+      starOX = p.width - starPattern[0].length * starSize - pad;
+      starOY = p.height - starPattern.length * starSize - pad;
+      heartPattern.forEach((row, y) => row.forEach((type, x) => {
+        if (type) cells.push({ x, y, type, heart: true });
+      }));
+      if (!narrow) {
+        starPattern.forEach((row, y) => row.forEach((type, x) => {
+          if (type) cells.push({ x, y, type, heart: false });
+        }));
+      }
+    }
+
+    function reveal() {
+      if (!cells.length) return;
+      const cell = cells.splice(p.floor(p.random(cells.length)), 1)[0];
+      const size = cell.heart ? heartSize : starSize;
+      const x = (cell.heart ? heartOX : starOX) + cell.x * size;
+      const y = (cell.heart ? heartOY : starOY) + cell.y * size;
+      layer.noStroke();
+      if (cell.heart) {
+        layer.fill(255, 105, 180);
+        cell.type === 7 ? layer.rect(x, y, size, size) : layer.ellipse(x + size / 2, y + size / 2, size, size);
+        heartBounds.push({ x, y, size });
+      } else {
+        layer.fill(77, 240, 229);
+        cell.type === 5 ? layer.rect(x, y, size, size) : layer.ellipse(x + size / 2, y + size / 2, size, size);
+        starBounds.push({ x, y, size });
+      }
+    }
+
+    function resize() {
+      p.resizeCanvas(footer.clientWidth, Math.max(footer.clientHeight, 420));
+      layer = p.createGraphics(p.width, p.height);
+      buildCells();
+      for (let i = 0; i < 500; i++) reveal();
+    }
+
+    p.setup = () => {
+      footer = document.getElementById('contact');
+      p.createCanvas(footer.clientWidth, Math.max(footer.clientHeight, 420)).parent('footer-pixel-art');
+      layer = p.createGraphics(p.width, p.height);
+      buildCells();
+      for (let i = 0; i < 500; i++) reveal();
+    };
+    p.windowResized = resize;
+    p.draw = () => {
+      p.clear();
+      p.image(layer, 0, 0);
+      let hovered = false;
+      for (const [bounds, color, hoverColor] of [
+        [starBounds, [77, 240, 229], [0, 0, 0]],
+        [heartBounds, [255, 105, 180], [57, 255, 20]]
+      ]) {
+        for (const cell of bounds) {
+          const on = p.mouseX > cell.x && p.mouseX < cell.x + cell.size &&
+            p.mouseY > cell.y && p.mouseY < cell.y + cell.size;
+          p.noStroke();
+          p.fill(on ? p.color(...hoverColor) : p.color(...color));
+          p.ellipse(cell.x + cell.size / 2, cell.y + cell.size / 2, cell.size, cell.size);
+          hovered = hovered || on;
+        }
+      }
+      document.body.style.cursor = hovered ? 'pointer' : "url('Character-building/cursor.png'), auto";
+    };
+    p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
+  };
+  window.addEventListener('load', () => new p5(sketch));
+})();
 </script>
 
 </body>
