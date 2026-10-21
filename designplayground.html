@@ -434,14 +434,34 @@ const SITE_HEIGHT = 900;   // keep in sync with .site-frame aspect-ratio (16/10)
 const siteStack  = document.getElementById('site-stack');
 const siteFrames = [];
 
+// The sites play music, and a cross-origin iframe can't be muted from here.
+// So fetch each page and load it via srcdoc with a script that blocks all audio/video sound.
+const MUTE_SCRIPT = `<script>
+  HTMLMediaElement.prototype.play = function () { this.muted = true; return Promise.resolve(); };
+  document.addEventListener('play', e => { e.target.muted = true; e.target.pause(); }, true);
+<\/script>`;
+
+function loadMuted(frame, url) {
+  fetch(url)
+    .then(res => res.text())
+    .then(html => {
+      const head = `<base href="${url}">${MUTE_SCRIPT}`;
+      frame.srcdoc = /<head[^>]*>/i.test(html)
+        ? html.replace(/<head[^>]*>/i, m => m + head)
+        : head + html;
+    })
+    .catch(() => {});  // leave the preview blank rather than load it with sound
+}
+
 sites.forEach(site => {
   const wrap = document.createElement('div');
   wrap.className = 'site-frame';
 
   const frame = document.createElement('iframe');
-  frame.src = site.url;
   frame.title = site.title;
   frame.loading = 'lazy';
+  frame.allow = "autoplay 'none'";
+  loadMuted(frame, site.url);
   wrap.appendChild(frame);
 
   const open = document.createElement('a');
