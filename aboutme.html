@@ -3,920 +3,349 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nadia Go — Your Product Designer</title>
+<title>About — Nadia Go</title>
+<meta name="description" content="About Nadia Go, a product designer based in Melbourne.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="Character-building/favicon(2).png" sizes="32x32">
-<!-- p5.js — powers the pixel-art footer canvas -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 
 <style>
-  @font-face{
-    font-family:'HaasGrotDisp'; font-style:normal; font-weight:450;
-    src:url('Fonts/NeueHaasGrotDisp-45Light-Trial.otf') format('opentype');
-  }
-  @font-face{
-    font-family:'HaasGrotDisp'; font-style:normal; font-weight:550;
-    src:url('Fonts/NeueHaasGrotDisp-55Roman-Trial.otf') format('opentype');
-  }
-  @font-face{
-    font-family:'HaasGrotDisp'; font-style:normal; font-weight:650;
-    src:url('Fonts/NeueHaasGrotDisp-65Medium-Trial.otf') format('opentype');
-  }
   :root{
-    --bg:#FFFFFF;             /* page + rail background (white) */
-    --feed-bg:#FFFF;        /* black gallery area */
-    --ink:#111111;
-    --muted:#6C6A62;
-    --faint:#98968C; 
-    --line:#111111;           /* header grid lines (matches screenshot's crisp black rules) */
-    --line-soft:#E4E1D8;
-    --cyan:#18C6E7; /* copy-email pill */
-    --cyan-lighter:#5ddef8;
-    --red:#f53c04;
-    /* case-study square fills */
-    --sq-green:#3E8E5F;
-    --green-dark:#1C6B41;     /* readable "copied" state */
-    --sq-blue:#D6E0E7;
-    --sq-pink:#EFA9DA;
-    --placeholder:#D9D9D9;
-    --sans:'Google Sans',system-ui,-apple-system,sans-serif;
-    --title:'HaasGrotDisp','Inter Display','Inter',system-ui,-apple-system,sans-serif;
-    --title-alt:'HaasGrotDisp','Inter Display','Inter',system-ui,-apple-system,sans-serif;
-    --pad:clamp(12px,1.4vw,18px);
-    --section-gap:22px;
-    --footer-h:clamp(520px,68vh,720px);
-    --cols:minmax(240px,0.6fr) 1.7fr;   /* shared grid: rail | feed (lower the rail's fraction to make it skinnier) */
+    --bg:#FAFAF8;
+    --ink:#141414;
+    --muted:#5E5E5A;
+    --faint:#9A9A94;
+    --line:#E6E5E0;
+    --green-dark:#1C6B41;
+    --accent:#f53c04;            /* page accent (quotes, question rule) */
+    --serif:'Instrument Serif', Georgia, 'Times New Roman', serif;   /* name only */
+    --sans:'Google Sans', system-ui, -apple-system, sans-serif;
+    --rail-w:340px;
+    --pad:clamp(20px,2.6vw,40px);
+    --measure:780px;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
     margin:0; background:var(--bg); color:var(--ink);
-    font-family:var(--sans); font-size:16px; line-height:1.55;
+    font-family:var(--sans); font-size:15px; line-height:1.55;
     -webkit-font-smoothing:antialiased;
-    cursor:url('Character-building/cursor.png'), auto;
   }
-  ::selection{background:var(--red); color:var(--bg);}
-  a{
-    color:inherit; text-decoration:none;
-    cursor:url('Character-building/hover-cursor.png'), pointer;
-  }
-  a:focus-visible,button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
-  img{max-width:100%; display:block;}
+  ::selection{background:var(--ink); color:var(--bg);}
+  a{color:inherit; text-decoration:none;}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ink); outline-offset:3px; border-radius:4px;}
+  img,video{max-width:100%; display:block;}
 
- .page{max-width:none; margin:0;}
-  .phone{display:none;}            /* phone-only layer, switched on below the iPad breakpoint */
-  body.ph-lock{overflow:hidden;}   /* freeze the page while a pop-up sheet is open */
+  /* ── LAYOUT ─────────────────────────────── */
+  .layout{display:grid; grid-template-columns:var(--rail-w) 1fr; min-height:100vh;}
 
-  /* ── TOP HEADER: name box + pet box ─────────────── */
-  .topbar{
-    display:grid; grid-template-columns:var(--cols);
-    border-bottom:1px solid var(--line);
-  }
-  .topbar-name{
-    padding:var(--pad);
-    padding-right:calc(var(--pad) + 28px);   /* extra air to the right of "Go" */
-    border-right:1px solid var(--line);
-    display:flex; align-items:center;
-    overflow:hidden;                 /* keep the big type inside its box */
-  }
-  .rail-name{
-    font-family:var(--title-alt); font-weight:550;   /* Roman */
-    letter-spacing:-0.06em;
-    font-size:clamp(2.6rem,7.4vw,6rem);
-    line-height:0.82; margin:0; white-space:nowrap;
-  }
-  /* pet on the left, copy-email pinned to the right */
-  .topbar-pet{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:16px;
-    padding:var(--pad);
-  }
-  /* button hugs its own text instead of filling the box */
-  .topbar-pet .rail-email{width:max-content;}
-
-  /* the pet, sitting in its box */
-  .pet{width:clamp(48px,4vw,64px); aspect-ratio:1; position:relative; flex:none;}
-  .pet__inner{position:relative; width:100%; height:100%; transform-origin:center bottom;}
-  .pet__body{position:absolute; inset:0; width:100%; height:100%;}
-  .pet__eyes{position:absolute; inset:0; transition:transform .08s linear; will-change:transform;}
-  .pet__eyes img{
-    width:100%; height:100%; display:block;
-    transform-origin:45.75% 35.25%;
-    transition:transform .09s ease;
-  }
-  .pet.is-blinking .pet__eyes img{transform:scaleY(.08);}
-  .pet img{-webkit-user-drag:none; user-select:none;}
-
-  /* ── BODY GRID: rail | feed ─────────────────────── */
-  .shell{display:grid; grid-template-columns:var(--cols);}
-
-  /* ── STICKY BIO RAIL ────────────────────────────── */
+  /* ── SIDEBAR (shared with index.html) ───── */
   .rail{
-    position:sticky; top:0; align-self:start;
+    position:sticky; top:0; height:100vh; overflow:hidden;
     padding:var(--pad);
-    background:var(--bg);
-    display:flex; flex-direction:column; gap:28px;
+    border-right:1px solid var(--line);
+    display:flex; flex-direction:column; gap:24px;
+  }
+  .rail-id{display:flex; flex-direction:column; gap:12px;}
+  .pfp{
+    position:relative; width:72px; height:72px; flex:none;
+    border-radius:50%; overflow:hidden;
+    background:#EDEBE5; border:1px solid var(--line);
+  }
+  .pfp__inner{position:absolute; left:-1%; top:15%; width:100%; height:100%;}
+  .pfp__body, .pfp__eyes img{width:100%; height:100%; -webkit-user-drag:none; user-select:none;}
+  .pfp__body{position:absolute; inset:0;}
+  .pfp__eyes{position:absolute; inset:0; transition:transform .08s linear; will-change:transform;}
+  .pfp__eyes img{display:block; transform-origin:45.75% 35.25%; transition:transform .09s ease;}
+  .pfp.is-blinking .pfp__eyes img{transform:scaleY(.08);}
+
+  .name{display:block; font-family:var(--serif); font-weight:400; font-size:2.1rem; line-height:1; letter-spacing:-0.01em; margin:0;}
+  .subtitle{font-size:0.78rem; color:var(--faint); margin:2px 0 0;}
+  .bio{color:var(--muted); margin:0; max-width:36ch; font-size:0.88rem; line-height:1.5;}
+  .bio strong{color:var(--ink); font-weight:500;}
+  .bio + .bio{margin-top:-14px;}
+
+  .rail-label{
+    display:block; font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--faint); margin:0 0 8px;
+  }
+  .nav ul{list-style:none; margin:0; padding:0; border-top:1px solid var(--line);}
+  .nav li{border-bottom:1px solid var(--line);}
+  .nav a{
+    display:flex; align-items:center; gap:12px; padding:8px 0;
+    font-size:0.88rem; color:var(--muted); transition:color .18s ease;
+  }
+  .nav .num{font-variant-numeric:tabular-nums; font-size:0.74rem; color:var(--faint); min-width:2em;}
+  .nav .arr{margin-left:auto; opacity:0; transform:translateX(-6px); transition:opacity .18s ease, transform .18s ease;}
+  .nav a:hover, .nav a[aria-current]{color:var(--ink);}
+  .nav a:hover .arr, .nav a[aria-current] .arr{opacity:1; transform:none;}
+
+  .back{font-size:0.88rem; color:var(--muted); width:max-content; transition:color .18s ease;}
+  .back:hover{color:var(--ink);}
+
+  .outbound{color:var(--muted); margin:0; line-height:1.8; font-size:0.88rem;}
+  .outbound a, .outbound button{color:var(--ink); border-bottom:1px solid var(--line); transition:border-color .18s ease;}
+  .outbound a:hover, .outbound button:hover{border-color:var(--ink);}
+  .outbound button{background:none; border-top:0; border-left:0; border-right:0; padding:0; font:inherit; cursor:pointer;}
+  .outbound button.copied{color:var(--green-dark); border-color:var(--green-dark);}
+
+  .rail-foot{
+    margin-top:auto; padding-top:16px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; gap:12px;
+    font-size:0.74rem; color:var(--faint); font-variant-numeric:tabular-nums;
+  }
+  .status{display:inline-flex; align-items:center; gap:8px;}
+  .status::before{content:""; width:7px; height:7px; border-radius:50%; background:#2FB36B;}
+
+  /* ── MAIN CONTENT ───────────────────────── */
+  .main{padding:var(--pad); min-width:0;}
+  .main > *{max-width:var(--measure);}
+  section[id], .main{scroll-margin-top:20px;}
+
+  .eyebrow, .label{
+    font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--faint); margin:0 0 8px;
+  }
+  .title{font-family:var(--sans); font-weight:700; letter-spacing:-0.03em; font-size:clamp(1.8rem,3vw,2.4rem); line-height:1.05; margin:0 0 22px;}
+
+  .media{margin:0; background:#E9E8E3; border:1px solid var(--line); border-radius:6px; overflow:hidden; aspect-ratio:16/9;}
+  .media.tall{aspect-ratio:16/10;}
+  .media.auto{aspect-ratio:auto;}
+  .media.auto img{height:auto;}
+  .media img,.media video{width:100%; height:100%; object-fit:cover;}
+  .media.fit{aspect-ratio:auto; background:none; border:0; border-radius:0; --cap:min(72vh,620px);}
+  .media.fit video{
+    margin:0 auto; width:100%; height:auto; aspect-ratio:var(--ar,16/9);
+    max-width:calc(var(--cap) * var(--ar-n,1.7778));
+    object-fit:contain; border-radius:6px; background:#E9E8E3;
   }
 
-  .rail-tags{display:flex; gap:6px; flex-wrap:wrap; font-size:0.75rem; color:var(--faint); margin-bottom:-14px;}
-  .rail-tags span + span::before{content:"·"; margin-right:6px;}
+  .facts{
+    margin:24px 0 0; padding-top:16px; border-top:1px solid var(--line);
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px;
+  }
+  .facts dt{font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin:0 0 4px;}
+  .facts dd{margin:0; font-size:0.86rem; line-height:1.45;}
 
-  .rail-bio{color:var(--muted); font-size:0.98rem; max-width:45ch; margin:0 0 -14px;}
-  .rail-bio strong{color:var(--ink); font-weight:inherit;}   /* emphasized phrases */
+  .block{padding:clamp(48px,6vw,80px) 0 0;}
+  .statement{font-family:var(--sans); font-weight:600; letter-spacing:-0.02em; font-size:clamp(1.3rem,2vw,1.7rem); line-height:1.2; margin:0 0 12px; max-width:28ch;}
+  .statement.wide{max-width:none;}
+  .body{font-size:0.95rem; line-height:1.6; color:var(--muted); margin:0 0 24px; max-width:60ch;}
+  .body strong{color:var(--ink); font-weight:500;}
 
-  /* ── EXPLORE MENU — plain floating list (matches case-study pages) ── */
-  .rail-menu-title{display:block; font-size:0.75rem; color:var(--faint); margin:0 0 8px;}
-  .rail-menu ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
-  .rail-menu a{
-    display:flex; align-items:center; gap:14px;
-    padding:5px 0; color:var(--faint); font-size:1rem;
-    transition:padding-left .18s ease, color .18s ease;
+  .question{
+    font-family:var(--sans); font-weight:600; letter-spacing:-0.015em;
+    font-size:clamp(1.05rem,1.5vw,1.25rem); line-height:1.35; margin:24px 0 0; max-width:40ch;
+    padding-left:16px; border-left:2px solid var(--accent);
   }
-  .rail-menu a .num{color:var(--faint); font-variant-numeric:tabular-nums; min-width:1.6em; font-size:0.85rem; transition:color .18s ease;}
-  .rail-menu a:hover{padding-left:5px; color:var(--ink);}
-  .rail-menu a:hover .num{color:var(--ink);}
+  .stat{display:flex; align-items:baseline; gap:16px; border-top:1px solid var(--line); padding-top:16px; margin-top:8px;}
+  .stat b{font-family:var(--sans); font-weight:700; font-size:clamp(2rem,3.2vw,2.8rem); letter-spacing:-0.04em; line-height:1;}
+  .stat span{font-size:0.86rem; color:var(--muted); max-width:44ch;}
 
+  .feature{margin-top:40px;}
+  .feature h4{font-family:var(--sans); font-weight:600; font-size:1rem; letter-spacing:-0.01em; margin:0 0 4px;}
+  .feature p{margin:0 0 14px; color:var(--muted); font-size:0.9rem;}
 
-  /* ── EXTERNAL LINKS — plain stacked ─────────────── */
-  .rail-links{display:flex; flex-direction:column; gap:10px;}
-  .rail-links a{
-    font-size:1.05rem; width:max-content;
-    transition:padding-left .18s ease, opacity .18s ease;
-  }
-  .rail-links a:hover{padding-left:5px; opacity:.65;}
+  .pull{font-family:var(--sans); font-weight:600; letter-spacing:-0.015em; font-size:clamp(1.05rem,1.5vw,1.25rem); line-height:1.35; margin:24px 0 0;}
+  .pull::before{content:"\201C"; color:var(--accent);} .pull::after{content:"\201D"; color:var(--accent);}
 
-  /* ── COPY-EMAIL CARD (original layout, black outline) ── */
-  .rail-email{
-    display:flex; align-items:center; gap:12px; width:100%;
-    background:#fff; border:1px solid var(--ink); border-radius:12px;
-    padding:12px 14px; cursor:url('Character-building/hover-cursor.png'), pointer;
-    font-family:var(--sans); font-size:0.9rem; color:var(--ink); text-align:left;
-    transition:background .18s ease, transform .18s ease, border-color .18s ease;
-  }
-  .rail-email:hover{color:var(--ink); background:var(--bg); transform:translateY(-1px);}
-  .rail-email .ico{font-size:1.15rem; line-height:1;}
-  .rail-email .txt{display:flex; flex-direction:column; line-height:1.25;}
-  .rail-email .txt b{font-weight:650;}
-  .rail-email .txt small{color:var(--muted); font-size:0.76rem;}
-  /* readable copied state: dark green fill, white text */
-  .rail-email.copied{background:var(--green-dark); border-color:var(--green-dark); color:#fff;}
-  .rail-email.copied .txt b{color:#fff;}
-  .rail-email.copied .txt small{color:rgba(255,255,255,0.88);}
+  .block > img{margin-top:8px; border-radius:6px; border:1px solid var(--line);}
 
-  /* ── MAIN AREA ───────────────── */
-  .feed{
-    background:var(--bg);
-    padding:clamp(18px,2vw,28px) clamp(18px,3vw,44px) clamp(40px,5vw,64px);
-    border-left:1px solid var(--line);
-    min-height:70vh;
+  .pager{
+    display:flex; justify-content:space-between; gap:16px;
+    margin-top:clamp(56px,7vw,96px); padding-top:18px; border-top:1px solid var(--line);
+    font-size:0.88rem; color:var(--muted);
   }
+  .pager a:hover{color:var(--ink);}
 
-  /* ── FOOTER (unchanged pixel-art) ───────────────── */
-  .micro-footer{
-    position:relative; min-height:var(--footer-h);
-    background:var(--feed-bg); color:#fff;
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden; padding:var(--pad);
-    border-top: 1px solid var(--line);
-  }
-  .micro-inner{position:relative; z-index:2; text-align:center; max-width:44ch;}
-  .micro-title{
-    font-family:var(--title); font-weight:650; letter-spacing:-0.02em;
-    font-size:clamp(2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px; color:var(--ink);
-  }
-  .micro-sub{color:rgba(68, 68, 68, 1); font-size:1.05rem; margin:0 0 26px;}
-  .micro-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
-  .micro-btn{
-    display:inline-flex; align-items:center; gap:8px;
-    background:#fff; border:1px solid var(--ink); border-radius:999px;
-    padding:10px 22px;
-    font-family:var(--sans); font-size:0.9rem; font-weight:650; color:var(--ink);
-    transition:background .18s ease, transform .18s ease, border-color .18s ease;
-  }
-  .micro-btn:hover{background:var(--bg); transform:translateY(-1px);}
-  #footer-pixel-art{position:absolute; inset:0; z-index:1;}
-  #footer-pixel-art canvas{display:block;}
+  /* about page */
+  .prose p{font-size:0.98rem; line-height:1.7; color:var(--muted); margin:0 0 18px; max-width:62ch;}
+  .prose strong{color:var(--ink); font-weight:500;}
 
-  /* ── RESPONSIVE: un-stick + stack ───────────────── */
-  @media (max-width:880px){
-    .topbar{grid-template-columns:1fr;}
-    .topbar-name{border-right:none; border-bottom:1px solid var(--line);}
-    .topbar-pet{flex-wrap:wrap;}
-    .shell{grid-template-columns:1fr;}
-    .rail{position:static; border-bottom:1px solid var(--line);}
-    .feed{border-left:none;}
+  /* ── FOOTER (shared with index.html) ────── */
+  .foot{
+    margin-top:72px; padding-top:28px; border-top:1px solid var(--line);
+    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:20px;
   }
+  .foot-line{font-family:var(--sans); font-weight:600; letter-spacing:-0.02em; font-size:clamp(1.2rem,2.2vw,1.6rem); line-height:1.2; margin:0; max-width:22ch;}
+  .foot-line em{font-style:normal; color:var(--faint);}
+  .foot-links{display:flex; gap:18px; font-size:0.84rem; color:var(--muted);}
+  .foot-links a:hover{color:var(--ink);}
 
-  /* ── PHONE (narrower than an iPad): hide the whole desktop layout
-        and switch on the dedicated .phone layer instead. Desktop is
-        left completely untouched above this breakpoint. ── */
-  @media (max-width:767px){
-    .page{ display:none; }
-    .phone{ display:block; }
+  /* ── RESPONSIVE ─────────────────────────── */
+  @media (max-width:1100px){ :root{--rail-w:300px;} }
+  @media (max-width:820px){
+    .layout{grid-template-columns:1fr;}
+    .rail{position:static; height:auto; overflow:visible; border-right:0; border-bottom:1px solid var(--line); gap:22px; padding:28px 20px;}
+    .rail .nav--sections{display:none;}   /* in-page menu not needed once stacked */
+    .name{font-size:2rem;}
+    .bio{max-width:none;}
+    .rail-foot{margin-top:0;}
+    .main{padding:28px 20px 40px;}
+    .facts{grid-template-columns:1fr 1fr;}
   }
-
-  @media (prefers-reduced-motion:reduce){
-    html{scroll-behavior:auto;}
-    .pet__eyes,.pet__eyes img{transition:none;}
+  @media (max-width:420px){
+    .rail-id{flex-direction:row; align-items:center; gap:16px; flex-wrap:wrap;}
+    .rail-id .text{flex:1; min-width:0;}
+    .pfp{width:64px; height:64px;}
+    .stat{flex-direction:column; gap:6px;}
   }
-
-
-  /* ══════════════════════════════════════════════════════════════
-     PHONE LAYER — only rendered ≤767px. Name-led hero, a clean
-     bordered work grid, and bottom-sheet pop-ups for everything else.
-     Inspired by Joshua Kaplan (big name + pills + numbered ledger)
-     and Soteria (hairline bordered grid, one red accent tile).
-     ══════════════════════════════════════════════════════════════ */
-  .phone{ background:var(--bg); color:var(--ink); min-height:100svh; }
-
-  /* ── HERO: just the name to start ── */
-  .ph-hero{
-    min-height:66svh;
-    display:flex; flex-direction:column;
-    padding:5px 20px 20px;
-    border-bottom:1px solid var(--line);
-  }
-  .ph-eyebrow{
-    display:flex; align-items:center; justify-content:space-between;
-    font-size:0.7rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
-    color:var(--ink);
-  }
-  .ph-eyebrow .dot{ width:8px; height:8px; border-radius:50%; background:var(--red); }
-  .ph-hero-mid{ flex:1; display:flex; flex-direction:column; justify-content:center; }
-  .ph-name{
-    font-family:var(--title-alt); font-weight:650; letter-spacing:-0.05em;
-    font-size:clamp(3.6rem,20vw,6rem); line-height:0.86; margin:0;
-  }
-  .ph-name img{ width:100%; max-width:300px; height:auto; display:block; }
-  .ph-name .amp{ color:var(--red); }
-  .ph-tagline{
-    margin:18px 0 0; max-width:22ch;
-    font-size:1.02rem; line-height:1.4; color:var(--muted);
-  }
-  .ph-tagline strong{ color:var(--ink); font-weight:650; }
-
-  /* pill row — About / Contact (Contact is the red accent) */
-  .ph-pills{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
-  .ph-pill{
-    font-family:var(--sans); font-size:0.9rem; font-weight:600;
-    padding:10px 18px; border-radius:999px;
-    border:1px solid var(--ink); background:#fff; color:var(--ink);
-    cursor:pointer; -webkit-tap-highlight-color:transparent;
-    transition:transform .12s ease;
-  }
-  .ph-pill:active{ transform:scale(0.96); }
-  .ph-pill.solid{ background:var(--red); border-color:var(--red); color:#fff; }
-
-
-  /* ── WORK GRID: 2-col bordered cells, Soteria hairline frame ── */
-  .ph-grid{
-    display:grid; grid-template-columns:1fr 1fr;
-    border-bottom:1px solid var(--line);
-  }
-  .ph-card{
-    position:relative; text-align:left;
-    background:#fff; border:none; cursor:pointer;
-    border-right:1px solid var(--line); border-bottom:1px solid var(--line);
-    padding:14px 14px 16px; min-height:172px;
-    display:flex; flex-direction:column; gap:12px;
-    -webkit-tap-highlight-color:transparent;
-    transition:background .15s ease;
-    font-family:var(--sans);
-  }
-  .ph-card:nth-child(2n){ border-right:none; }
-  .ph-card:active{ background:#faf7f2; }
-  .ph-thumb{
-    width:100%; aspect-ratio:1/1; border-radius:10px;
-    display:flex; align-items:center; justify-content:center; overflow:hidden;
-    font-family:var(--title-alt); font-weight:650; font-size:1.6rem; color:#fff;
-  }
-  .ph-thumb.green{ background:var(--sq-green); }
-  .ph-thumb.pink{ background:var(--sq-pink); color:var(--ink); }
-  .ph-thumb img{ width:100%; height:100%; object-fit:cover; }
-  .ph-card-t, .ph-card-c{ display:block; }
-  .ph-card-t{ font-family:var(--title-alt); font-weight:650; font-size:1.12rem; letter-spacing:-0.02em; line-height:1; margin:0; }
-  .ph-card-c{ font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin-top:5px; }
-  .ph-card .corner{ position:absolute; top:12px; right:12px; font-size:0.9rem; color:var(--ink); }
-
-  /* the one red accent tile (playground) — echoes Soteria's single red cell */
-  .ph-card.accent{ background:var(--red); color:#fff; justify-content:space-between; }
-  .ph-card.accent:active{ background:#d63403; }
-  .ph-card.accent .ph-card-t{ color:#fff; }
-  .ph-card.accent .ph-card-c{ color:rgba(255,255,255,0.8); }
-  .ph-card.accent .corner{ color:#fff; }
-  .ph-card.accent .play-mark{
-    font-family:var(--title-alt); font-weight:650; font-size:2.4rem; line-height:1;
-    margin-top:6px;
-  }
-
-  /* ── BOTTOM-SHEET POP-UPS ── */
-  .ph-sheet-wrap{
-    position:fixed; inset:0; z-index:120;
-    display:none; align-items:flex-end; justify-content:center;
-  }
-  .ph-sheet-wrap.open{ display:flex; }
-  .ph-backdrop{
-    position:absolute; inset:0; background:rgba(17,17,17,0.42);
-    opacity:0; transition:opacity .25s ease;
-  }
-  .ph-sheet-wrap.open .ph-backdrop{ opacity:1; }
-  .ph-sheet{
-    position:relative; z-index:1;
-    width:100%; max-height:88svh; overflow-y:auto;
-    background:var(--bg); color:var(--ink);
-    border-top-left-radius:22px; border-top-right-radius:22px;
-    border-top:1px solid var(--line);
-    padding:10px 22px 30px;
-    transform:translateY(100%); transition:transform .32s cubic-bezier(.2,.85,.25,1);
-    -webkit-overflow-scrolling:touch;
-  }
-  .ph-sheet-wrap.open .ph-sheet{ transform:translateY(0); }
-  .ph-handle{ width:40px; height:4px; border-radius:999px; background:#d9d5cc; margin:0 auto 4px; }
-  .ph-sheet-top{
-    position:sticky; top:0; background:var(--bg); z-index:2;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:8px 0 12px; margin-bottom:6px; border-bottom:1px solid var(--line);
-  }
-  .ph-sheet-title{ font-family:var(--title-alt); font-weight:650; letter-spacing:-0.02em; font-size:1.5rem; margin:0; }
-  .ph-sheet-x{
-    width:34px; height:34px; flex:none; border-radius:50%;
-    border:1px solid var(--ink); background:#fff; color:var(--ink);
-    font-size:1rem; line-height:1; cursor:pointer; -webkit-tap-highlight-color:transparent;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .ph-sheet-x:active{ background:var(--ink); color:#fff; }
-  .ph-sheet-body{ padding-top:16px; }
-  .ph-sheet-body p{ font-size:1rem; line-height:1.5; color:var(--muted); margin:0 0 14px; }
-  .ph-sheet-body p strong{ color:var(--ink); font-weight:650; }
-
-  /* tag pills inside a sheet */
-  .ph-tags{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px; }
-  .ph-tags span{
-    font-size:0.78rem; font-weight:600; padding:6px 13px; border-radius:999px;
-    background:var(--ink); color:#fff;
-  }
-  .ph-tags span.red{ background:var(--red); }
-  .ph-tags span.hollow{ background:#fff; color:var(--ink); border:1px solid var(--ink); }
-
-  /* project sheet thumb */
-  .ph-sheet-thumb{
-    width:100%; border-radius:14px; margin:0 0 18px;
-    display:block; overflow:hidden;
-    font-family:var(--title-alt); font-weight:650; font-size:2.4rem; color:#fff;
-  }
-  .ph-sheet-thumb.green{ background:var(--sq-green); }
-  .ph-sheet-thumb.pink{ background:var(--sq-pink); color:var(--ink); }
-  .ph-sheet-thumb img{ width:100%; height:auto; object-fit:contain; }
-
-  /* meta ledger (Kaplan style: label | value rows) */
-  .ph-meta{ border-top:1px solid var(--line); margin:4px 0 20px; }
-  .ph-meta .row{
-    display:grid; grid-template-columns:5.5em 1fr; gap:12px;
-    padding:11px 0; border-bottom:1px solid var(--line-soft);
-  }
-  .ph-meta dt{ font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin:0; align-self:center; }
-  .ph-meta dd{ margin:0; font-size:0.95rem; font-weight:600; color:var(--ink); line-height:1.3; }
-
-  /* experience ledger: year · company · role (Kaplan numbered list feel) */
-  .ph-ledger{ margin:2px 0 6px; }
-  .ph-ledger .item{
-    display:grid; grid-template-columns:3.2em 1fr auto; gap:12px; align-items:baseline;
-    padding:14px 0; border-bottom:1px solid var(--line-soft);
-  }
-  .ph-ledger .yr{ font-variant-numeric:tabular-nums; color:var(--faint); font-size:0.85rem; }
-  .ph-ledger .co{ font-family:var(--title-alt); font-weight:650; font-size:1.05rem; letter-spacing:-0.01em; }
-  .ph-ledger .rl{ font-size:0.82rem; color:var(--muted); text-align:right; }
-
-  /* primary button inside sheets */
-  .ph-btn{
-    display:flex; align-items:center; justify-content:space-between;
-    width:100%; margin-top:6px;
-    background:var(--ink); color:#fff; border:none; border-radius:14px;
-    padding:16px 20px; font-family:var(--sans); font-size:1rem; font-weight:650;
-    cursor:pointer; -webkit-tap-highlight-color:transparent; text-decoration:none;
-  }
-  .ph-btn:active{ transform:scale(0.98); }
-  .ph-btn.red{ background:var(--red); }
-
-  /* copy-email row */
-  .ph-copy{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    width:100%; margin:0 0 12px;
-    background:#fff; border:1px solid var(--ink); border-radius:14px;
-    padding:15px 18px; font-family:var(--sans); font-size:0.95rem; color:var(--ink);
-    cursor:pointer; -webkit-tap-highlight-color:transparent; text-align:left;
-  }
-  .ph-copy b{ font-weight:650; display:block; }
-  .ph-copy small{ color:var(--muted); font-size:0.78rem; }
-  .ph-copy .tick{ font-size:1.1rem; }
-  .ph-copy.copied{ background:var(--green-dark); border-color:var(--green-dark); color:#fff; }
-  .ph-copy.copied b, .ph-copy.copied small{ color:#fff; }
-
-  /* stacked social links */
-  .ph-links{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
-  .ph-links a{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 2px; border-bottom:1px solid var(--line-soft);
-    font-size:1.05rem; font-weight:600; color:var(--ink);
-  }
-  .ph-links a .arr{ color:var(--faint); }
-
-  /* ---------- Photo gallery: scattered mind-map layout ---------- */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  column-gap: 2rem;
-  row-gap: 3rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  align-items: start;
-}
-.gallery-item {
-  /* width, alignment and vertical offset are set per photo by the script */
-  width: 70%;
-}
-.gallery img {
-  width: 100%;
-  display: block;
-  cursor: pointer;
-  transition: transform .25s ease;
-}
-.gallery img:hover { transform: scale(1.04); }
-@media (max-width: 1100px) { .gallery { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 800px)  { .gallery { grid-template-columns: repeat(3, 1fr); column-gap: 1rem; row-gap: 2rem; } }
-@media (max-width: 520px)  { .gallery { grid-template-columns: repeat(2, 1fr); } }
-
-
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} *{transition:none !important;} }
 </style>
 </head>
 <body>
 
-<div class="page">
+<div class="layout">
 
-  <!-- ══ TOP HEADER ══ -->
-  <header class="topbar">
-    <div class="topbar-name">
-      <h1 class="rail-name"><a href="index.html"><img src="Character-building/name logo(2).png" alt="Nadia Go"></a></h1>
-    </div>
-    <div class="topbar-pet">
-      <!-- the pet lives here -->
-      <div class="pet" id="pet" aria-hidden="true">
-        <div class="pet__inner">
-          <img class="pet__body" alt="" src="Character-building/whole.png">
-          <div class="pet__eyes" id="petEyes"><img alt="" src="Character-building/eyes.png"></div>
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="rail">
+    <div class="rail-id">
+      <a href="index.html" class="pfp" id="pfp" aria-label="Nadia Go — home">
+        <div class="pfp__inner">
+          <img class="pfp__body" alt="" src="Character-building/whole.png" onerror="this.remove()">
+          <div class="pfp__eyes" id="pfpEyes"><img alt="" src="Character-building/eyes.png" onerror="this.remove()"></div>
         </div>
+      </a>
+      <div class="text">
+        <a href="index.html"><span class="name">Nadia Go</span></a>
+        <p class="subtitle">Product Designer · Melbourne, AU</p>
       </div>
-
-      <!-- copy-email, pinned to the far right of the pet's box -->
-      <button class="rail-email" id="copyEmail" data-email="nadiajingxiang@gmail.com">
-        <span class="ico">📨</span>
-        <span class="txt">
-          <b id="emailLabel">Copy my email</b>
-          <small id="emailSub">Tap to copy · nadiajingxiang@gmail.com</small>
-        </span>
-      </button>
     </div>
-  </header>
 
-  <!-- ══ BODY ══ -->
-  <div class="shell">
-    
+    <p class="bio">Studying <strong>UI/UX Design</strong> at the <strong>University of Melbourne</strong>, with a soft spot for graphic design.</p>
+    <p class="bio">I focus on <strong>finding the holes</strong> others miss, and use research to shape products that genuinely satisfy.</p>
 
-    <!-- ── STICKY BIO RAIL ── -->
-    <aside class="rail">
-      <div class="rail-tags">
-        <span>Product Designer</span>
-        <span>Melbourne, AU</span>
+    <nav class="nav" aria-label="Explore">
+      <span class="rail-label">Explore</span>
+      <ul>
+        <li><a href="index.html#work"><span class="num">01</span>My Work<span class="arr">→</span></a></li>
+        <li><a href="aboutme.html" aria-current="page"><span class="num">02</span>About Me<span class="arr">→</span></a></li>
+        <li><a href="designplayground.html"><span class="num">03</span>Playground<span class="arr">→</span></a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <span class="rail-label">Outbound</span>
+      <p class="outbound">
+        <button type="button" id="copyEmail" data-email="nadiajingxiang@gmail.com">Email</button>,
+        <a href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener">LinkedIn</a>,
+        <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener">Instagram</a>
+      </p>
+    </div>
+
+    <div class="rail-foot">
+      <span class="status">Open to roles</span>
+      <span id="clock">--:-- --</span>
+    </div>
+  </aside>
+
+  <!-- ══ CONTENT ══ -->
+  <main class="main" id="top">
+
+    <section>
+      <p class="eyebrow">About me</p>
+      <h1 class="title">Hi, I'm Nadia.</h1>
+      <div class="prose">
+        <p>I'm a product designer with an analytical lens, interested in bettering communities and forming strong bonds between people and product.</p>
+        <p>I used to be confused between the terms UI/UX Designer and Product Designer. I ended up landing on <strong>Product Designer</strong> as I enjoy the process of systems thinking and problem-solving.</p>
+        <p>Outside of work, I enjoy cooking, reading, and exploring new yummy spots in Melbourne! Current go-to fave is <strong>Le Bajo</strong> in West Melbourne :3</p>
       </div>
+    </section>
 
-      <p class="rail-bio">Studied at the <strong>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
-      <p class="rail-bio">Focused on <strong>finding the holes</strong> that other people can't identify first, and conducting user research to create an end-product that <strong>satisfies</strong>.</p>
+    <!-- Photo gallery — kept from the original, still switched off.
+    <section class="block">
+      <p class="label">Gallery</p>
+      <h2 class="statement">Things in the wild that caught my eye.</h2>
+      ...
+    </section> -->
 
-      <nav class="rail-menu">
-        <span class="rail-menu-title">Explore</span>
-        <ul>
-          <li><a href="index.html"><span class="num">01</span><span class="lbl">Work</span></a></li>
-          <li><a href="aboutme.html"><span class="num">02</span><span class="lbl">About Me</span></a></li>
-          <li><a href="designplayground.html"><span class="num">03</span><span class="lbl">Fun</span></a></li>
-        </ul>
-      </nav>
-    </aside>
-
-    <!-- ── MAIN AREA (empty, ready for your own layout) ── -->
-    <main class="feed" id="work">
-    <div class="intro-about">
-      I'm a product designer with an analytical lens, interested in bettering communities and forming strong bonds between people and product. 
-      I used to be confused between the terms of a UI/UX Designer and Product Designer; I ended up landing on Product Designer as I enjoy the process of systems thinking and problem-solving.
-      <br> <br>
-      Outside of work, I enjoy cooking, reading, and exploring new yummy spots in Melbourne! 
-      <br> Current go-to fave is Le Bajo in West Melbourne :3 
-
-
-
-    </main>
-
-    <!-- ================= Photo gallery ================= 
-<h1> Things in the wild
-    <br> that caught my eye.
-</h1>
-
-<div class="gallery">
-  <div class="gallery-item">
-    <img src="Gallery-builder/fabric.jpg" alt="Blue fabric and thread spools">
-  </div>
-  <div class="gallery-item">
-    <img src="Gallery-builder/gum.jpg" alt="Yellow packaging">
-  </div>
-  <div class="gallery-item">
-    <img src="Gallery-builder/IMG_5115.jpg" alt="Design sketches">
-  </div>
-  <div class="gallery-item">
-    <img src="Gallery-builder/IMG_5354.jpg" alt="Notebook page">
-  </div>
-  <div class="gallery-item">
-    <img src="Gallery-builder/IMG_5356.jpg" alt="Books on a shelf">
-  </div>
- 
-</div> -->
-
-  </div>
+    <footer class="foot">
+      <p class="foot-line">Thanks for stopping by. <em>Let's make something good.</em></p>
+      <div class="foot-links">
+        <a href="https://www.linkedin.com/in/nadia-alexandra-/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/nadialexandraa/" target="_blank" rel="noopener">Instagram</a>
+        <a href="#top">Back to top ↑</a>
+      </div>
+    </footer>
+  </main>
 </div>
 
-
-<!-- ══ PHONE LAYER (≤767px only) ══ -->
-<div class="phone">
-
-  <!-- HERO: just the name -->
-  <section class="ph-hero">
-    <div class="ph-eyebrow">
-      <span>Product Designer</span>
-      <span class="dot" aria-hidden="true"></span>
-    </div>
-
-    <div class="ph-hero-mid">
-      <h1 class="ph-name"><img src="Character-building/name logo(2).png" alt="Nadia Go"></h1>
-      <p class="ph-tagline">Product designer who <strong>finds the holes</strong> others miss — based in Melbourne, AU.</p>
-
-      <div class="ph-pills">
-        <button class="ph-pill" data-open="pop-about">About</button>
-        <button class="ph-pill solid" data-open="pop-contact">Contact</button>
-      </div>
-    </div>
-
-  </section>
-
-
-  
-
-  <!-- About -->
-  <div class="ph-sheet-wrap" id="pop-about">
-    <div class="ph-backdrop" data-close></div>
-    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="About">
-      <div class="ph-handle"></div>
-      <div class="ph-sheet-top">
-        <h2 class="ph-sheet-title">About</h2>
-        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
-      </div>
-      <div class="ph-sheet-body">
-        <div class="ph-tags">
-          <span>Product Designer</span>
-          <span class="red">Melbourne, AU</span>
-        </div>
-        <p>Studied at the <strong>University of Melbourne</strong>, majoring in <strong>UI/UX Design</strong> with an interest in <strong>Graphic Design</strong>.</p>
-        <p>Focused on <strong>finding the holes</strong> that other people can't identify first, and conducting user research to create an end-product that <strong>satisfies</strong>.</p>
-      </div>
-    </div>
-  </div>
-
-<!-- Contact -->
-  <div class="ph-sheet-wrap" id="pop-contact">
-    <div class="ph-backdrop" data-close></div>
-    <div class="ph-sheet" role="dialog" aria-modal="true" aria-label="Contact">
-      <div class="ph-handle"></div>
-      <div class="ph-sheet-top">
-        <h2 class="ph-sheet-title">Contact</h2>
-        <button class="ph-sheet-x" data-close aria-label="Close">✕</button>
-      </div>
-      <div class="ph-sheet-body">
-        <button class="ph-copy" id="phCopy" data-email="nadiajingxiang@gmail.com">
-          <span>
-            <b id="phCopyLabel">Copy my email</b>
-            <small id="phCopySub">nadiajingxiang@gmail.com</small>
-          </span>
-          <span class="tick">📨</span>
-        </button>
-        <div class="ph-links">
-          <a href="https://www.instagram.com/nadialexandraa/"><span>Instagram</span><span class="arr">↗</span></a>
-          <a href="https://www.linkedin.com/in/nadia-alexandra-/"><span>LinkedIn</span><span class="arr">↗</span></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  
-
-
-</div><!-- /.phone -->
-
-<!-- ══ CONTACT / FOOTER ══ -->
-<footer class="contact micro-footer" id="contact">
-  <div class="micro-inner">
-    <h2 class="micro-title">Thank you for coming!</h2>
-    <p class="micro-sub">Let's connect!</p>
-    <div class="micro-actions">
-      <a class="micro-btn" href="https://www.instagram.com/nadialexandraa/">Instagram</a>
-      <a class="micro-btn" href="https://www.linkedin.com/in/nadia-alexandra-/">LinkedIn</a>
-    </div>
-  </div>
-
-   <div class="footer-pixel-art" id="footer-pixel-art">
-    <!-- Background graphics by Tessie Gresley -->
-    <script>
-    (function () {
-      const starGridSize = 20, heartGridSize = 22;
-
-      const starPattern = [
-        [0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,5,6,5,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,6,5,5,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,5,6,6,5,6,0,0,0,0,0,0],
-        [5,6,5,6,6,5,5,6,5,6,5,5,6,6,6,6,5],
-        [0,5,6,6,6,6,6,6,6,5,6,5,6,6,6,6,0],
-        [0,0,6,6,5,5,6,5,5,6,6,6,5,5,5,0,0],
-        [0,0,0,6,6,0,0,5,6,6,6,5,5,5,0,0,0],
-        [0,0,0,0,6,5,5,5,6,6,6,5,6,0,0,0,0],
-        [0,0,0,0,0,6,6,6,5,6,6,6,0,0,0,0,0],
-        [0,0,0,0,0,5,5,6,6,5,5,6,0,0,0,0,0],
-        [0,0,0,0,6,6,5,6,0,6,6,6,6,0,0,0,0],
-        [0,0,0,0,6,6,6,0,0,0,5,5,6,0,0,0,0],
-        [0,0,0,6,6,6,0,0,0,0,0,5,5,5,0,0,0],
-        [0,0,6,5,0,0,0,0,0,0,0,0,0,5,6,0,0],
-      ];
-
-      const heartPattern = [
-        [0,7,7,8,8,8,0,8,8,8,8,0],
-        [7,8,0,7,7,8,0,8,8,7,7,8],
-        [8,8,7,7,7,7,7,7,8,8,7,7],
-        [7,7,7,8,8,7,7,8,8,8,7,8],
-        [7,7,0,7,7,7,7,0,0,7,7,8],
-        [7,8,8,8,7,8,7,7,7,8,8,8],
-        [0,7,7,7,7,8,7,7,8,8,8,0],
-        [0,0,8,7,7,8,8,7,8,8,0,0],
-        [0,0,0,7,0,8,7,8,8,0,0,0],
-        [0,0,0,0,8,7,8,8,0,0,0,0],
-        [0,0,0,0,0,7,8,0,0,0,0,0],
-      ];
-
-      const sketch = (p) => {
-        let footerEl, layer;
-        let cells = [], starBounds = [], heartBounds = [];
-        let starOX, starOY, heartOX, heartOY;
-        let activeStarSize, activeHeartSize;
-        let heartHover = false;
-
-        function buildCells() {
-          cells = []; starBounds = []; heartBounds = [];
-
-          const narrow = p.width < 700;
-          const gs  = narrow ? 12 : starGridSize;
-          const hs  = narrow ? 13 : heartGridSize;
-          const pad = narrow ? 24 : 60;
-
-          activeStarSize = gs;
-          activeHeartSize = hs;
-
-          heartOX = pad; heartOY = pad;
-          starOX = p.width  - starPattern[0].length * gs - pad;
-          starOY = p.height - starPattern.length    * gs - pad;
-
-          for (let y = 0; y < heartPattern.length; y++)
-            for (let x = 0; x < heartPattern[y].length; x++)
-              if (heartPattern[y][x] !== 0) cells.push({ x, y, type: heartPattern[y][x], src: 'heart' });
-
-          if (!narrow) {
-            for (let y = 0; y < starPattern.length; y++)
-              for (let x = 0; x < starPattern[y].length; x++)
-                if (starPattern[y][x] !== 0) cells.push({ x, y, type: starPattern[y][x], src: 'star' });
-          }
-        }
-
-        function reveal() {
-          if (!cells.length) return;
-          const c = cells.splice(p.floor(p.random(cells.length)), 1)[0];
-          const size = c.src === 'star' ? activeStarSize : activeHeartSize;
-          const ox   = c.src === 'star' ? starOX : heartOX;
-          const oy   = c.src === 'star' ? starOY : heartOY;
-          const px = ox + c.x * size, py = oy + c.y * size;
-          layer.noStroke();
-          if (c.type === 5 || c.type === 6) {
-            layer.fill(77, 240, 229);
-            c.type === 5 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
-            starBounds.push({ x:px, y:py, size });
-          } else if (c.type === 7 || c.type === 8) {
-            layer.fill(255,105,180);
-            c.type === 7 ? layer.rect(px,py,size,size) : layer.ellipse(px+size/2,py+size/2,size,size);
-            heartBounds.push({ x:px, y:py, size });
-          }
-        }
-
-        p.setup = () => {
-          footerEl = document.getElementById('contact');
-          const cv = p.createCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
-          cv.parent('footer-pixel-art');
-          layer = p.createGraphics(p.width, p.height);
-          buildCells();
-          for (let i = 0; i < 500; i++) reveal();
-        };
-
-        p.windowResized = () => {
-          p.resizeCanvas(footerEl.offsetWidth, Math.max(footerEl.offsetHeight, 520));
-          layer = p.createGraphics(p.width, p.height);
-          buildCells();
-          for (let i = 0; i < 500; i++) reveal();
-        };
-
-        p.draw = () => {
-          p.clear();
-          p.image(layer, 0, 0);
-
-          let starH = false;
-          for (const s of starBounds) {
-            const on = p.mouseX>s.x && p.mouseX<s.x+s.size && p.mouseY>s.y && p.mouseY<s.y+s.size;
-            p.noStroke(); p.fill(on ? p.color(0,0,0) : p.color(77, 240, 229));
-            p.ellipse(s.x+s.size/2, s.y+s.size/2, s.size, s.size);
-            if (on) starH = true;
-          }
-          heartHover = false;
-          for (const h of heartBounds) {
-            const on = p.mouseX>h.x && p.mouseX<h.x+h.size && p.mouseY>h.y && p.mouseY<h.y+h.size;
-            p.noStroke(); p.fill(on ? p.color(57,255,20) : p.color(255,105,180));
-            p.ellipse(h.x+h.size/2, h.y+h.size/2, h.size, h.size);
-            if (on) heartHover = true;
-          }
-          document.body.style.cursor = (starH || heartHover)
-            ? 'pointer'
-            : "url('Character-building/cursor.png'), auto";
-        };
-
-        p.mouseMoved = () => { for (let i = 0; i < 4; i++) reveal(); };
-      };
-
-      window.addEventListener('load', () => new p5(sketch));
-    })();
-    </script>
-  </div>
-</footer>
-
-
 <script>
-  /* ── pet: walks back & forth with a hop, blinks, eyes track cursor ── */
+  /* ── profile picture: eyes follow the cursor + blink ── */
   (function(){
-    // phone layer replaces the desktop header entirely — skip the pet there
-    if (window.matchMedia && window.matchMedia('(max-width:767px)').matches) return;
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const pet   = document.getElementById('pet');
-    const inner = pet && pet.querySelector('.pet__inner');
-    const eyes  = document.getElementById('petEyes');
-    if(!pet || !inner || !eyes) return;
-
-    const EYE_MAX_X = 6.5, EYE_MAX_Y = 4.5;      // pupil drift range (display px)
-    const EYE_CX = 0.4575, EYE_TOP = 0.3525;     // pupil centre as a fraction of the box
-    const SPEED    = 26;    // px/sec — how fast it strolls
-    const BOB_RATE = 7.5;   // hop cadence
-    const BOB_AMP  = 2.4;   // hop height (px)
-
-    let mx = -9999, my = -9999;
-    let x = 0, dir = 1, phase = 0, bob = 0, maxX = 0;
-
-    // how far it can travel = box inner width minus the pet's own width
-    const box = pet.parentElement;
-    function measure(){
-      const cs = getComputedStyle(box);
-      const padL = parseFloat(cs.paddingLeft) || 0;
-      const padR = parseFloat(cs.paddingRight) || 0;
-      const email = box.querySelector('.rail-email');
-      const emailW = email ? email.offsetWidth : 0;
-      const gap = parseFloat(cs.columnGap || cs.gap) || 0;
-      // travel span = box inner width minus the pet AND the email pinned on the right
-      maxX = Math.max(0, box.clientWidth - padL - padR - pet.offsetWidth - emailW - gap);
-      if(x > maxX) x = maxX;
+    const pfp  = document.getElementById('pfp');
+    const eyes = document.getElementById('pfpEyes');
+    if(!pfp || !eyes) return;
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const EYE_CX = 0.4575, EYE_CY = 0.3525;
+    let mx = null, my = null, raf = 0;
+    function track(){
+      if(mx === null) return;
+      const r = eyes.getBoundingClientRect();
+      const maxX = r.width * 0.07, maxY = r.height * 0.05;
+      const cx = r.left + r.width * EYE_CX, cy = r.top + r.height * EYE_CY;
+      const dx = mx - cx, dy = my - cy, len = Math.hypot(dx, dy) || 1;
+      eyes.style.transform = `translate(${(dx/len*maxX).toFixed(2)}px, ${(dy/len*maxY).toFixed(2)}px)`;
     }
-    measure();
-    addEventListener('resize', measure, {passive:true});
-    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, {passive:true});
-
-    let last = performance.now();
-    function frame(now){
-      const dt = Math.min(0.05, (now - last)/1000); last = now;
-
-      if(!reduce){
-        // walk back and forth, flipping at each edge
-        x += SPEED * dir * dt;
-        if(x >= maxX){ x = maxX; dir = -1; }
-        else if(x <= 0){ x = 0; dir = 1; }
-        // little hop to mimic steps
-        phase += BOB_RATE * dt;
-        const target = -BOB_AMP * Math.abs(Math.sin(phase));
-        bob += (target - bob) * Math.min(1, dt*18);
-        pet.style.transform   = `translateX(${x.toFixed(2)}px)`;
-        inner.style.transform = `translateY(${bob.toFixed(2)}px) scaleX(${dir})`;
-      }
-
-      // eyes follow the cursor (flip x with facing direction)
-      if(mx > -9999){
-        const r = pet.getBoundingClientRect();
-        const cx = r.left + r.width * EYE_CX, cy = r.top + r.height * EYE_TOP;
-        const dx = mx - cx, dy = my - cy, len = Math.hypot(dx,dy) || 1;
-        const ox = Math.max(-EYE_MAX_X, Math.min(EYE_MAX_X, dx/len*EYE_MAX_X)) * dir;
-        const oy = Math.max(-EYE_MAX_Y, Math.min(EYE_MAX_Y, dy/len*EYE_MAX_Y));
-        eyes.style.transform = `translate(${ox.toFixed(2)}px, ${oy.toFixed(2)}px)`;
-      }
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-
+    addEventListener('pointermove', e => {
+      mx = e.clientX; my = e.clientY;
+      if(!raf) raf = requestAnimationFrame(() => { raf = 0; track(); });
+    }, {passive:true});
+    addEventListener('scroll', track, {passive:true});
     if(!reduce){
       (function blink(){
         setTimeout(() => {
-          pet.classList.add('is-blinking');
-          setTimeout(() => pet.classList.remove('is-blinking'), 150);
+          pfp.classList.add('is-blinking');
+          setTimeout(() => pfp.classList.remove('is-blinking'), 150);
           blink();
-        }, 2600 + Math.random()*4000);
+        }, 2600 + Math.random() * 4000);
       })();
     }
   })();
 
-  /* ── copy-email card ── */
+  /* ── Melbourne local time ── */
+  (function(){
+    const el = document.getElementById('clock');
+    const fmt = new Intl.DateTimeFormat('en-AU', {hour:'2-digit', minute:'2-digit', hour12:true, timeZone:'Australia/Melbourne'});
+    const tick = () => { el.textContent = fmt.format(new Date()).toUpperCase() + ' MEL'; };
+    tick(); setInterval(tick, 15000);
+  })();
+
+  /* ── copy email ── */
   (function(){
     const btn = document.getElementById('copyEmail');
-    const label = document.getElementById('emailLabel');
-    const sub = document.getElementById('emailSub');
-    const original = {l: label.textContent, s: sub.textContent};
     btn.addEventListener('click', async () => {
-      try{
-        await navigator.clipboard.writeText(btn.dataset.email);
-        btn.classList.add('copied');
-        label.textContent = 'Copied ✓';
-        sub.textContent = btn.dataset.email;
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          label.textContent = original.l; sub.textContent = original.s;
-        }, 1800);
-      }catch(e){ sub.textContent = btn.dataset.email; }
+      try{ await navigator.clipboard.writeText(btn.dataset.email); btn.textContent = 'Copied ✓'; btn.classList.add('copied'); }
+      catch(e){ btn.textContent = btn.dataset.email; }
+      setTimeout(() => { btn.textContent = 'Email'; btn.classList.remove('copied'); }, 1800);
     });
   })();
 
-  /* ── phone: bottom-sheet pop-ups ── */
+  /* ── in-page menu: highlight the section being read ── */
   (function(){
-    let openEl = null;
-    function open(id){
-      const el = document.getElementById(id);
-      if(!el) return;
-      openEl = el;
-      el.classList.add('open');
-      document.body.classList.add('ph-lock');
-    }
-    function close(){
-      if(!openEl) return;
-      openEl.classList.remove('open');
-      openEl = null;
-      document.body.classList.remove('ph-lock');
-    }
-    document.addEventListener('click', function(e){
-      const opener = e.target.closest('[data-open]');
-      if(opener){ open(opener.getAttribute('data-open')); return; }
-      if(e.target.closest('[data-close]')){ close(); }
-    });
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape') close();
-    });
+    const links = [...document.querySelectorAll('.nav--sections a[href^="#"]')];
+    if(!links.length || !('IntersectionObserver' in window)) return;
+    const byId = Object.fromEntries(links.map(a => [a.getAttribute('href').slice(1), a]));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if(!en.isIntersecting) return;
+        links.forEach(a => a.removeAttribute('aria-current'));
+        byId[en.target.id]?.setAttribute('aria-current', 'location');
+      });
+    }, {rootMargin:'-35% 0px -60% 0px'});
+    Object.keys(byId).forEach(id => { const s = document.getElementById(id); if(s) io.observe(s); });
   })();
 
-  /* ── phone: copy-email button ── */
-  (function(){
-    const btn = document.getElementById('phCopy');
-    if(!btn) return;
-    const label = document.getElementById('phCopyLabel');
-    const sub   = document.getElementById('phCopySub');
-    const orig  = {l: label.textContent, s: sub.textContent};
-    btn.addEventListener('click', async function(){
-      try{
-        await navigator.clipboard.writeText(btn.dataset.email);
-        btn.classList.add('copied');
-        label.textContent = 'Copied ✓';
-        sub.textContent = btn.dataset.email;
-        setTimeout(function(){
-          btn.classList.remove('copied');
-          label.textContent = orig.l; sub.textContent = orig.s;
-        }, 1800);
-      }catch(e){ sub.textContent = btn.dataset.email; }
-    });
-  })();
+  /* ── fit videos to their real shape ── */
+  document.querySelectorAll('.media.fit video').forEach(v => {
+    const fit = () => {
+      if(!v.videoWidth) return;
+      v.style.setProperty('--ar', v.videoWidth + ' / ' + v.videoHeight);
+      v.style.setProperty('--ar-n', v.videoWidth / v.videoHeight);
+    };
+    v.addEventListener('loadedmetadata', fit); fit();
+  });
 </script>
-
-
 </body>
 </html>
